@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      font-family: -apple-system, sans-serif;
+      width: 380px;
+      padding: 16px;
+      background: #0f0f0f;
+      color: #f0f0f0;
+      margin: 0;
+    }
+    h2 { margin: 0 0 12px; font-size: 16px; color: #1db954; }
+    p.sub { font-size: 12px; color: #888; margin: 0 0 14px; }
+    button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    #extractBtn { background: #1db954; color: #fff; }
+    #extractBtn:hover { background: #17a349; }
+    #copyPlain { background: #2a2a2a; color: #f0f0f0; display: none; }
+    #copySrt   { background: #2a2a2a; color: #f0f0f0; display: none; }
+    #copyPlain:hover, #copySrt:hover { background: #3a3a3a; }
+    #status {
+      font-size: 13px;
+      min-height: 20px;
+      margin-bottom: 8px;
+      color: #aaa;
+    }
+    #status.ok  { color: #1db954; }
+    #status.err { color: #e74c3c; }
+    #output {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 11px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      max-height: 300px;
+      overflow-y: auto;
+      display: none;
+      color: #ddd;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <h2>🎵 Suno Lyric Timestamps</h2>
+  <p class="sub">Open a Suno editor page, then click Extract.</p>
+  <div id="status">Ready.</div>
+  <button id="extractBtn">⏱ Extract Timestamps</button>
+  <button id="copyPlain">📋 Copy Plain Text</button>
+  <button id="copySrt">📋 Copy as SRT</button>
+  <div id="output"></div>
+  <script>
+    let lastResult = null;
+    document.getElementById('extractBtn').addEventListener('click', () => {
+      const status = document.getElementById('status');
+      const output = document.getElementById('output');
+      status.className = '';
+      status.textContent = 'Extracting…';
+      output.style.display = 'none';
+      document.getElementById('copyPlain').style.display = 'none';
+      document.getElementById('copySrt').style.display = 'none';
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const tab = tabs[0];
+        if (!tab.url?.includes('suno.com/edit/')) {
+          status.className = 'err';
+          status.textContent = '❌ Not a Suno editor page.';
+          return;
+        }
+        chrome.tabs.sendMessage(tab.id, { action: 'extract' }, (res) => {
+          if (chrome.runtime.lastError) {
+            status.className = 'err';
+            status.textContent = '❌ Could not reach page. Try refreshing.';
+            return;
+          }
+          if (res.error) {
+            status.className = 'err';
+            status.textContent = '❌ ' + res.error;
+            return;
+          }
+          lastResult = res;
+          status.className = 'ok';
+          status.textContent = `✅ Extracted ${res.tokenCount} timed tokens.`;
+          output.textContent = res.plainText;
+          output.style.display = 'block';
+          document.getElementById('copyPlain').style.display = 'block';
+          document.getElementById('copySrt').style.display = 'block';
+        });
+      });
+    });
+    document.getElementById('copyPlain').addEventListener('click', () => {
+      if (lastResult) navigator.clipboard.writeText(lastResult.plainText)
+        .then(() => { document.getElementById('status').textContent = '📋 Copied plain text!'; });
+    });
+    document.getElementById('copySrt').addEventListener('click', () => {
+      if (lastResult) navigator.clipboard.writeText(lastResult.srt)
+        .then(() => { document.getElementById('status').textContent = '📋 Copied SRT!'; });
+    });
+  </script>
+</body>
+</html>

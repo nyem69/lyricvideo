@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Selamat Hari Raya - Lyrics Video</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Great+Vibes&family=Amiri:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,700;1,400&family=Raleway:wght@100;200;300;400;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a1a0a;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  #video-container {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Animated background */
+  .bg-layer {
+    position: absolute;
+    inset: 0;
+    transition: opacity 2s ease;
+  }
+
+  #bg-gradient {
+    background: radial-gradient(ellipse at center, #0d2b0d 0%, #071407 50%, #030a03 100%);
+    z-index: 0;
+  }
+
+  /* Floating particles */
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Islamic geometric pattern overlay */
+  #pattern-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    opacity: 0.06;
+    background-image:
+      repeating-conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(212,175,55,0.3) 30deg, transparent 60deg);
+    background-size: 120px 120px;
+    animation: patternRotate 120s linear infinite;
+  }
+
+  @keyframes patternRotate {
+    from { transform: rotate(0deg) scale(1.5); }
+    to { transform: rotate(360deg) scale(1.5); }
+  }
+
+  /* Star/crescent decorations */
+  .star {
+    position: absolute;
+    z-index: 3;
+    opacity: 0;
+    animation: twinkle 4s ease-in-out infinite;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.1; transform: scale(0.8); }
+    50% { opacity: 0.6; transform: scale(1.2); }
+  }
+
+  /* Main lyrics display */
+  #lyrics-display {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    padding: 40px;
+  }
+
+  .lyric-line {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    text-align: center;
+    max-width: 85%;
+    line-height: 1.5;
+    text-shadow: 0 0 40px rgba(0,0,0,0.8), 0 0 80px rgba(0,0,0,0.5);
+  }
+
+  .lyric-line.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .lyric-line.fade-out {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.97);
+    transition: all 1s ease-in;
+  }
+
+  /* ===== STYLE THEMES ===== */
+
+  /* Style 1: Elegant Gold - Opening verse */
+  .style-elegant .lyric-line {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 56px);
+    font-weight: 700;
+    color: #d4af37;
+    letter-spacing: 2px;
+  }
+
+  /* Style 2: Flowing Script - Chorus */
+  .style-script .lyric-line {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(32px, 5vw, 68px);
+    color: #f5e6c8;
+    letter-spacing: 3px;
+    text-shadow: 0 0 30px rgba(212,175,55,0.4), 0 0 60px rgba(0,0,0,0.8);
+  }
+
+  /* Style 3: Amiri Arabic-inspired - Remembrance verse */
+  .style-amiri .lyric-line {
+    font-family: 'Amiri', serif;
+    font-size: clamp(26px, 3.8vw, 52px);
+    font-weight: 400;
+    font-style: italic;
+    color: #c5dfc5;
+    letter-spacing: 1px;
+  }
+
+  /* Style 4: Modern Minimal - Brotherhood verse */
+  .style-modern .lyric-line {
+    font-family: 'Raleway', sans-serif;
+    font-size: clamp(24px, 3.5vw, 48px);
+    font-weight: 200;
+    color: #ffffff;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+  }
+
+  /* Style 5: Grand Finale */
+  .style-finale .lyric-line {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(42px, 7vw, 96px);
+    font-weight: 900;
+    color: #d4af37;
+    letter-spacing: 4px;
+    text-shadow: 0 0 50px rgba(212,175,55,0.6), 0 0 100px rgba(212,175,55,0.3);
+  }
+
+  /* Style 6: Lora Warm - Second chorus */
+  .style-warm .lyric-line {
+    font-family: 'Lora', serif;
+    font-size: clamp(28px, 4vw, 54px);
+    font-weight: 400;
+    font-style: italic;
+    color: #f0d890;
+    letter-spacing: 2px;
+  }
+
+  /* Section title */
+  #section-marker {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 15;
+    font-family: 'Raleway', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    color: rgba(212,175,55,0.3);
+    opacity: 0;
+    transition: opacity 1.5s ease;
+  }
+
+  /* Crescent moon decoration */
+  #crescent {
+    position: absolute;
+    top: 8%;
+    right: 12%;
+    z-index: 5;
+    opacity: 0;
+    transition: opacity 3s ease;
+  }
+
+  /* Controls bar */
+  #controls-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 24px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+    opacity: 0.5;
+    transition: opacity 0.3s;
+  }
+
+  #controls-bar:hover { opacity: 1; }
+
+  .ctrl-btn {
+    background: rgba(212,175,55,0.15);
+    border: 1px solid rgba(212,175,55,0.3);
+    color: #d4af37;
+    padding: 8px 16px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .ctrl-btn:hover {
+    background: rgba(212,175,55,0.3);
+    border-color: #d4af37;
+  }
+
+  .timer-text {
+    color: rgba(212,175,55,0.5);
+    font-family: 'Raleway', sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+
+  #seek-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: rgba(212,175,55,0.2);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  #seek-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #d4af37;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(212,175,55,0.4);
+  }
+
+  #seek-slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #d4af37;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(212,175,55,0.4);
+  }
+
+  #audio-name {
+    color: rgba(212,175,55,0.4);
+    font-family: 'Raleway', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Vignette */
+  #vignette {
+    position: absolute;
+    inset: 0;
+    z-index: 8;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%);
+    pointer-events: none;
+  }
+
+  /* Light rays */
+  .light-ray {
+    position: absolute;
+    z-index: 4;
+    opacity: 0;
+    pointer-events: none;
+    width: 2px;
+    background: linear-gradient(to bottom, rgba(212,175,55,0.3), transparent);
+    transform-origin: top center;
+  }
+
+  /* Ketupat decoration shapes */
+  .ketupat-shape {
+    position: absolute;
+    z-index: 3;
+    opacity: 0.04;
+    pointer-events: none;
+  }
+
+  /* Fade to black for transitions */
+  #transition-overlay {
+    position: absolute;
+    inset: 0;
+    background: #0a1a0a;
+    z-index: 9;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1.5s ease;
+  }
+
+  /* Intro title */
+  .intro-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(36px, 6vw, 80px);
+    color: #d4af37;
+    opacity: 0;
+    transform: scale(0.9);
+    transition: all 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    text-shadow: 0 0 60px rgba(212,175,55,0.4);
+  }
+
+  .intro-title.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .intro-subtitle {
+    font-family: 'Raleway', sans-serif;
+    font-size: clamp(12px, 1.5vw, 18px);
+    font-weight: 200;
+    letter-spacing: 12px;
+    color: rgba(212,175,55,0.5);
+    margin-top: 20px;
+    opacity: 0;
+    transition: opacity 2s ease 0.8s;
+    text-transform: uppercase;
+  }
+
+  .intro-subtitle.visible { opacity: 1; }
+
+  /* Background color transitions */
+  .bg-scene-1 { background: radial-gradient(ellipse at center, #0d2b0d 0%, #071407 50%, #030a03 100%); }
+  .bg-scene-2 { background: radial-gradient(ellipse at 30% 70%, #1a0d2b 0%, #0a0514 50%, #050308 100%); }
+  .bg-scene-3 { background: radial-gradient(ellipse at 70% 30%, #2b1a0d 0%, #140d05 50%, #080503 100%); }
+  .bg-scene-4 { background: radial-gradient(ellipse at center, #0d1a2b 0%, #050d14 50%, #030508 100%); }
+  .bg-scene-5 { background: radial-gradient(ellipse at center, #1a2b0d 0%, #0d1405 50%, #050803 100%); }
+</style>
+</head>
+<body>
+<div id="video-container">
+  <div id="bg-gradient" class="bg-layer bg-scene-1"></div>
+  <div id="pattern-overlay"></div>
+  <div id="vignette"></div>
+  <div id="transition-overlay"></div>
+
+  <!-- Crescent moon -->
+  <svg id="crescent" width="80" height="80" viewBox="0 0 80 80">
+    <circle cx="40" cy="40" r="25" fill="#d4af37" opacity="0.15"/>
+    <circle cx="50" cy="35" r="22" fill="#0a1a0a"/>
+    <circle cx="62" cy="20" r="3" fill="#d4af37" opacity="0.3"/>
+  </svg>
+
+  <div id="lyrics-display"></div>
+  <div id="section-marker"></div>
+  <div id="controls-bar">
+    <button class="ctrl-btn" id="btn-play" onclick="togglePlay()">Play</button>
+    <span class="timer-text" id="timer-current">0:00</span>
+    <input type="range" id="seek-slider" min="0" max="255" step="0.1" value="0">
+    <span class="timer-text" id="timer-total">4:15</span>
+    <button class="ctrl-btn" onclick="restartVideo()">Restart</button>
+    <label class="ctrl-btn" for="audio-input">Load MP3</label>
+    <input type="file" id="audio-input" accept="audio/*" style="display:none">
+    <span id="audio-name"></span>
+  </div>
+</div>
+
+<script>
+// ===== SONG STRUCTURE & TIMING =====
+// Total duration: 255 seconds (~4:15)
+
+const sections = [
+  // INTRO
+  {
+    type: 'intro',
+    start: 0,
+    end: 11,
+    style: '',
+    bgScene: 'bg-scene-1',
+    lines: []
+  },
+  // VERSE 1 - Elegant Gold
+  {
+    type: 'verse',
+    start: 11,
+    end: 46,
+    style: 'style-elegant',
+    bgScene: 'bg-scene-1',
+    lines: [
+      { text: 'Sembah berlalu ramadhan suci', at: 11.162 },
+      { text: 'Berkah amalan meruntun jiwa', at: 15.776 },
+      { text: 'Muncullah kini hari dinanti', at: 18.085 },
+      { text: 'Hadirnya syawal menggetar sukma', at: 41.854 }
+    ]
+  },
+  // CHORUS 1 - Flowing Script
+  {
+    type: 'chorus',
+    start: 46,
+    end: 63,
+    style: 'style-script',
+    bgScene: 'bg-scene-2',
+    lines: [
+      { text: 'Jari disusun maaf dipohon', at: 46.515 },
+      { text: 'Mekarnya rasa seindah maya', at: 51.118 },
+      { text: 'Murnikan hati salah diampun', at: 55.728 },
+      { text: 'Seindah cahya di langit senja', at: 60.338 }
+    ]
+  },
+  // VERSE 2 - Remembrance (Amiri)
+  {
+    type: 'verse',
+    start: 63,
+    end: 83,
+    style: 'style-amiri',
+    bgScene: 'bg-scene-3',
+    lines: [
+      { text: 'Buat insan yang telah pergi', at: 63.542 },
+      { text: 'Tetap dikenang biarpun tiada', at: 69.707 },
+      { text: 'Tulusnya doa sentiasa di hati', at: 74.246 },
+      { text: 'Mohon syurga rahmatnya di sana', at: 78.792 }
+    ]
+  },
+  // VERSE 3 - Brotherhood (Modern)
+  {
+    type: 'verse',
+    start: 83,
+    end: 105,
+    style: 'style-modern',
+    bgScene: 'bg-scene-4',
+    lines: [
+      { text: 'Saudara taulan kita santuni', at: 83.193 },
+      { text: 'Walau tersua di aidil fitri', at: 87.752 },
+      { text: 'Namun ikatan tetap abadi', at: 92.627 },
+      { text: 'Semurni lebaran kekal di hati', at: 97.163 }
+    ]
+  },
+  // INTERLUDE (instrumental break)
+  {
+    type: 'interlude',
+    start: 105,
+    end: 129,
+    style: '',
+    bgScene: 'bg-scene-5',
+    lines: []
+  },
+  // CHORUS 2 - Warm Lora
+  {
+    type: 'chorus',
+    start: 129,
+    end: 146,
+    style: 'style-warm',
+    bgScene: 'bg-scene-5',
+    lines: [
+      { text: 'Jari disusun maaf dipohon', at: 129.639 },
+      { text: 'Mekarnya rasa seindah maya', at: 134.189 },
+      { text: 'Murnikan hati salah diampun', at: 138.803 },
+      { text: 'Seindah cahya di langit senja', at: 143.416 }
+    ]
+  },
+  // VERSE 2 REPEAT - Amiri
+  {
+    type: 'verse',
+    start: 146,
+    end: 166,
+    style: 'style-amiri',
+    bgScene: 'bg-scene-3',
+    lines: [
+      { text: 'Buat insan yang telah pergi', at: 146.650 },
+      { text: 'Tetap dikenang biarpun tiada', at: 152.590 },
+      { text: 'Tulusnya doa sentiasa di hati', at: 155.778 },
+      { text: 'Mohon syurga rahmatnya di sana', at: 161.926 }
+    ]
+  },
+  // VERSE 3 REPEAT - Modern
+  {
+    type: 'verse',
+    start: 166,
+    end: 192,
+    style: 'style-modern',
+    bgScene: 'bg-scene-4',
+    lines: [
+      { text: 'Saudara taulan kita santuni', at: 166.255 },
+      { text: 'Walau tersua di aidil fitri', at: 170.910 },
+      { text: 'Namun ikatan tetap abadi', at: 175.725 },
+      { text: 'Semurni lebaran kekal di hati', at: 180.301 }
+    ]
+  },
+  // FINALE - Selamat Hari Raya (repeated)
+  {
+    type: 'finale',
+    start: 192,
+    end: 255,
+    style: 'style-finale',
+    bgScene: 'bg-scene-1',
+    lines: [
+      { text: 'Selamat Hari Raya', at: 192.363 },
+      { text: 'Selamat Hari Raya', at: 196.841 },
+      { text: 'Selamat Hari Raya', at: 201.481 },
+      { text: 'Selamat Hari Raya', at: 205.796 },
+      { text: 'Selamat Hari Raya', at: 210.762 },
+      { text: 'Selamat Hari Raya', at: 213.204 },
+      { text: 'Selamat Hari Raya', at: 215.321 },
+      { text: 'Selamat Hari Raya', at: 218.131 },
+      { text: 'Selamat Hari Raya', at: 220.046 },
+      { text: 'Selamat Hari Raya', at: 224.209 },
+      { text: 'Selamat Hari Raya', at: 228.861 },
+      { text: 'Selamat Hari Raya', at: 233.457 },
+      { text: 'Selamat Hari Raya', at: 239.945 }
+    ]
+  }
+];
+
+let totalDuration = 255;
+let currentTime = 0;
+let isPlaying = false;
+let animFrame = null;
+let lastTimestamp = null;
+let currentSectionIndex = -1;
+let activeLines = [];
+let audioEl = null;
+let isSeeking = false;
+let isTransitioning = false;
+
+const display = document.getElementById('lyrics-display');
+const bgGradient = document.getElementById('bg-gradient');
+const transOverlay = document.getElementById('transition-overlay');
+const sectionMarker = document.getElementById('section-marker');
+const seekSlider = document.getElementById('seek-slider');
+const timerCurrent = document.getElementById('timer-current');
+const timerTotal = document.getElementById('timer-total');
+const btnPlay = document.getElementById('btn-play');
+const crescent = document.getElementById('crescent');
+
+// Create floating particles
+function createParticles() {
+  const container = document.getElementById('video-container');
+  for (let i = 0; i < 40; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 4 + 1;
+    const x = Math.random() * 100;
+    const dur = Math.random() * 30 + 20;
+    const delay = Math.random() * 20;
+    p.style.cssText = `
+      width: ${size}px; height: ${size}px;
+      left: ${x}%; bottom: -10px;
+      background: radial-gradient(circle, rgba(212,175,55,${Math.random() * 0.3 + 0.1}), transparent);
+      animation: floatUp ${dur}s linear ${delay}s infinite;
+    `;
+    container.appendChild(p);
+  }
+
+  // Create stars
+  for (let i = 0; i < 25; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 3 + 1;
+    s.style.cssText = `
+      width: ${size}px; height: ${size}px; border-radius: 50%;
+      left: ${Math.random()*100}%; top: ${Math.random()*100}%;
+      background: #d4af37;
+      animation-delay: ${Math.random()*4}s;
+      animation-duration: ${Math.random()*3+3}s;
+    `;
+    document.getElementById('video-container').appendChild(s);
+  }
+
+  // Add float animation
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes floatUp {
+      0% { transform: translateY(0) translateX(0); opacity: 0; }
+      10% { opacity: 0.6; }
+      90% { opacity: 0.3; }
+      100% { transform: translateY(-110vh) translateX(${Math.random()*40-20}px); opacity: 0; }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+createParticles();
+
+function formatTime(s) {
+  return Math.floor(s / 60) + ':' + Math.floor(s % 60).toString().padStart(2, '0');
+}
+
+// Audio upload
+document.getElementById('audio-input').addEventListener('change', function() {
+  const file = this.files[0];
+  if (!file) return;
+  restartVideo();
+  if (audioEl) { audioEl.pause(); audioEl.src = ''; }
+  audioEl = new Audio();
+  audioEl.src = URL.createObjectURL(file);
+  audioEl.addEventListener('loadedmetadata', () => {
+    totalDuration = audioEl.duration;
+    seekSlider.max = totalDuration;
+    timerTotal.textContent = formatTime(totalDuration);
+  });
+  audioEl.addEventListener('ended', () => {
+    isPlaying = false;
+    btnPlay.textContent = 'Play';
+  });
+  document.getElementById('audio-name').textContent = file.name;
+});
+
+// Seek slider
+function seekTo(time) {
+  currentTime = Math.max(0, Math.min(time, totalDuration));
+  if (audioEl) audioEl.currentTime = currentTime;
+  lastLineIndex = {};
+  currentSectionIndex = -1;
+  lastTimestamp = null;
+  display.textContent = '';
+  display.className = '';
+  activeLines = [];
+  transOverlay.style.opacity = '0';
+}
+
+seekSlider.addEventListener('mousedown', () => isSeeking = true);
+seekSlider.addEventListener('touchstart', () => isSeeking = true);
+seekSlider.addEventListener('input', () => seekTo(parseFloat(seekSlider.value)));
+document.addEventListener('mouseup', () => isSeeking = false);
+document.addEventListener('touchend', () => isSeeking = false);
+
+// Show intro
+function showIntro() {
+  display.innerHTML = '';
+  display.className = '';
+  const title = document.createElement('div');
+  title.className = 'intro-title';
+  title.textContent = 'Selamat Hari Raya';
+  const sub = document.createElement('div');
+  sub.className = 'intro-subtitle';
+  sub.textContent = 'Aidilfitri';
+  display.appendChild(title);
+  display.appendChild(sub);
+
+  setTimeout(() => { title.classList.add('visible'); sub.classList.add('visible'); }, 300);
+  crescent.style.opacity = '1';
+}
+
+// Clear display with transition
+function clearDisplay(callback) {
+  isTransitioning = true;
+  const lines = display.querySelectorAll('.lyric-line, .intro-title, .intro-subtitle');
+  lines.forEach(l => {
+    l.classList.remove('visible');
+    l.classList.add('fade-out');
+  });
+  transOverlay.style.opacity = '0.6';
+  setTimeout(() => {
+    display.innerHTML = '';
+    activeLines = [];
+    transOverlay.style.opacity = '0';
+    isTransitioning = false;
+    if (callback) callback();
+  }, 800);
+}
+
+// Show a lyric line
+function showLine(text, index) {
+  const line = document.createElement('div');
+  line.className = 'lyric-line';
+  line.textContent = text;
+  line.style.transitionDelay = '0.1s';
+  display.appendChild(line);
+
+  // Remove old lines if more than 3
+  const allLines = display.querySelectorAll('.lyric-line');
+  if (allLines.length > 3) {
+    allLines[0].classList.add('fade-out');
+    allLines[0].classList.remove('visible');
+    setTimeout(() => { if (allLines[0].parentNode) allLines[0].remove(); }, 1000);
+  }
+
+  setTimeout(() => line.classList.add('visible'), 50);
+  activeLines.push({ el: line, shown: currentTime });
+}
+
+// Update section
+function updateSection(sectionIdx) {
+  if (sectionIdx === currentSectionIndex) return;
+
+  const section = sections[sectionIdx];
+  currentSectionIndex = sectionIdx;
+
+  clearDisplay(() => {
+    display.className = section.style;
+
+    // Change background
+    bgGradient.className = 'bg-layer ' + section.bgScene;
+
+    // Update section marker
+    if (section.type === 'intro') {
+      showIntro();
+      sectionMarker.style.opacity = '0';
+    } else if (section.type === 'chorus') {
+      sectionMarker.textContent = '~ Korus ~';
+      sectionMarker.style.opacity = '1';
+    } else if (section.type === 'finale') {
+      sectionMarker.textContent = '';
+      sectionMarker.style.opacity = '0';
+    } else {
+      sectionMarker.textContent = '';
+      sectionMarker.style.opacity = '0';
+    }
+  });
+}
+
+// Main update loop
+let lastLineIndex = {};
+
+function update(timestamp) {
+  if (!lastTimestamp) lastTimestamp = timestamp;
+  const delta = (timestamp - lastTimestamp) / 1000;
+  lastTimestamp = timestamp;
+
+  if (isPlaying) {
+    if (audioEl) {
+      currentTime = audioEl.currentTime;
+    } else {
+      currentTime += delta;
+    }
+
+    if (currentTime >= totalDuration) {
+      currentTime = totalDuration;
+      isPlaying = false;
+      if (audioEl) audioEl.pause();
+      btnPlay.textContent = 'Play';
+    }
+
+    // Find current section
+    let sIdx = 0;
+    for (let i = 0; i < sections.length; i++) {
+      if (currentTime >= sections[i].start && currentTime < sections[i].end) {
+        sIdx = i;
+        break;
+      }
+      if (i === sections.length - 1 && currentTime >= sections[i].start) {
+        sIdx = i;
+      }
+    }
+
+    // Update section if changed
+    if (sIdx !== currentSectionIndex) {
+      updateSection(sIdx);
+      lastLineIndex = {};
+    }
+
+    // Show lines at their scheduled times (skip during transition to avoid wipe)
+    const section = sections[sIdx];
+    if (section.lines && !isTransitioning) {
+      section.lines.forEach((line, li) => {
+        const key = sIdx + '-' + li;
+        if (currentTime >= line.at && !lastLineIndex[key]) {
+          lastLineIndex[key] = true;
+          showLine(line.text, li);
+        }
+      });
+    }
+
+    // Update seek slider and timer
+    if (!isSeeking) seekSlider.value = currentTime;
+    timerCurrent.textContent = formatTime(currentTime);
+  }
+
+  animFrame = requestAnimationFrame(update);
+}
+
+function togglePlay() {
+  if (currentTime >= totalDuration) {
+    restartVideo();
+    return;
+  }
+  isPlaying = !isPlaying;
+  btnPlay.textContent = isPlaying ? 'Pause' : 'Play';
+  if (audioEl) {
+    if (isPlaying) audioEl.play();
+    else audioEl.pause();
+  }
+  if (isPlaying && currentSectionIndex === -1) {
+    updateSection(0);
+  }
+}
+
+function restartVideo() {
+  isPlaying = false;
+  currentTime = 0;
+  if (audioEl) {
+    audioEl.pause();
+    audioEl.currentTime = 0;
+  }
+  currentSectionIndex = -1;
+  lastLineIndex = {};
+  lastTimestamp = null;
+  display.innerHTML = '';
+  display.className = '';
+  activeLines = [];
+  seekSlider.value = 0;
+  timerCurrent.textContent = '0:00';
+  bgGradient.className = 'bg-layer bg-scene-1';
+  sectionMarker.style.opacity = '0';
+  transOverlay.style.opacity = '0';
+  crescent.style.opacity = '0';
+  btnPlay.textContent = 'Play';
+}
+
+// Keyboard controls
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
+  if (e.code === 'KeyR') restartVideo();
+  if (e.code === 'ArrowLeft') { e.preventDefault(); seekTo(currentTime - 5); }
+  if (e.code === 'ArrowRight') { e.preventDefault(); seekTo(currentTime + 5); }
+});
+
+// Start animation loop
+animFrame = requestAnimationFrame(update);
+</script>
+</body>
+</html>
