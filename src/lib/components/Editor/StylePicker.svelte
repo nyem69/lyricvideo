@@ -9,9 +9,9 @@
 </script>
 
 <div class="flex flex-col gap-3">
-  <label class="text-sm tracking-wider text-gold/60 uppercase" style="font-family:'Raleway',sans-serif">
+  <span class="text-sm tracking-wider text-gold/60 uppercase" style="font-family:'Raleway',sans-serif">
     Style
-  </label>
+  </span>
   <div class="grid grid-cols-2 gap-2">
     {#each presetList as preset}
       <button
