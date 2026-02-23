@@ -1,0 +1,12 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-gold: #d4af37;
+  --color-gold-dim: rgba(212, 175, 55, 0.3);
+  --color-surface: #0a1a0a;
+  --color-surface-light: #1a2a1a;
+  --font-display: 'Playfair Display', serif;
+  --font-script: 'Great Vibes', cursive;
+  --font-impact: 'Bebas Neue', sans-serif;
+  --font-minimal: 'Raleway', sans-serif;
+}
