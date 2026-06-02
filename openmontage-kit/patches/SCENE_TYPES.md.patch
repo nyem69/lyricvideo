@@ -1,0 +1,26 @@
+diff --git a/remotion-composer/SCENE_TYPES.md b/remotion-composer/SCENE_TYPES.md
+index 539e326..95da925 100644
+--- a/remotion-composer/SCENE_TYPES.md
++++ b/remotion-composer/SCENE_TYPES.md
+@@ -11,9 +11,11 @@ When you add a new component, append it here and in `src/components/index.ts`.
+ | `type` | Component | Required fields | Common fields | Purpose |
+ |---|---|---|---|---|
+ | *(none — video)* | `OffthreadVideo` | `source` (path to mp4) | `source_in_seconds`, `animation` (zoom-in, ken-burns), `in_seconds`, `out_seconds` | Play an MP4 clip directly |
+-| *(none — image)* | `Img` | `source` (path to png/jpg) | `animation`, `in_seconds`, `out_seconds` | Play a still with Ken Burns |
++| *(none — image)* | `Img` | `source` (path to png/jpg) | `animation`, `in_seconds`, `out_seconds` | Play a still with Ken Burns (objectFit: cover — crops portrait) |
++| `photo` | `PhotoScene` | `source` (path to png/jpg) | `animation`, `in_seconds`, `out_seconds` | Warm memory-book still — photo shown WHOLE (contain) over a blurred zoomed copy of itself, shared Ken Burns drift, warm grade. Use for mixed portrait/landscape personal photos so faces are never cropped. |
+ | `text_card` | `TextCard` | `text` | `fontSize`, `backgroundVideo`, `backgroundOverlay`, `color` | Large-typography beat |
+-| `hero_title` | `HeroTitle` | `text` | `heroSubtitle`, `backgroundVideo`, `backgroundOverlay` | Title/end card |
++| `hero_title` | `HeroTitle` | `text` | `heroSubtitle`, `backgroundVideo`, `backgroundOverlay` | Title/end card (cold cyan/purple, Space Grotesk) |
++| `title_card` | `TitleCard` | `title` | `subtitle`, `accentColor`, `backgroundColor` | Warm elegant opening/closing card — large Playfair italic title over a gold divider + smaller subtitle, warm-dark ground, gentle fade. For memory montages / heartfelt pieces. |
+ | `stat_card` | `StatCard` | `stat` | `subtitle`, `accentColor`, `backgroundVideo` | A single big number |
+ | `callout` | `CalloutBox` | `text` | `callout_type` (info/warning/tip/quote), `title`, `backgroundVideo` | Boxed message with bullets |
+ | `comparison` | `ComparisonCard` | `leftLabel`, `leftValue`, `rightLabel`, `rightValue` | `title`, `backgroundColor` | Side-by-side compare |
+@@ -36,6 +38,7 @@ When you add a new component, append it here and in `src/components/index.ts`.
+ | `stat_reveal` | `StatReveal` | `text` | `subtitle`, `accentColor`, `position` | Corner stat badge |
+ | `hero_title` | `HeroTitle` (as overlay) | `text` | `subtitle` | Full-frame title overlay |
+ | **`provider_chip`** | **`ProviderChip`** | **`providers`** (list of strings) | **`cycleSeconds`, `position`, `accentColor`, `label`** | **Rotating badge that cycles through provider names — used in AI-generated-motion scenes to show which model produced the clip** |
++| **`lyric_band`** | **`LyricBand`** | **`text`** (primary line) | **`subtitle` (secondary line, smaller/dimmer), `bottomY` (0..1, default 0.84), `accentColor`** | **Bilingual lyric line for warm photo montages — primary line (e.g. Javanese) over a lighter secondary line (e.g. Malay), Playfair italic, bottom band with a soft scrim. Fades in/out within its Sequence.** |
+ 
+ ---
+ 

@@ -1,0 +1,77 @@
+diff --git a/remotion-composer/src/Explainer.tsx b/remotion-composer/src/Explainer.tsx
+index fb55dde..f8b7268 100644
+--- a/remotion-composer/src/Explainer.tsx
++++ b/remotion-composer/src/Explainer.tsx
+@@ -46,6 +46,9 @@ import type { TerminalStep } from "./components/TerminalScene";
+ import { ScreenshotScene } from "./components/ScreenshotScene";
+ import type { ScreenshotStep } from "./components/ScreenshotScene";
+ import { ProviderChip } from "./components/ProviderChip";
++import { LyricBand } from "./components/LyricBand";
++import { PhotoScene } from "./components/PhotoScene";
++import { TitleCard } from "./components/TitleCard";
+ import type { ParticleType } from "./components/ParticleOverlay";
+ import { resolveTheme, type ThemeConfig, DEFAULT_THEME } from "./Root";
+ 
+@@ -271,13 +274,15 @@ interface Cut {
+ }
+ 
+ interface Overlay {
+-  type: "section_title" | "stat_reveal" | "hero_title" | "provider_chip";
++  type: "section_title" | "stat_reveal" | "hero_title" | "provider_chip" | "lyric_band";
+   in_seconds: number;
+   out_seconds: number;
+   text?: string;
+   subtitle?: string;
+   accentColor?: string;
+   position?: string;
++  // lyric_band — vertical center of the band, 0..1 (default 0.84)
++  bottomY?: number;
+   // provider_chip
+   providers?: string[];
+   cycleSeconds?: number;
+@@ -597,6 +602,16 @@ const SceneRenderer: React.FC<{ cut: Cut; theme: ThemeConfig }> = ({ cut, theme
+       <HeroTitle title={cut.text} subtitle={cut.heroSubtitle || cut.subtitle} />
+     );
+   }
++  if (cut.type === "title_card" && cut.title) {
++    return maybeWrapWithBg(
++      <TitleCard
++        title={cut.title}
++        subtitle={cut.subtitle}
++        accentColor={cut.accentColor || theme.accentColor}
++        backgroundColor={cut.backgroundColor || theme.backgroundColor}
++      />
++    );
++  }
+   if (cut.type === "terminal_scene" && cut.steps) {
+     return maybeWrapWithBg(
+       <TerminalScene
+@@ -708,6 +723,11 @@ const SceneRenderer: React.FC<{ cut: Cut; theme: ThemeConfig }> = ({ cut, theme
+   // --- Media types (image / video fallback) ---
+   const animation = cut.animation || cut.transform?.animation;
+ 
++  // Warm memory-book still: blur-fill + contain so faces are never cropped.
++  if (cut.type === "photo" && cut.source) {
++    return maybeWrapWithBg(<PhotoScene src={cut.source} animation={animation} />);
++  }
++
+   if (cut.source && isImage(cut.source)) {
+     return maybeWrapWithBg(<ImageScene src={cut.source} animation={animation} />);
+   }
+@@ -753,6 +773,16 @@ const OverlayRenderer: React.FC<{ overlay: Overlay }> = ({ overlay }) => {
+   if (overlay.type === "hero_title") {
+     return <HeroTitle title={overlay.text} subtitle={overlay.subtitle} />;
+   }
++  if (overlay.type === "lyric_band" && overlay.text) {
++    return (
++      <LyricBand
++        text={overlay.text}
++        subtitle={overlay.subtitle}
++        bottomY={overlay.bottomY}
++        accentColor={overlay.accentColor}
++      />
++    );
++  }
+   if (overlay.type === "provider_chip" && overlay.providers) {
+     return (
+       <ProviderChip

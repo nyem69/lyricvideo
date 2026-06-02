@@ -1,0 +1,14 @@
+diff --git a/remotion-composer/src/components/index.ts b/remotion-composer/src/components/index.ts
+index cc4976e..dc111c8 100644
+--- a/remotion-composer/src/components/index.ts
++++ b/remotion-composer/src/components/index.ts
+@@ -13,6 +13,9 @@ export { AnimeScene } from "./AnimeScene";
+ export { TerminalScene } from "./TerminalScene";
+ export { ScreenshotScene } from "./ScreenshotScene";
+ export { ProviderChip } from "./ProviderChip";
++export { LyricBand } from "./LyricBand";
++export { PhotoScene } from "./PhotoScene";
++export { TitleCard } from "./TitleCard";
+ export type { ParticleType } from "./ParticleOverlay";
+ export type { CameraMotion, AnimeSceneProps } from "./AnimeScene";
+ export type { TerminalStep } from "./TerminalScene";
