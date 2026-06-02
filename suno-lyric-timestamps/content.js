@@ -67,7 +67,7 @@ function extractLyricTimestamps() {
   let currentWord = '';
   let currentWordTs = null;
   for (const t of rawTokens) {
-    if (t.text === '\\n') {
+    if (t.text === '\n') {
       if (currentWord) {
         currentLine.push({ word: currentWord, timestamp: currentWordTs });
         currentWord = '';
@@ -92,7 +92,7 @@ function extractLyricTimestamps() {
   const plainText = lines.map(line => {
     if (line.length === 0) return '';
     return line.map(w => `${w.timestamp ? '[' + w.timestamp + '] ' : ''}${w.word}`).join(' ');
-  }).join('\\n');
+  }).join('\n');
   // 10. Format as SRT subtitle output (word-level)
   let srtIndex = 1;
   const srtLines = [];
@@ -100,15 +100,15 @@ function extractLyricTimestamps() {
   for (let i = 0; i < allWords.length; i++) {
     const w = allWords[i];
     const nextTs = allWords[i + 1]?.timestamp;
-    const toSrtTime = (ts) => ts.replace('.', ',').replace(/^(\\d{2}):/, '00:$1:');
+    const toSrtTime = (ts) => ts.replace('.', ',').replace(/^(\d{2}):/, '00:$1:');
     const endTs = nextTs ? toSrtTime(nextTs) : toSrtTime(w.timestamp); // same if last
-    srtLines.push(`${srtIndex++}\\n${toSrtTime(w.timestamp)} --> ${endTs}\\n${w.word}\\n`);
+    srtLines.push(`${srtIndex++}\n${toSrtTime(w.timestamp)} --> ${endTs}\n${w.word}\n`);
   }
   return {
     success: true,
     tokenCount: rawTokens.filter(t => t.timestamp).length,
     plainText,
-    srt: srtLines.join('\\n'),
+    srt: srtLines.join('\n'),
     lines,
   };
 }
