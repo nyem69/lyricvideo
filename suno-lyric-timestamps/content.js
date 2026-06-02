@@ -10,16 +10,29 @@ function extractLyricTimestamps() {
   if (!pc || typeof pc.seek !== 'function') {
     return { error: 'Playback controller not available. Try refreshing the page.' };
   }
-  // 3. Walk React fiber tree to find the token array with beat timings
+  // 3. Walk the React fiber tree to find the token array with beat timings.
+  //    Suno periodically reshuffles its component tree and hook order, so the
+  //    old hard-coded "up 4 fibers, hook index 22" stopped matching (the array
+  //    has since moved to hook 27). Instead we auto-locate it: climb a handful
+  //    of ancestor fibers and scan each one's hook chain for an array that
+  //    looks like the syllable tokens — objects with a `text` field, at least
+  //    one carrying a `timing`. This survives index drift across Suno updates.
   const fiberKey = Object.keys(lyricsEl).find(k => k.startsWith('__reactFiber'));
   if (!fiberKey) return { error: 'React fiber not found.' };
+  function looksLikeTokens(v) {
+    return Array.isArray(v) && v.length > 20
+      && v.every(x => x && typeof x === 'object' && 'text' in x)
+      && v.some(x => x.timing);
+  }
+  let tokens = null;
   let node = lyricsEl[fiberKey];
-  for (let i = 0; i < 4; i++) node = node.return;
-  // State index 22 holds the 504-token array with beat timings
-  let s = node.memoizedState;
-  for (let i = 0; i < 22; i++) s = s.next;
-  const tokens = s.memoizedState;
-  if (!Array.isArray(tokens) || !tokens[0]?.timing) {
+  for (let up = 0; up < 12 && node && !tokens; up++, node = node.return) {
+    let s = node.memoizedState;
+    for (let idx = 0; s && idx < 60; idx++, s = s.next) {
+      if (looksLikeTokens(s.memoizedState)) { tokens = s.memoizedState; break; }
+    }
+  }
+  if (!tokens) {
     return { error: 'Token data not found. Make sure the editor is fully loaded.' };
   }
   // 4. Save current playhead position so we can restore it
