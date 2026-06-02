@@ -96,13 +96,15 @@ Reused as-is: `Editor/LyricsImport.svelte`, `Player/Controls.svelte`,
 ## Data Model
 
 ```ts
-// Photo metadata — blob lives in IndexedDB under assetKey
+// Photo metadata — the DOWNSCALED, render-safe blob lives in IndexedDB under assetKey.
+// v1 does NOT keep the original upload: we downscale on import and store only the
+// canvas-safe blob, so restore/export are predictable and giant photos can't blow memory.
 type Photo = {
   id: string;            // nanoid
   name: string;
-  width: number;         // post-downscale, canvas-safe
+  width: number;         // post-downscale (matches the stored blob)
   height: number;
-  assetKey: string;      // IndexedDB key for the Blob
+  assetKey: string;      // IndexedDB key for the downscaled Blob
 };
 
 // One on-screen photo cut, computed by timeline.ts
@@ -154,9 +156,12 @@ type MontageProject = {
 One band per lyric line. Mirrors the skill's rule:
 
 - `start` = first word onset of the line.
-- `end` = `min(nextLineOnset - 0.25, lastWordOfLine + 1.8)` so lines hand off and
-  fade across instrumental gaps.
-- Last line: `end = lastWord + 1.8`.
+- `computedEnd` = `min(nextLineOnset - 0.25, lastWordOfLine + 1.8)` so lines hand
+  off and fade across instrumental gaps.
+- Last line: `computedEnd = lastWord + 1.8`.
+- **Minimum-visible guard (dense/overlapping lyrics):**
+  `end = max(start + 0.4, computedEnd)`. Prevents zero/negative-duration bands
+  when fast lines push `nextLineOnset - 0.25` at or before `start`.
 
 ### `timeline.ts` — `(nPhotos, songDuration, bands, settings) -> PhotoCut[]`
 
@@ -168,6 +173,11 @@ One band per lyric line. Mirrors the skill's rule:
 - `kenBurns` cycles through the four variants by index.
 - `openingDuration` / `tailDuration` are **inputs**, never hardcoded — keeps the
   function pure and free of style assumptions.
+
+**`PhotoCut[]` is derived, not persisted (v1).** Cuts are recomputed from
+`photoOrder` + `songDuration` + `settings` + `bands` on load and on any change.
+`MontageProject` deliberately stores none of them — there is no per-photo manual
+timing in v1, so persisting cuts would only risk drift from their inputs.
 
 ## Renderer — `MontageRenderer`
 
@@ -194,9 +204,9 @@ band layout + scrim + text wrapping, title/credit cards, safe margins.
 
 ### `image-cache.ts`
 
-- Decode uploaded files to `ImageBitmap`, **downscaling to canvas-safe
-  dimensions** (≤ render size) before storing/rendering — bounds memory and
-  avoids giant-image jank.
+- On import, **downscale to canvas-safe dimensions** (≤ render size) and store
+  *that* blob in IDB (see `Photo` above — the original is not kept). Decode the
+  stored blob to `ImageBitmap` for rendering.
 - Sliding window: keep bitmaps for cuts near the current time; release far ones.
 
 ## Export — `ExportController`
@@ -210,7 +220,9 @@ recording:
    audio track from a WebAudio `MediaStreamDestination` (reliable mixing, not raw
    `audio.captureStream()`).
 4. Start `MediaRecorder` (codec feature-detected: VP9 → VP8 → default).
-5. Play; drive `renderAt` each frame to `songDuration`.
+5. Play; drive `renderAt` from an **export-local clock** — elapsed recording time
+   / `AudioContext.currentTime`, **not** `playerStore.currentTime` — so export is
+   deterministic and fully decoupled from UI playback. Run to `songDuration`.
 6. Stop recorder at duration; assemble Blob; trigger download (`<song>.webm`).
 7. Restore saved player state.
 
