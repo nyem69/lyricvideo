@@ -59,6 +59,8 @@ function extractLyricTimestamps() {
       : token.timing.startBeats;
     return { index, text: token.text, timestamp: getTimestamp(beats) };
   });
+  const timedTokenCount = rawTokens.filter(t => t.timestamp).length;
+  const newlineTokenCount = rawTokens.filter(t => t.text === '\n').length;
   // 7. Restore playhead
   pc.seek(originalBeats);
   // 8. Group syllables into words, words into lines
@@ -97,16 +99,29 @@ function extractLyricTimestamps() {
   let srtIndex = 1;
   const srtLines = [];
   const allWords = lines.flat().filter(w => w.timestamp);
+  // Hoisted out of the loop so the post-loop sanity check can reach it.
+  const toSrtTime = (ts) => ts.replace('.', ',').replace(/^(\d{2}):/, '00:$1:');
   for (let i = 0; i < allWords.length; i++) {
     const w = allWords[i];
     const nextTs = allWords[i + 1]?.timestamp;
-    const toSrtTime = (ts) => ts.replace('.', ',').replace(/^(\d{2}):/, '00:$1:');
     const endTs = nextTs ? toSrtTime(nextTs) : toSrtTime(w.timestamp); // same if last
     srtLines.push(`${srtIndex++}\n${toSrtTime(w.timestamp)} --> ${endTs}\n${w.word}\n`);
   }
+  // Guard against escape regressions that silently collapse lines or emit invalid SRT.
+  const srtTimePattern = /^\d{2}:\d{2}:\d{2},\d{3}$/;
+  const firstSrtTimestamp = allWords[0]?.timestamp ? toSrtTime(allWords[0].timestamp) : null;
+  if (newlineTokenCount > 0 && lines.length <= 1) {
+    return { error: `Sanity check failed: found ${newlineTokenCount} newline tokens but produced ${lines.length} line.` };
+  }
+  if (newlineTokenCount > 0 && !plainText.includes('\n')) {
+    return { error: 'Sanity check failed: newline tokens were found but plaintext has no line breaks.' };
+  }
+  if (firstSrtTimestamp && !srtTimePattern.test(firstSrtTimestamp)) {
+    return { error: `Sanity check failed: invalid SRT timestamp "${firstSrtTimestamp}".` };
+  }
   return {
     success: true,
-    tokenCount: rawTokens.filter(t => t.timestamp).length,
+    tokenCount: timedTokenCount,
     plainText,
     srt: srtLines.join('\n'),
     lines,
