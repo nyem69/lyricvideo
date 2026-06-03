@@ -40,6 +40,7 @@
     renderer.setStyle(getMontageStyle(montageStore.styleId));
     renderer.setSettings(montageStore.settings);
     renderer.setTitle(montageStore.title);
+    renderer.setTextStyles(montageStore.titleStyle, montageStore.bandStyle);
 
     const audioBlob = montageStore.audioKey ? await getAsset(montageStore.audioKey) : null;
 

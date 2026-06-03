@@ -1,5 +1,14 @@
 // src/lib/renderer/montage-renderer.ts
-import type { Photo, PhotoCut, LyricBand, MontageStyle, MontageSettings } from '$lib/montage/model';
+import type {
+  Photo,
+  PhotoCut,
+  LyricBand,
+  MontageStyle,
+  MontageSettings,
+  TextStyle,
+} from '$lib/montage/model';
+import { DEFAULT_TITLE_STYLE, DEFAULT_BAND_STYLE } from '$lib/montage/model';
+import { getFontFamily } from '$lib/montage/fonts';
 import { ImageCache } from './image-cache';
 
 interface RendererDeps {
@@ -18,6 +27,10 @@ export class MontageRenderer {
   private style!: MontageStyle;
   private settings!: MontageSettings;
   private title = '';
+  // Resolved text styling passed in by the caller (never read from the store).
+  // Seeded with defaults so a renderAt before setTextStyles still draws sanely.
+  private titleStyle: TextStyle = DEFAULT_TITLE_STYLE;
+  private bandStyle: TextStyle = DEFAULT_BAND_STYLE;
 
   constructor({ canvas, imageCache }: RendererDeps) {
     this.canvas = canvas;
@@ -44,6 +57,10 @@ export class MontageRenderer {
   }
   setTitle(title: string) {
     this.title = title;
+  }
+  setTextStyles(title: TextStyle, band: TextStyle) {
+    this.titleStyle = title;
+    this.bandStyle = band;
   }
   getCanvas() {
     return this.canvas;
@@ -153,9 +170,9 @@ export class MontageRenderer {
   }
 
   private drawBand(band: LyricBand, W: number, H: number) {
-    const { ctx, style } = this;
-    const fontPx = Math.round(H * 0.05);
-    ctx.font = `400 ${fontPx}px ${style.bandFontFamily}`;
+    const { ctx, bandStyle } = this;
+    const fontPx = Math.round(H * bandStyle.sizePct);
+    ctx.font = `${bandStyle.fontWeight} ${fontPx}px ${getFontFamily(bandStyle.fontFamilyId).stack}`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
@@ -170,7 +187,7 @@ export class MontageRenderer {
     ctx.lineJoin = 'round';
     ctx.lineWidth = fontPx * 0.07;
     ctx.strokeStyle = 'rgba(0,0,0,0.85)';
-    ctx.fillStyle = style.bandColor;
+    ctx.fillStyle = bandStyle.color;
     lines.forEach((ln, i) => {
       const y = bottomY - blockH + i * lineH + lineH / 2;
       // Pass 1: outline carries the shadow (densest halo around the glyph edge).
@@ -188,13 +205,13 @@ export class MontageRenderer {
   }
 
   private drawTitleCard(title: string, W: number, H: number) {
-    const { ctx, style } = this;
+    const { ctx, style, titleStyle } = this;
     ctx.save();
     ctx.fillStyle = style.background;
     ctx.fillRect(0, 0, W, H);
-    const fontPx = Math.round(H * 0.08);
-    ctx.font = `700 ${fontPx}px ${style.titleFontFamily}`;
-    ctx.fillStyle = style.bandColor;
+    const fontPx = Math.round(H * titleStyle.sizePct);
+    ctx.font = `${titleStyle.fontWeight} ${fontPx}px ${getFontFamily(titleStyle.fontFamilyId).stack}`;
+    ctx.fillStyle = titleStyle.color;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(title, W / 2, H / 2 - fontPx * 0.3);

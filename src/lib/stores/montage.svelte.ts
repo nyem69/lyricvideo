@@ -1,7 +1,8 @@
 // src/lib/stores/montage.svelte.ts
 import { nanoid } from 'nanoid';
-import type { Photo, MontageProject } from '$lib/montage/model';
-import { DEFAULT_SETTINGS } from '$lib/montage/model';
+import type { Photo, MontageProject, TextStyle } from '$lib/montage/model';
+import { DEFAULT_SETTINGS, DEFAULT_TITLE_STYLE, DEFAULT_BAND_STYLE } from '$lib/montage/model';
+import { coerceTextStyle } from '$lib/montage/fonts';
 import { deriveBands } from '$lib/montage/bands';
 import { buildTimeline } from '$lib/montage/timeline';
 import { parseSunoTimestamps } from '$lib/parser/suno';
@@ -16,6 +17,10 @@ class MontageStore {
   photos = $state<Photo[]>([]);
   lyricsText = $state('');
   videoTitle = $state('');
+  // Non-optional in the live store (always a valid TextStyle); persisted as
+  // optional and back-filled from defaults on restore for older projects.
+  titleStyle = $state<TextStyle>({ ...DEFAULT_TITLE_STYLE });
+  bandStyle = $state<TextStyle>({ ...DEFAULT_BAND_STYLE });
   styleId = $state('warm-memory');
   settings = $state({ ...DEFAULT_SETTINGS });
   audioKey = $state<string | undefined>(undefined);
@@ -139,6 +144,18 @@ class MontageStore {
     this.persist();
   }
 
+  setTitleStyle(patch: Partial<TextStyle>) {
+    // coerceTextStyle re-validates the weight against the (possibly new) family
+    // so a family change never leaves an unsupported weight behind.
+    this.titleStyle = coerceTextStyle({ ...this.titleStyle, ...patch });
+    this.persist();
+  }
+
+  setBandStyle(patch: Partial<TextStyle>) {
+    this.bandStyle = coerceTextStyle({ ...this.bandStyle, ...patch });
+    this.persist();
+  }
+
   private persist() {
     const project: MontageProject = {
       version: 1,
@@ -148,6 +165,8 @@ class MontageStore {
       songDuration: this.songDuration,
       lyricsText: this.lyricsText,
       videoTitle: this.videoTitle,
+      titleStyle: this.titleStyle,
+      bandStyle: this.bandStyle,
       styleId: this.styleId,
       settings: this.settings,
       updatedAt: Date.now(),
@@ -163,6 +182,10 @@ class MontageStore {
       this.photos = project.photoOrder.map((id) => byId.get(id)).filter((p): p is Photo => !!p);
       this.lyricsText = project.lyricsText;
       this.videoTitle = project.videoTitle ?? '';
+      // Back-fill + coerce so an older project (or a hand-edited blob with a
+      // stale family/weight combo) always lands as a valid TextStyle.
+      this.titleStyle = coerceTextStyle({ ...DEFAULT_TITLE_STYLE, ...project.titleStyle });
+      this.bandStyle = coerceTextStyle({ ...DEFAULT_BAND_STYLE, ...project.bandStyle });
       this.styleId = project.styleId;
       this.settings = project.settings;
       this.audioKey = project.audioKey;
