@@ -1,0 +1,67 @@
+<!-- src/routes/montage/+page.svelte -->
+<script lang="ts">
+  import { onMount } from 'svelte';
+  import Controls from '$lib/components/Player/Controls.svelte';
+  import PhotoTray from '$lib/components/Montage/PhotoTray.svelte';
+  import MontageStage from '$lib/components/Montage/MontageStage.svelte';
+  import ExportButton from '$lib/components/Montage/ExportButton.svelte';
+  import { montageStore } from '$lib/stores/montage.svelte';
+
+  // MontageStage hands its canvas up via onCanvasReady; ExportButton reads it
+  // back through getCanvas(). The {#if} below ensures it's set before export.
+  let canvasEl = $state<HTMLCanvasElement>();
+  let audioInput: HTMLInputElement;
+
+  onMount(() => {
+    montageStore.restore();
+  });
+
+  function onAudio(e: Event) {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (file) montageStore.loadAudio(file);
+  }
+</script>
+
+<div class="min-h-screen bg-surface text-white">
+  <header class="flex items-center justify-between px-6 py-4 border-b border-gold/10">
+    <h1 class="text-gold text-lg tracking-[0.3em] uppercase" style="font-family:'Raleway',sans-serif">Photo Montage</h1>
+    <a href="{import.meta.env.BASE_URL}" class="text-gold/40 hover:text-gold text-xs uppercase tracking-wider">Lyrics-only mode →</a>
+  </header>
+
+  <div class="flex flex-col lg:flex-row gap-6 p-6">
+    <aside class="w-full lg:w-96 flex-shrink-0 flex flex-col gap-6">
+      <PhotoTray />
+
+      <div class="flex flex-col gap-2">
+        <span class="text-sm tracking-wider text-gold/60 uppercase" style="font-family:'Raleway',sans-serif">Song</span>
+        <input bind:this={audioInput} type="file" accept="audio/*" class="hidden" onchange={onAudio} />
+        <button
+          onclick={() => audioInput.click()}
+          class="bg-gold/15 border border-gold/30 text-gold px-4 py-2 text-sm tracking-widest uppercase rounded cursor-pointer hover:bg-gold/30 transition-all"
+          style="font-family:'Raleway',sans-serif"
+        >
+          Add Song
+        </button>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <span class="text-sm tracking-wider text-gold/60 uppercase" style="font-family:'Raleway',sans-serif">Lyrics (timestamps)</span>
+        <textarea
+          value={montageStore.lyricsText}
+          oninput={(e) => montageStore.importLyrics((e.target as HTMLTextAreaElement).value)}
+          rows="8"
+          placeholder={"[00:11.162] Sembah [00:11.392] berlalu..."}
+          class="w-full bg-white/5 border border-gold/20 rounded px-3 py-2 text-sm text-white/80 font-mono placeholder:text-white/20 focus:outline-none focus:border-gold/50 resize-y"
+        ></textarea>
+      </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col gap-4">
+      <MontageStage onCanvasReady={(c) => (canvasEl = c)} />
+      <Controls hideAudioUpload />
+      {#if canvasEl && montageStore.ready}
+        <ExportButton getCanvas={() => canvasEl} />
+      {/if}
+    </main>
+  </div>
+</div>

@@ -2,7 +2,11 @@
   import { playerStore } from '$lib/stores/player.svelte';
   import { Play, Pause, RotateCcw, Upload } from '@lucide/svelte';
 
-  let audioInput: HTMLInputElement;
+  // Montage route hides this: there, audio must go through montageStore.loadAudio
+  // (persisted to IDB) — playerStore.loadAudio alone would be lost on refresh.
+  let { hideAudioUpload = false }: { hideAudioUpload?: boolean } = $props();
+
+  let audioInput = $state<HTMLInputElement>();
 
   function handleAudioUpload(e: Event) {
     const input = e.target as HTMLInputElement;
@@ -66,20 +70,22 @@
     {playerStore.formattedDuration}
   </span>
 
-  <button
-    onclick={() => audioInput.click()}
-    class="text-gold/60 hover:text-gold transition-colors cursor-pointer"
-    aria-label="Upload audio"
-  >
-    <Upload size={16} />
-  </button>
-  <input
-    bind:this={audioInput}
-    type="file"
-    accept="audio/*"
-    onchange={handleAudioUpload}
-    class="hidden"
-  />
+  {#if !hideAudioUpload}
+    <button
+      onclick={() => audioInput?.click()}
+      class="text-gold/60 hover:text-gold transition-colors cursor-pointer"
+      aria-label="Upload audio"
+    >
+      <Upload size={16} />
+    </button>
+    <input
+      bind:this={audioInput}
+      type="file"
+      accept="audio/*"
+      onchange={handleAudioUpload}
+      class="hidden"
+    />
+  {/if}
 </div>
 
 <svelte:document
