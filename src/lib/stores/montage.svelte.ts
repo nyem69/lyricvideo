@@ -15,6 +15,7 @@ export const PHOTO_SOFT_CAP = 50;
 class MontageStore {
   photos = $state<Photo[]>([]);
   lyricsText = $state('');
+  videoTitle = $state('');
   styleId = $state('warm-memory');
   settings = $state({ ...DEFAULT_SETTINGS });
   audioKey = $state<string | undefined>(undefined);
@@ -39,7 +40,9 @@ class MontageStore {
       this.settings
     );
   });
-  readonly title = $derived(this.song?.title || 'Montage');
+  // Title is fully user-owned (no longer derived from the parsed song header).
+  // Blank falls back to 'Montage' so the title card / export filename are never empty.
+  readonly title = $derived(this.videoTitle.trim() || 'Montage');
   // The montage's true rendered length = the last cut's end (already accounts
   // for opening/tail/bands). Single source of truth for the export duration so
   // the recording matches the rendered content exactly (no blank tail / cut-off).
@@ -131,6 +134,11 @@ class MontageStore {
     this.persist();
   }
 
+  setTitle(text: string) {
+    this.videoTitle = text;
+    this.persist();
+  }
+
   private persist() {
     const project: MontageProject = {
       version: 1,
@@ -139,6 +147,7 @@ class MontageStore {
       audioKey: this.audioKey,
       songDuration: this.songDuration,
       lyricsText: this.lyricsText,
+      videoTitle: this.videoTitle,
       styleId: this.styleId,
       settings: this.settings,
       updatedAt: Date.now(),
@@ -153,6 +162,7 @@ class MontageStore {
       const byId = new Map(project.photos.map((p) => [p.id, p]));
       this.photos = project.photoOrder.map((id) => byId.get(id)).filter((p): p is Photo => !!p);
       this.lyricsText = project.lyricsText;
+      this.videoTitle = project.videoTitle ?? '';
       this.styleId = project.styleId;
       this.settings = project.settings;
       this.audioKey = project.audioKey;

@@ -164,19 +164,27 @@ export class MontageRenderer {
     const bottomY = H * 0.86;
     const blockH = lines.length * lineH;
 
-    // scrim
-    const scrimTop = bottomY - blockH - fontPx * 0.6;
-    ctx.fillStyle = style.scrim;
-    ctx.fillRect(0, scrimTop, W, H - scrimTop);
-
+    // No scrim bar — legibility comes from a soft drop shadow plus a thin dark
+    // glyph outline, so the text reads over bright/busy photo areas (e.g. sky).
+    ctx.save();
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = fontPx * 0.07;
+    ctx.strokeStyle = 'rgba(0,0,0,0.85)';
     ctx.fillStyle = style.bandColor;
-    ctx.shadowColor = 'rgba(0,0,0,0.6)';
-    ctx.shadowBlur = fontPx * 0.4;
     lines.forEach((ln, i) => {
       const y = bottomY - blockH + i * lineH + lineH / 2;
+      // Pass 1: outline carries the shadow (densest halo around the glyph edge).
+      ctx.shadowColor = 'rgba(0,0,0,0.7)';
+      ctx.shadowBlur = fontPx * 0.5;
+      ctx.shadowOffsetY = fontPx * 0.04;
+      ctx.strokeText(ln, W / 2, y);
+      // Pass 2: crisp light fill on top, no shadow (avoids a muddy double halo).
+      ctx.shadowColor = 'transparent';
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetY = 0;
       ctx.fillText(ln, W / 2, y);
     });
-    ctx.shadowBlur = 0;
+    ctx.restore();
   }
 
   private drawTitleCard(title: string, W: number, H: number) {
