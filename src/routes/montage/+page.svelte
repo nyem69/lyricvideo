@@ -3,6 +3,7 @@
   import { onMount } from 'svelte';
   import Controls from '$lib/components/Player/Controls.svelte';
   import PhotoTray from '$lib/components/Montage/PhotoTray.svelte';
+  import TextStylePanel from '$lib/components/Montage/TextStylePanel.svelte';
   import MontageStage from '$lib/components/Montage/MontageStage.svelte';
   import ExportButton from '$lib/components/Montage/ExportButton.svelte';
   import { montageStore } from '$lib/stores/montage.svelte';
@@ -65,6 +66,8 @@
           class="w-full bg-white/5 border border-gold/20 rounded px-3 py-2 text-sm text-white/80 font-mono placeholder:text-white/20 focus:outline-none focus:border-gold/50 resize-y"
         ></textarea>
       </div>
+
+      <TextStylePanel />
     </aside>
 
     <main class="flex-1 flex flex-col gap-4">

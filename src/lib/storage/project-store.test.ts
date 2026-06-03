@@ -7,7 +7,12 @@ import {
   localStorageBackend,
   type KvBackend,
 } from './project-store';
-import { DEFAULT_SETTINGS, type MontageProject } from '$lib/montage/model';
+import {
+  DEFAULT_SETTINGS,
+  DEFAULT_TITLE_STYLE,
+  DEFAULT_BAND_STYLE,
+  type MontageProject,
+} from '$lib/montage/model';
 
 function memoryBackend(): KvBackend {
   const map = new Map<string, string>();
@@ -66,6 +71,28 @@ describe('project-store', () => {
     const loaded = loadProject(b);
     expect(loaded).not.toBeNull();
     expect(loaded?.videoTitle).toBeUndefined();
+  });
+
+  it('round-trips the optional title/band text styles', () => {
+    const b = memoryBackend();
+    const withStyles: MontageProject = {
+      ...sample,
+      titleStyle: { ...DEFAULT_TITLE_STYLE, fontFamilyId: 'bebas', color: '#ff0066' },
+      bandStyle: { ...DEFAULT_BAND_STYLE, fontWeight: 600, sizePct: 0.07 },
+    };
+    saveProject(withStyles, b);
+    const loaded = loadProject(b);
+    expect(loaded?.titleStyle).toEqual(withStyles.titleStyle);
+    expect(loaded?.bandStyle).toEqual(withStyles.bandStyle);
+  });
+
+  it('still loads a project saved before text styles existed', () => {
+    const b = memoryBackend();
+    saveProject(sample, b); // no titleStyle/bandStyle
+    const loaded = loadProject(b);
+    expect(loaded).not.toBeNull();
+    expect(loaded?.titleStyle).toBeUndefined();
+    expect(loaded?.bandStyle).toBeUndefined();
   });
 
   it('returns null on a v1 blob missing required fields', () => {

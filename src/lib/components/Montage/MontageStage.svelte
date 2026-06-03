@@ -6,6 +6,7 @@
   import { MontageRenderer } from '$lib/renderer/montage-renderer';
   import { ImageCache } from '$lib/renderer/image-cache';
   import { getMontageStyle } from '$lib/montage/style';
+  import { getFontFamily, ensureFontLoaded } from '$lib/montage/fonts';
   import { getAsset } from '$lib/storage/asset-store';
 
   interface Props {
@@ -39,6 +40,7 @@
         renderer.setStyle(getMontageStyle(montageStore.styleId));
         renderer.setSettings(montageStore.settings);
         renderer.setTitle(montageStore.title);
+        renderer.setTextStyles(montageStore.titleStyle, montageStore.bandStyle);
         await renderer.warm(playerStore.currentTime);
         // re-check after the await: onDestroy may have fired while warm() was pending
         if (!destroyed && renderer) renderer.renderAt(playerStore.currentTime);
@@ -54,6 +56,15 @@
     renderer = null;
     cache?.clear(); // close decoded ImageBitmaps (GPU memory)
     cache = null;
+  });
+
+  // Preload whichever families/weights the styles currently use, so a freshly
+  // picked font isn't drawn as a system fallback for the first frame or two.
+  $effect(() => {
+    const t = montageStore.titleStyle;
+    const b = montageStore.bandStyle;
+    void ensureFontLoaded(getFontFamily(t.fontFamilyId).stack, t.fontWeight);
+    void ensureFontLoaded(getFontFamily(b.fontFamilyId).stack, b.fontWeight);
   });
 </script>
 

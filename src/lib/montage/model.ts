@@ -37,6 +37,30 @@ export const DEFAULT_SETTINGS: MontageSettings = {
   fps: 30,
 };
 
+// User-editable text styling for the title card and the lyric band. Stored
+// separately from MontageStyle (which owns palette/motion), so the curated
+// style and the per-project text tweaks evolve independently.
+export interface TextStyle {
+  fontFamilyId: string; // id into the fonts.ts catalog
+  fontWeight: number;   // must be a weight the family supports (see coerceWeight)
+  sizePct: number;      // glyph height as a fraction of the 1080p frame height
+  color: string;        // hex fill
+}
+
+export const DEFAULT_TITLE_STYLE: TextStyle = {
+  fontFamilyId: 'playfair',
+  fontWeight: 700,
+  sizePct: 0.08,
+  color: '#fdf6e3',
+};
+
+export const DEFAULT_BAND_STYLE: TextStyle = {
+  fontFamilyId: 'playfair',
+  fontWeight: 400,
+  sizePct: 0.05,
+  color: '#fdf6e3',
+};
+
 export interface MontageStyle {
   id: string;
   name: string;
@@ -58,6 +82,8 @@ export interface MontageProject {
   songDuration?: number;   // seconds
   lyricsText: string;      // raw imported timestamp text
   videoTitle?: string;     // user-set title card text; absent on pre-title saves
+  titleStyle?: TextStyle;  // absent on saves predating text-style controls
+  bandStyle?: TextStyle;   // absent on saves predating text-style controls
   styleId: string;
   settings: MontageSettings;
   updatedAt: number;
