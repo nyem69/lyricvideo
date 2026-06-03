@@ -74,6 +74,16 @@ export class ImageCache {
     return bmp;
   }
 
+  /**
+   * Synchronous read of an already-decoded bitmap. Never triggers a load and
+   * has no side effects. Returns null if the key isn't decoded yet OR was
+   * evicted (and thus .close()d) — so a renderer reading via peek() can never
+   * hold a stale, closed bitmap. Pair with warm()/get() to populate first.
+   */
+  peek(key: string): ImageBitmap | null {
+    return this.cache.get(key) ?? null;
+  }
+
   clear(): void {
     for (const b of this.cache.values()) b.close();
     this.cache.clear();
