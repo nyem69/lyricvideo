@@ -30,6 +30,17 @@
 
   <div class="flex flex-col lg:flex-row gap-6 p-6">
     <aside class="w-full lg:w-96 flex-shrink-0 flex flex-col gap-6">
+      <div class="flex flex-col gap-2">
+        <span class="text-sm tracking-wider text-gold/60 uppercase" style="font-family:'Raleway',sans-serif">Video Title</span>
+        <input
+          type="text"
+          value={montageStore.videoTitle}
+          oninput={(e) => montageStore.setTitle((e.target as HTMLInputElement).value)}
+          placeholder="Montage"
+          class="w-full bg-white/5 border border-gold/20 rounded px-3 py-2 text-sm text-white/80 placeholder:text-white/20 focus:outline-none focus:border-gold/50"
+        />
+      </div>
+
       <PhotoTray />
 
       <div class="flex flex-col gap-2">

@@ -51,6 +51,23 @@ describe('project-store', () => {
     expect(loadProject(b)).toBeNull();
   });
 
+  it('round-trips the optional videoTitle field', () => {
+    const b = memoryBackend();
+    const withTitle: MontageProject = { ...sample, videoTitle: 'Our Wedding' };
+    saveProject(withTitle, b);
+    expect(loadProject(b)?.videoTitle).toBe('Our Wedding');
+  });
+
+  it('still loads a project saved before videoTitle existed', () => {
+    // videoTitle is optional; a pre-existing v1 blob lacks it entirely and
+    // must remain valid (the store back-fills it to '' on restore).
+    const b = memoryBackend();
+    saveProject(sample, b); // sample has no videoTitle
+    const loaded = loadProject(b);
+    expect(loaded).not.toBeNull();
+    expect(loaded?.videoTitle).toBeUndefined();
+  });
+
   it('returns null on a v1 blob missing required fields', () => {
     const b = memoryBackend();
     // version passes the gate, but `photos`/`settings`/etc. are absent —

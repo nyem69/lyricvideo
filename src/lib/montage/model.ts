@@ -57,6 +57,7 @@ export interface MontageProject {
   audioKey?: string;       // IndexedDB key for the audio blob
   songDuration?: number;   // seconds
   lyricsText: string;      // raw imported timestamp text
+  videoTitle?: string;     // user-set title card text; absent on pre-title saves
   styleId: string;
   settings: MontageSettings;
   updatedAt: number;
