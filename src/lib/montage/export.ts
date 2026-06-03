@@ -54,7 +54,9 @@ export async function exportMontage(opts: ExportOptions): Promise<Blob> {
     recorder.onstop = () => resolve(new Blob(chunks, { type: 'video/webm' }));
   });
 
-  recorder.start();
+  // Timeslice: flush a chunk every second instead of buffering the whole video
+  // in the encoder until stop() — avoids OOM / dropped data on long exports.
+  recorder.start(1000);
   if (audioEl && audioCtx) {
     await audioCtx.resume();
     audioEl.currentTime = 0;

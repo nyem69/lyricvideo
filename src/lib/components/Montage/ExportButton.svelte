@@ -25,6 +25,8 @@
     recording = true;
     progress = 0;
     playerStore.pause();
+    // Suspend the preview loop — it shares this canvas with the export renderer.
+    montageStore.exporting = true;
 
     // Dedicated renderer bound to the SAME canvas, driven by the export clock.
     const cache = new ImageCache((key) => getAsset(key));
@@ -64,6 +66,7 @@
       console.error(err);
     } finally {
       recording = false;
+      montageStore.exporting = false; // resume the preview loop
       playerStore.restart();
       cache.clear();
     }

@@ -20,6 +20,10 @@ class MontageStore {
   audioKey = $state<string | undefined>(undefined);
   songDuration = $state(0);
   ready = $state(false);
+  // True while an export is recording. The preview (MontageStage) shares the
+  // same <canvas> as the export renderer, so the preview loop must stand down
+  // during export or the two would interleave draws and corrupt the capture.
+  exporting = $state(false);
 
   private song = $derived(this.lyricsText ? parseSunoTimestamps(this.lyricsText) : null);
   readonly bands = $derived(deriveBands(this.song));

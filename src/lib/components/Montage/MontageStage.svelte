@@ -31,7 +31,8 @@
     renderer.setSettings(montageStore.settings);
 
     const loop = async () => {
-      if (!destroyed && renderer) {
+      // Stand down while an export records — both share this canvas (see store).
+      if (!destroyed && renderer && !montageStore.exporting) {
         renderer.setPhotos(montageStore.photos);
         renderer.setCuts(montageStore.cuts);
         renderer.setBands(montageStore.bands);
