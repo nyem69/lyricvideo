@@ -19,7 +19,9 @@
     if (!canvas) return toast.error('Canvas not ready');
     if (montageStore.photos.length === 0) return toast.error('Add photos first');
 
-    const duration = montageStore.songDuration || playerStore.duration;
+    // Match the rendered montage length exactly (last cut's end) — not raw audio
+    // length — so the WebM has no blank tail and isn't cut off mid-montage.
+    const duration = montageStore.totalDuration;
     if (!duration) return toast.error('Add a song or lyrics to set the duration');
 
     recording = true;

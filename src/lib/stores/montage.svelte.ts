@@ -40,6 +40,12 @@ class MontageStore {
     );
   });
   readonly title = $derived(this.song?.title || 'Montage');
+  // The montage's true rendered length = the last cut's end (already accounts
+  // for opening/tail/bands). Single source of truth for the export duration so
+  // the recording matches the rendered content exactly (no blank tail / cut-off).
+  readonly totalDuration = $derived(
+    this.cuts.length ? this.cuts[this.cuts.length - 1].end : 0
+  );
 
   /**
    * Add photos one at a time, isolating per-file failures: a corrupt/non-image

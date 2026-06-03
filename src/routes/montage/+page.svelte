@@ -58,8 +58,8 @@
 
     <main class="flex-1 flex flex-col gap-4">
       <MontageStage onCanvasReady={(c) => (canvasEl = c)} />
-      <Controls />
-      {#if canvasEl}
+      <Controls hideAudioUpload />
+      {#if canvasEl && montageStore.ready}
         <ExportButton getCanvas={() => canvasEl} />
       {/if}
     </main>
