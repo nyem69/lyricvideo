@@ -19,13 +19,17 @@
 <div class="min-h-screen bg-surface text-white">
   <header class="flex items-center justify-between px-6 py-4 border-b border-gold/10">
     <h1 class="text-gold text-lg tracking-[0.3em] uppercase" style="font-family:'Raleway',sans-serif">Lyrics Video</h1>
-    <button
-      onclick={toggleFullscreen}
-      class="text-gold/40 hover:text-gold transition-colors cursor-pointer"
-      aria-label="Fullscreen"
-    >
-      <Maximize size={18} />
-    </button>
+    <div class="flex gap-4 items-center">
+      <a href="{import.meta.env.BASE_URL}visualizer" class="text-gold/40 hover:text-gold text-xs uppercase tracking-wider">Audio Visualizer →</a>
+      <a href="{import.meta.env.BASE_URL}montage" class="text-gold/40 hover:text-gold text-xs uppercase tracking-wider">Photo montage →</a>
+      <button
+        onclick={toggleFullscreen}
+        class="text-gold/40 hover:text-gold transition-colors cursor-pointer"
+        aria-label="Fullscreen"
+      >
+        <Maximize size={18} />
+      </button>
+    </div>
   </header>
 
   <div class="flex flex-col lg:flex-row gap-6 p-6">
