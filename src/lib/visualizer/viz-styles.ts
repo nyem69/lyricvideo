@@ -5,6 +5,8 @@
 // It does NOT clear the background and does NOT draw any title text.
 // Those responsibilities belong to the renderer's own layers.
 
+import type { VizStyleId } from './model';
+
 export interface VizFrame {
   ctx: CanvasRenderingContext2D;
   w: number;
@@ -16,7 +18,7 @@ export interface VizFrame {
 }
 
 export interface VizStyle {
-  id: string;
+  id: VizStyleId;
   name: string;
   desc: string;
   draw: (f: VizFrame) => void;
