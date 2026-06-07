@@ -94,7 +94,12 @@
         ></textarea>
       </div>
 
-      <TextStylePanel />
+      <TextStylePanel
+        titleStyle={visualizerStore.titleStyle}
+        bandStyle={visualizerStore.bandStyle}
+        setTitleStyle={(p) => visualizerStore.setTitleStyle(p)}
+        setBandStyle={(p) => visualizerStore.setBandStyle(p)}
+      />
     </aside>
 
     <main class="flex-1 flex flex-col gap-4">

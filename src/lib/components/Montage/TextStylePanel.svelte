@@ -1,8 +1,15 @@
 <!-- src/lib/components/Montage/TextStylePanel.svelte -->
 <script lang="ts">
-  import { montageStore } from '$lib/stores/montage.svelte';
   import { FONT_FAMILIES, getFontFamily } from '$lib/montage/fonts';
   import type { TextStyle } from '$lib/montage/model';
+
+  interface Props {
+    titleStyle: TextStyle;
+    bandStyle: TextStyle;
+    setTitleStyle: (patch: Partial<TextStyle>) => void;
+    setBandStyle: (patch: Partial<TextStyle>) => void;
+  }
+  let { titleStyle, bandStyle, setTitleStyle, setBandStyle }: Props = $props();
 
   // px the size maps to on the 1080p export frame — shown so the slider is legible.
   const pxAt1080 = (pct: number) => Math.round(1080 * pct);
@@ -67,7 +74,7 @@
     Text Style
   </summary>
   <div class="flex flex-col gap-4 px-3 pb-3 pt-1">
-    {@render group('Title', montageStore.titleStyle, (p) => montageStore.setTitleStyle(p))}
-    {@render group('Lyrics', montageStore.bandStyle, (p) => montageStore.setBandStyle(p))}
+    {@render group('Title', titleStyle, (p) => setTitleStyle(p))}
+    {@render group('Lyrics', bandStyle, (p) => setBandStyle(p))}
   </div>
 </details>

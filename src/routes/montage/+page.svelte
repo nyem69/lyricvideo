@@ -70,7 +70,12 @@
         ></textarea>
       </div>
 
-      <TextStylePanel />
+      <TextStylePanel
+        titleStyle={montageStore.titleStyle}
+        bandStyle={montageStore.bandStyle}
+        setTitleStyle={(p) => montageStore.setTitleStyle(p)}
+        setBandStyle={(p) => montageStore.setBandStyle(p)}
+      />
     </aside>
 
     <main class="flex-1 flex flex-col gap-4">
