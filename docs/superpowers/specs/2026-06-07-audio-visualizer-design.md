@@ -88,16 +88,26 @@ attachAnalyser(): AnalyserNode {
 }
 ```
 
+**Works before audio is loaded (per review):** `attachAnalyser()` may be called by the
+stage on mount, before any song exists. It creates/caches `audioCtx` + `analyser`
+**immediately** and returns the (possibly still-unconnected) analyser. If `audioEl` is
+null, no source node is built yet; the analyser is connected to the live element later,
+the first time `loadAudio()` provides one. Until then the renderer reads a zeroed buffer
+→ a quiet frame, no throw.
+
 **MediaElementSource footgun (per review):** a given `<audio>` element can be connected
 to a `MediaElementAudioSourceNode` **only once in its lifetime**. So:
 
-- `buildAnalyserGraph()` creates `audioCtx` + `analyser` once and reuses them forever.
+- `buildAnalyserGraph()` creates `audioCtx` + `analyser` once and reuses them forever
+  (this part runs even with no element — it just doesn't build a source node).
 - It creates `srcNode = audioCtx.createMediaElementSource(el)` **only when the current
-  element differs from `srcEl`** (i.e. cache the source node per element). Repeat
+  element differs from the cached `srcEl`** (cache the source node per element). Repeat
   `attachAnalyser()` / `play()` calls do **not** recreate it.
 - `playerStore.loadAudio()` swaps in a new `<audio>` element; *after* it does, if
-  `analyserWanted` it rebuilds the source node against the new element (and reconnects
-  `srcNode → analyser → destination`). This is the ONLY rebuild trigger.
+  `analyserWanted` it rebuilds the source node against the new element. On rebuild it
+  **explicitly disconnects the old `srcNode`** (`srcNode.disconnect()`) before creating
+  the new one, then connects `srcNode → analyser → destination` and updates `srcEl`.
+  This element-change is the ONLY rebuild trigger.
 - `play()` resumes a suspended `audioCtx` (Web Audio autoplay-gesture rule).
 
 Because preview transport and analysis share the **same** playing element, lyric-band
@@ -230,7 +240,7 @@ minus photos/cuts:
   `formatId`, `customWidth`, `customHeight`, `backgroundKey`, `audioKey`,
   `songDuration`, `settings`, `ready`, `exporting`.
 - `$derived`: `song` (parsed), `bands` (deriveBands), `title` (videoTitle || 'Visualizer'),
-  `dims` (resolveFormat), `totalDuration` (= songDuration, clamped finite; no photo cuts).
+  `dims` (resolveFormat), `totalDuration` (see below).
 - Methods: `importLyrics`, `loadAudio` (reuses asset-store + playerStore + metadata
   probe, same as montage), `setBackground(file)` / `removeBackground`, `setVizStyle`,
   `setFormat(id)` / `setCustomDims(w,h)`, `setTitle`, `setTitleStyle`/`setBandStyle`
@@ -238,6 +248,23 @@ minus photos/cuts:
 - **Separate localStorage key** (e.g. `visualizer-project-v1`) so it never collides
   with the montage project. Audio + background blobs in the shared IndexedDB asset-store
   under namespaced keys (`audio:*`, `vizbg:*`).
+
+**`totalDuration` contract (per review):** unlike montage there are no photo cuts, but
+the export must never truncate timestamped lyrics when the audio metadata duration is
+missing, not-yet-loaded, or shorter than the parsed lyrics. So:
+
+```
+totalDuration = max(
+  finite(songDuration),                       // uploaded-song metadata (0 if absent)
+  lastBandEnd + settings.tailDuration,        // lyric coverage + tail (0 if no lyrics)
+  settings.openingDuration                     // at least show the title card
+)
+```
+
+with `finite(x)` = `Number.isFinite(x) && x > 0 ? x : 0` (same Infinity/NaN guard as
+montage's `cuts`). This keeps the lyric/tail fallback that montage gets for free from
+its cut timeline, and reuses `MontageSettings.tailDuration`/`openingDuration` rather
+than ignoring them.
 
 `project-store.ts` is generalized to take a storage key (or a thin viz-specific
 save/load is added) so both projects persist independently.
