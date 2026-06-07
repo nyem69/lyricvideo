@@ -8,8 +8,8 @@ import type {
   TextStyle,
 } from '$lib/montage/model';
 import { DEFAULT_TITLE_STYLE, DEFAULT_BAND_STYLE } from '$lib/montage/model';
-import { getFontFamily } from '$lib/montage/fonts';
 import { ImageCache } from './image-cache';
+import { drawLyricBand, drawTitleCard } from './text-overlays';
 
 interface RendererDeps {
   canvas: HTMLCanvasElement;
@@ -108,11 +108,11 @@ export class MontageRenderer {
     }
 
     if (t < this.settings.openingDuration && this.title) {
-      this.drawTitleCard(this.title, W, H);
+      drawTitleCard(ctx, this.title, W, H, this.titleStyle, this.style);
     }
 
     const band = this.bands.find((b) => t >= b.start && t < b.end) ?? null;
-    if (band) this.drawBand(band, W, H);
+    if (band) drawLyricBand(ctx, band, W, H, this.bandStyle);
   }
 
   // The ImageCache is the single owner of decoded bitmaps. renderAt must paint
@@ -168,77 +168,4 @@ export class MontageRenderer {
     const h = baseH * zoom;
     ctx.drawImage(bmp, (W - w) / 2 + dx, (H - h) / 2 + dy, w, h);
   }
-
-  private drawBand(band: LyricBand, W: number, H: number) {
-    const { ctx, bandStyle } = this;
-    const fontPx = Math.round(H * bandStyle.sizePct);
-    ctx.font = `${bandStyle.fontWeight} ${fontPx}px ${getFontFamily(bandStyle.fontFamilyId).stack}`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-
-    const lines = wrapText(ctx, band.primary, W * 0.82);
-    const lineH = fontPx * 1.25;
-    const bottomY = H * 0.86;
-    const blockH = lines.length * lineH;
-
-    // No scrim bar — legibility comes from a soft drop shadow plus a thin dark
-    // glyph outline, so the text reads over bright/busy photo areas (e.g. sky).
-    ctx.save();
-    ctx.lineJoin = 'round';
-    ctx.lineWidth = fontPx * 0.07;
-    ctx.strokeStyle = 'rgba(0,0,0,0.85)';
-    ctx.fillStyle = bandStyle.color;
-    lines.forEach((ln, i) => {
-      const y = bottomY - blockH + i * lineH + lineH / 2;
-      // Pass 1: outline carries the shadow (densest halo around the glyph edge).
-      ctx.shadowColor = 'rgba(0,0,0,0.7)';
-      ctx.shadowBlur = fontPx * 0.5;
-      ctx.shadowOffsetY = fontPx * 0.04;
-      ctx.strokeText(ln, W / 2, y);
-      // Pass 2: crisp light fill on top, no shadow (avoids a muddy double halo).
-      ctx.shadowColor = 'transparent';
-      ctx.shadowBlur = 0;
-      ctx.shadowOffsetY = 0;
-      ctx.fillText(ln, W / 2, y);
-    });
-    ctx.restore();
-  }
-
-  private drawTitleCard(title: string, W: number, H: number) {
-    const { ctx, style, titleStyle } = this;
-    ctx.save();
-    ctx.fillStyle = style.background;
-    ctx.fillRect(0, 0, W, H);
-    const fontPx = Math.round(H * titleStyle.sizePct);
-    ctx.font = `${titleStyle.fontWeight} ${fontPx}px ${getFontFamily(titleStyle.fontFamilyId).stack}`;
-    ctx.fillStyle = titleStyle.color;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(title, W / 2, H / 2 - fontPx * 0.3);
-    // gold divider
-    ctx.strokeStyle = style.accent;
-    ctx.lineWidth = Math.max(1, H * 0.003);
-    ctx.beginPath();
-    ctx.moveTo(W / 2 - W * 0.08, H / 2 + fontPx * 0.5);
-    ctx.lineTo(W / 2 + W * 0.08, H / 2 + fontPx * 0.5);
-    ctx.stroke();
-    ctx.restore();
-  }
-}
-
-function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
-  const words = text.split(/\s+/);
-  const lines: string[] = [];
-  let current = '';
-  for (const word of words) {
-    const tentative = current ? `${current} ${word}` : word;
-    if (ctx.measureText(tentative).width > maxWidth && current) {
-      lines.push(current);
-      current = word;
-    } else {
-      current = tentative;
-    }
-  }
-  if (current) lines.push(current);
-  return lines;
 }

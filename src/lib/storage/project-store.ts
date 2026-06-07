@@ -1,5 +1,6 @@
 // src/lib/storage/project-store.ts
 import type { MontageProject } from '$lib/montage/model';
+import type { VisualizerProject } from '$lib/visualizer/model';
 
 export interface KvBackend {
   getItem(key: string): string | null;
@@ -44,6 +45,41 @@ export function loadProject(backend: KvBackend): MontageProject | null {
 
 export function clearProject(backend: KvBackend): void {
   backend.removeItem(KEY);
+}
+
+const VIZ_KEY = 'visualizer:lastProject';
+
+function isVisualizerProject(value: unknown): value is VisualizerProject {
+  if (typeof value !== 'object' || value === null) return false;
+  const v = value as Record<string, unknown>;
+  return (
+    v.version === 1 &&
+    typeof v.lyricsText === 'string' &&
+    typeof v.vizStyleId === 'string' &&
+    typeof v.formatId === 'string' &&
+    typeof v.songDuration === 'number' &&
+    v.settings != null &&
+    typeof v.updatedAt === 'number'
+  );
+}
+
+export function saveVisualizerProject(project: VisualizerProject, backend: KvBackend): void {
+  backend.setItem(VIZ_KEY, JSON.stringify(project));
+}
+
+export function loadVisualizerProject(backend: KvBackend): VisualizerProject | null {
+  const raw = backend.getItem(VIZ_KEY);
+  if (!raw) return null;
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    return isVisualizerProject(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+export function clearVisualizerProject(backend: KvBackend): void {
+  backend.removeItem(VIZ_KEY);
 }
 
 // localStorage may be absent (SSR) OR present-but-throwing (sandboxed iframes,

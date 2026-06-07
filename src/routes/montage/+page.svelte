@@ -26,7 +26,10 @@
 <div class="min-h-screen bg-surface text-white">
   <header class="flex items-center justify-between px-6 py-4 border-b border-gold/10">
     <h1 class="text-gold text-lg tracking-[0.3em] uppercase" style="font-family:'Raleway',sans-serif">Photo Montage</h1>
-    <a href="{import.meta.env.BASE_URL}" class="text-gold/40 hover:text-gold text-xs uppercase tracking-wider">Lyrics-only mode →</a>
+    <div class="flex gap-4 items-center">
+      <a href="{import.meta.env.BASE_URL}visualizer" class="text-gold/40 hover:text-gold text-xs uppercase tracking-wider">Visualizer →</a>
+      <a href="{import.meta.env.BASE_URL}" class="text-gold/40 hover:text-gold text-xs uppercase tracking-wider">Lyrics-only mode →</a>
+    </div>
   </header>
 
   <div class="flex flex-col lg:flex-row gap-6 p-6">
@@ -67,7 +70,12 @@
         ></textarea>
       </div>
 
-      <TextStylePanel />
+      <TextStylePanel
+        titleStyle={montageStore.titleStyle}
+        bandStyle={montageStore.bandStyle}
+        setTitleStyle={(p) => montageStore.setTitleStyle(p)}
+        setBandStyle={(p) => montageStore.setBandStyle(p)}
+      />
     </aside>
 
     <main class="flex-1 flex flex-col gap-4">
