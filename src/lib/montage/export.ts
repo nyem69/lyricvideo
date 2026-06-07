@@ -6,6 +6,9 @@ export interface ExportOptions {
   fps: number;
   renderFrame: (t: number) => void | Promise<void>; // paints the canvas at export-local time t
   onProgress?: (frac: number) => void;
+  /** When present, an AnalyserNode is tapped off the export audio source and
+   *  handed back before recording starts, so renderFrame can read live FFT. */
+  onAnalyserReady?: (analyser: AnalyserNode) => void;
 }
 
 function pickMimeType(): string {
@@ -22,7 +25,7 @@ function pickMimeType(): string {
 
 /** Record the canvas + (optional) audio to a WebM blob. Resolves when recording stops. */
 export async function exportMontage(opts: ExportOptions): Promise<Blob> {
-  const { canvas, audioFile, durationSec, fps, renderFrame, onProgress } = opts;
+  const { canvas, audioFile, durationSec, fps, renderFrame, onProgress, onAnalyserReady } = opts;
 
   const videoStream = canvas.captureStream(fps);
   const tracks = [...videoStream.getVideoTracks()];
@@ -40,6 +43,13 @@ export async function exportMontage(opts: ExportOptions): Promise<Blob> {
     const dest = audioCtx.createMediaStreamDestination();
     source.connect(dest);
     source.connect(audioCtx.destination);
+    if (onAnalyserReady) {
+      const analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 2048;
+      analyser.smoothingTimeConstant = 0.8;
+      source.connect(analyser);
+      onAnalyserReady(analyser);
+    }
     tracks.push(...dest.stream.getAudioTracks());
   }
 
