@@ -39,8 +39,8 @@
     >
   </header>
 
-  <div class="flex flex-col lg:flex-row gap-6 p-6">
-    <aside class="w-full lg:w-96 flex-shrink-0 flex flex-col gap-6">
+  <div class="flex flex-col min-[1100px]:flex-row items-start gap-6 p-6">
+    <aside class="w-full min-[1100px]:w-96 flex-shrink-0 flex flex-col gap-6 order-2 min-[1100px]:order-1">
       <div class="flex flex-col gap-2">
         <span class="text-sm tracking-wider text-gold/60 uppercase" style="font-family:'Raleway',sans-serif">Video Title</span>
         <input
@@ -102,7 +102,9 @@
       />
     </aside>
 
-    <main class="flex-1 flex flex-col gap-4">
+    <main
+      class="w-full flex-1 flex flex-col gap-4 order-1 min-[1100px]:order-2 min-[1100px]:sticky min-[1100px]:top-6 min-[1100px]:self-start"
+    >
       <VisualizerStage onCanvasReady={(c) => (canvasEl = c)} />
       <Controls hideAudioUpload />
       {#if canvasEl && visualizerStore.ready}

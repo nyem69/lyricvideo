@@ -7,6 +7,9 @@ import { drawLyricBand, drawTitleCard } from './text-overlays';
 
 const SURFACE = '#0a1a0a';
 const ACCENT = '#d4af37';
+// Teal cue used ONLY for the idle (no-signal) shimmer, mirroring the
+// audio-reactive accent in the editor chrome. Live playback uses gold (ACCENT).
+const IDLE_ACCENT = '#46d6c8';
 
 export class VisualizerRenderer {
   private canvas: HTMLCanvasElement;
@@ -26,6 +29,10 @@ export class VisualizerRenderer {
   private settings: MontageSettings | null = null;
   private bg: ImageBitmap | null = null;
   private bgDim = 0.45; // overlay alpha over a bg image so text/viz stay legible
+  // Frame counter for the idle shimmer. Driven per-frame, NOT by the playback
+  // clock `t` — so the stage still breathes while paused (currentTime frozen at
+  // 0) and an idle export stays frame-deterministic.
+  private idleFrame = 0;
 
   constructor({ canvas }: { canvas: HTMLCanvasElement }) {
     this.canvas = canvas;
@@ -82,8 +89,18 @@ export class VisualizerRenderer {
 
     this.drawBackground(W, H);
 
-    const style = VIZ_STYLE_MAP[this.styleId] ?? VIZ_STYLE_MAP.bars;
-    style.draw({ ctx, w: W, h: H, freq: this.freq, wave: this.wave, t, accent: ACCENT });
+    // When there's no live signal (no audio attached, or attached-but-paused),
+    // the byte buffers are all-zero and every style draws a flat/blank frame —
+    // which reads as "broken". Fall back to a gentle animated idle shimmer so
+    // the stage always looks alive. Live playback (energy > 0) takes over.
+    let energy = 0;
+    for (let i = 0; i < this.freq.length; i++) energy += this.freq[i];
+    if (energy === 0) {
+      this.drawIdle(W, H, this.idleFrame++ / 60);
+    } else {
+      const style = VIZ_STYLE_MAP[this.styleId] ?? VIZ_STYLE_MAP.bars;
+      style.draw({ ctx, w: W, h: H, freq: this.freq, wave: this.wave, t, accent: ACCENT });
+    }
 
     if (t < this.settings.openingDuration && this.title) {
       drawTitleCard(ctx, this.title, W, H, this.titleStyle, VIZ_TITLE_THEME);
@@ -91,6 +108,30 @@ export class VisualizerRenderer {
 
     const band = this.bands.find((b) => t >= b.start && t < b.end) ?? null;
     if (band) drawLyricBand(ctx, band, W, H, this.bandStyle);
+  }
+
+  // A calm centered EQ that breathes via a few out-of-phase sine waves — no
+  // randomness so a paused/seeking preview stays deterministic and an idle
+  // export is reproducible. Teal, low alpha, so it never competes with a title.
+  private drawIdle(W: number, H: number, t: number) {
+    const { ctx } = this;
+    const bars = 48;
+    const gap = Math.max(2, Math.round(W * 0.004));
+    const bw = (W - gap * (bars - 1)) / bars;
+    const mid = H / 2;
+    const maxH = H * 0.16;
+    ctx.save();
+    ctx.fillStyle = IDLE_ACCENT;
+    for (let i = 0; i < bars; i++) {
+      const phase = t * 1.6 + i * 0.32;
+      const env = 0.55 + 0.45 * Math.sin(i / bars * Math.PI); // taller in the middle
+      const amp = (0.5 + 0.5 * Math.sin(phase)) * env;
+      const h = Math.max(bw * 0.5, amp * maxH);
+      const x = i * (bw + gap);
+      ctx.globalAlpha = 0.12 + 0.18 * amp;
+      ctx.fillRect(x, mid - h, bw, h * 2);
+    }
+    ctx.restore();
   }
 
   private drawBackground(W: number, H: number) {
