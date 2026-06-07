@@ -1,6 +1,7 @@
 <!-- src/routes/montage/+page.svelte -->
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { base } from '$app/paths';
   import Controls from '$lib/components/Player/Controls.svelte';
   import PhotoTray from '$lib/components/Montage/PhotoTray.svelte';
   import TextStylePanel from '$lib/components/Montage/TextStylePanel.svelte';
@@ -27,8 +28,8 @@
   <header class="flex items-center justify-between px-6 py-4 border-b border-gold/10">
     <h1 class="text-gold text-lg tracking-[0.3em] uppercase" style="font-family:'Raleway',sans-serif">Photo Montage</h1>
     <div class="flex gap-4 items-center">
-      <a href="{import.meta.env.BASE_URL}visualizer" class="text-gold/40 hover:text-gold text-xs uppercase tracking-wider">Visualizer →</a>
-      <a href="{import.meta.env.BASE_URL}" class="text-gold/40 hover:text-gold text-xs uppercase tracking-wider">Lyrics-only mode →</a>
+      <a href="{base}/studio" class="text-gold/40 hover:text-gold text-xs uppercase tracking-wider">← Studio</a>
+      <a href="{base}/visualizer" class="text-gold/40 hover:text-gold text-xs uppercase tracking-wider">Visualizer →</a>
     </div>
   </header>
 

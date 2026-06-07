@@ -33,10 +33,10 @@
     <h1 class="text-gold text-lg tracking-[0.3em] uppercase" style="font-family:'Raleway',sans-serif">
       Audio Visualizer
     </h1>
-    <a
-      href="{base}/montage"
-      class="text-gold/40 hover:text-gold text-xs uppercase tracking-wider">Photo montage →</a
-    >
+    <div class="flex gap-4 items-center">
+      <a href="{base}/studio" class="text-gold/40 hover:text-gold text-xs uppercase tracking-wider">← Studio</a>
+      <a href="{base}/montage" class="text-gold/40 hover:text-gold text-xs uppercase tracking-wider">Photo montage →</a>
+    </div>
   </header>
 
   <div class="flex flex-col min-[1100px]:flex-row items-start gap-6 p-6">
