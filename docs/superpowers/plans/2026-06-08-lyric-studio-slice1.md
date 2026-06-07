@@ -823,6 +823,14 @@ git commit -m "feat(landing): pricing table + FAQ"
 
 **Files:**
 - Modify: `src/routes/+page.svelte` (replace the temporary redirect with the real landing)
+- Modify: `src/routes/studio/+page.svelte` (rename the editor header so it doesn't feel like a separate product)
+
+- [ ] **Step 0: Rename the studio header (deferred from Task 1, approved by user)**
+
+Now that `/` is the commercial landing, the editor must read as part of the same product. In
+`src/routes/studio/+page.svelte`, change the header `<h1>` text from `Lyrics Video` to `Lyric Studio`
+(keep all classes/markup identical — text only). Optionally make the wordmark a link to `{base}/` so users
+can get back to the landing. Minimal change: just the `<h1>` text.
 
 - [ ] **Step 1: Replace `/+page.svelte` with the composed landing**
 
@@ -881,8 +889,8 @@ Expected: all pass; only the known favicon 404 in console.
 - [ ] **Step 4: Commit**
 
 ```bash
-git add src/routes/+page.svelte
-git commit -m "feat(landing): assemble Lyric Studio landing page at /"
+git add src/routes/+page.svelte src/routes/studio/+page.svelte
+git commit -m "feat(landing): assemble Lyric Studio landing page at / + rename studio header"
 ```
 
 ---
