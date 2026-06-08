@@ -7,10 +7,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,500&family=Great+Vibes&family=Bebas+Neue&family=Fraunces:ital,opsz,wght@1,9..144,500&family=Raleway:wght@100;200;300;400;600&display=swap" rel="stylesheet" />
   <!-- Static SEO/social defaults for non-JS crawlers (the app is client-rendered, so
-       %sveltekit.head% is empty in the served shell). Route-level <svelte:head> still
-       overrides these at runtime for JS visitors. -->
+       %sveltekit.head% is empty in the served shell). Route-level <svelte:head> overrides
+       <title> at runtime; the description below is marked data-static-fallback so the
+       landing route can drop it on hydration (leaving its single localized description).
+       OG/Twitter stay English — social unfurlers don't run the SPA (localized unfurls
+       would need the deferred locale-path/prerender slice). -->
   <title>Lyric Studio — Lyric videos & visualizers in your browser</title>
-  <meta name="description" content="Make synced lyric videos, audio visualizers and photo montages in your browser. No upload, no editor, free to start. Built for indie musicians." />
+  <meta name="description" data-static-fallback content="Make synced lyric videos, audio visualizers and photo montages in your browser. No upload, no editor, free to start. Built for indie musicians." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://lyricvideo.pages.dev/" />
   <meta property="og:title" content="Lyric Studio — Lyric videos & visualizers in your browser" />
