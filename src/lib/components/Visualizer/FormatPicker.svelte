@@ -11,12 +11,25 @@
     const h = Number((e.target as HTMLInputElement).value);
     visualizerStore.setCustomDims(visualizerStore.customWidth ?? 1920, h);
   }
+
+  // Surface the active format in the collapsed summary so it stays informative
+  // when folded (the section defaults closed to keep the sidebar short).
+  const activeLabel = $derived(
+    visualizerStore.formatId === 'custom'
+      ? `Custom ${visualizerStore.customWidth ?? 1920}×${visualizerStore.customHeight ?? 1080}`
+      : (FORMATS.find((f) => f.id === visualizerStore.formatId)?.label ?? 'YouTube')
+  );
 </script>
 
-<div class="flex flex-col gap-2">
-  <span class="text-sm tracking-wider text-gold/60 uppercase" style="font-family:'Raleway',sans-serif"
-    >Video Format</span
+<details class="border border-gold/15 rounded">
+  <summary
+    class="cursor-pointer select-none px-3 py-2 text-sm tracking-wider text-gold/60 uppercase flex items-center justify-between gap-2"
+    style="font-family:'Raleway',sans-serif"
   >
+    <span>Video Format</span>
+    <span class="text-xs normal-case tracking-normal text-gold/40">{activeLabel}</span>
+  </summary>
+  <div class="flex flex-col gap-2 px-3 pb-3 pt-1">
   <div class="flex flex-wrap gap-2">
     {#each FORMATS as f}
       <button
@@ -56,4 +69,5 @@
       />
     </div>
   {/if}
-</div>
+  </div>
+</details>

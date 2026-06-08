@@ -1,6 +1,7 @@
 <!-- src/routes/montage/+page.svelte -->
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { base } from '$app/paths';
   import Controls from '$lib/components/Player/Controls.svelte';
   import PhotoTray from '$lib/components/Montage/PhotoTray.svelte';
   import TextStylePanel from '$lib/components/Montage/TextStylePanel.svelte';
@@ -27,13 +28,13 @@
   <header class="flex items-center justify-between px-6 py-4 border-b border-gold/10">
     <h1 class="text-gold text-lg tracking-[0.3em] uppercase" style="font-family:'Raleway',sans-serif">Photo Montage</h1>
     <div class="flex gap-4 items-center">
-      <a href="{import.meta.env.BASE_URL}visualizer" class="text-gold/40 hover:text-gold text-xs uppercase tracking-wider">Visualizer →</a>
-      <a href="{import.meta.env.BASE_URL}" class="text-gold/40 hover:text-gold text-xs uppercase tracking-wider">Lyrics-only mode →</a>
+      <a href="{base}/studio" class="text-gold/40 hover:text-gold text-xs uppercase tracking-wider">← Studio</a>
+      <a href="{base}/visualizer" class="text-gold/40 hover:text-gold text-xs uppercase tracking-wider">Visualizer →</a>
     </div>
   </header>
 
-  <div class="flex flex-col lg:flex-row gap-6 p-6">
-    <aside class="w-full lg:w-96 flex-shrink-0 flex flex-col gap-6">
+  <div class="flex flex-col min-[1100px]:flex-row items-start gap-6 p-6">
+    <aside class="w-full min-[1100px]:w-96 flex-shrink-0 flex flex-col gap-6 order-2 min-[1100px]:order-1">
       <div class="flex flex-col gap-2">
         <span class="text-sm tracking-wider text-gold/60 uppercase" style="font-family:'Raleway',sans-serif">Video Title</span>
         <input
@@ -78,7 +79,9 @@
       />
     </aside>
 
-    <main class="flex-1 flex flex-col gap-4">
+    <main
+      class="w-full flex-1 flex flex-col gap-4 order-1 min-[1100px]:order-2 min-[1100px]:sticky min-[1100px]:top-6 min-[1100px]:self-start"
+    >
       <MontageStage onCanvasReady={(c) => (canvasEl = c)} />
       <Controls hideAudioUpload />
       {#if canvasEl && montageStore.ready}

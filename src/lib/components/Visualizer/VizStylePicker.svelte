@@ -14,7 +14,7 @@
         onclick={() => visualizerStore.setVizStyle(style.id)}
         class="px-3 py-2 text-xs uppercase tracking-wider rounded border transition-all text-left {style.id ===
         visualizerStore.vizStyleId
-          ? 'border-gold/50 text-gold bg-gold/10'
+          ? 'border-audio/60 text-audio bg-audio/10'
           : 'border-gold/15 text-white/50 hover:text-gold hover:border-gold/30'}"
         style="font-family:'Raleway',sans-serif">{style.name}</button
       >

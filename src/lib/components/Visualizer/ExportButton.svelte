@@ -11,6 +11,10 @@
 
   let recording = $state(false);
   let progress = $state(0);
+  // Export is only meaningful once there's real content — a song or timestamped
+  // lyrics. (totalDuration is always > 0 thanks to the title-card opening, so it
+  // can't gate this.) Drives the disabled/ready treatment.
+  const canExport = $derived(!!visualizerStore.audioKey || visualizerStore.bands.length > 0);
 
   async function onExport() {
     const canvas = getCanvas();
@@ -74,11 +78,22 @@
   }
 </script>
 
-<button
-  onclick={onExport}
-  disabled={recording}
-  class="bg-gold/20 border border-gold/40 text-gold px-4 py-2 text-sm tracking-widest uppercase rounded cursor-pointer hover:bg-gold/30 disabled:opacity-50 disabled:cursor-wait transition-all"
-  style="font-family:'Raleway',sans-serif"
->
-  {recording ? `Recording… ${Math.round(progress * 100)}%` : 'Download Video'}
-</button>
+<div class="flex flex-col gap-1.5">
+  <button
+    onclick={onExport}
+    disabled={recording || !canExport}
+    class="px-4 py-2.5 text-sm tracking-widest uppercase rounded transition-all
+      {canExport
+      ? 'bg-gold text-surface font-semibold border border-gold shadow-[0_8px_24px_-10px_var(--color-gold)] cursor-pointer hover:bg-gold/90'
+      : 'bg-gold/5 text-gold/35 border border-gold/15 cursor-not-allowed'}
+      disabled:cursor-wait"
+    style="font-family:'Raleway',sans-serif"
+  >
+    {recording ? `Recording… ${Math.round(progress * 100)}%` : 'Download Video'}
+  </button>
+  {#if !canExport && !recording}
+    <span class="text-xs text-white/35 text-center" style="font-family:'Raleway',sans-serif"
+      >Add a song or timestamped lyrics to export</span
+    >
+  {/if}
+</div>
