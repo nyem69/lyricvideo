@@ -11,6 +11,15 @@
   import Faq from '$lib/components/Landing/Faq.svelte';
   import SiteFooter from '$lib/components/Landing/SiteFooter.svelte';
   import * as m from '$lib/paraglide/messages';
+  import { browser } from '$app/environment';
+
+  // app.html ships an English <meta name="description" data-static-fallback> for no-JS
+  // crawlers. For JS visitors, drop it so the localized one in <svelte:head> below is the
+  // sole description tag. Browser-safe + idempotent (?.remove() is a no-op once gone).
+  $effect(() => {
+    if (!browser) return;
+    document.head.querySelector('meta[name="description"][data-static-fallback]')?.remove();
+  });
 </script>
 
 <svelte:head>
