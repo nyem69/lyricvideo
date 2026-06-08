@@ -10,11 +10,12 @@
   import ReserveSection from '$lib/components/Landing/ReserveSection.svelte';
   import Faq from '$lib/components/Landing/Faq.svelte';
   import SiteFooter from '$lib/components/Landing/SiteFooter.svelte';
+  import * as m from '$lib/paraglide/messages';
 </script>
 
 <svelte:head>
-  <title>Lyric Studio — Lyric videos & visualizers in your browser</title>
-  <meta name="description" content="Make synced lyric videos, audio visualizers and photo montages in your browser. No upload, no editor, free to start. Built for indie musicians." />
+  <title>{m.meta_title()}</title>
+  <meta name="description" content={m.meta_description()} />
 </svelte:head>
 
 <div class="min-h-screen bg-surface text-white">
