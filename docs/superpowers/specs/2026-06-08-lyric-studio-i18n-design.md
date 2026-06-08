@@ -144,3 +144,11 @@ No product-UI translation (`/studio`, `/visualizer`, `/montage`, `/dev/*`); no l
 - **D5 — Reserve `mailto:` localized** via `m.reserve_mailto_*` messages.
 
 If you approve (or adjust) these, the implementation plan follows: install/config Paraglide → en messages → ms → id → wire `m.*` into each landing component → LanguageSwitcher → localized reserve form + mailto → localized `<svelte:head>` → browser verification.
+
+## 14. Verification findings & follow-ups (Task 10, 2026-06-08)
+
+Browser verification (Playwright, preview at `/lyricvideo/`) confirmed all functional i18n behavior: default→en, UI switch flips every section + `document.title` for ms/id, reload persistence, first-visit `navigator.languages` auto-detect (ms→Malay, unsupported→English), localized `mailto:` fallback + invalid-email error, console clean (favicon 404 only). Three items were observed and **deferred** (none block this slice):
+
+- **F1 — Mobile header overflow (`<640px`).** The landing `SiteHeader` nav (brand + 3 links + switcher + "Open studio" CTA, all inline, `gap-5`, no wrap/hamburger) is desktop-first and exceeds a 375–390px viewport — the CTA is clipped off the right edge. This is **pre-existing** (nav is ~388px wide with the switcher hidden). Task 10 mitigation: the switcher trigger now shows a compact code (EN/MS/ID) below `sm` so it fits within the viewport and stops dominating the overflow; full native name returns at `sm+`. The **remaining nav overflow is a follow-up** (responsive nav / wrap / hamburger) — explicitly out of scope here per the user.
+- **F2 — `<html lang>` stays `"en"`** in all locales (hardcoded in `app.html`, not wired to runtime locale). Minor a11y/SEO signal gap; belongs with the §4 Path A localized-SEO/prerender follow-up.
+- **F3 — Two `<meta name="description">` tags** in the served HTML (app.html static English + localized `<svelte:head>`). `<title>` correctly dedupes to one (locale-correct). Harmless for no-JS crawlers (they see only app.html's English fallback); in ms/id the two descriptions differ in language. Resolved by the same Path A localized-crawler-meta follow-up (§8).
