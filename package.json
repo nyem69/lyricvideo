@@ -6,11 +6,12 @@
   "packageManager": "pnpm@10.11.1",
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build",
+    "build": "paraglide-js compile --project ./project.inlang --outdir ./src/lib/paraglide --strategy localStorage preferredLanguage baseLocale && vite build",
     "preview": "vite preview",
-    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check": "paraglide-js compile --project ./project.inlang --outdir ./src/lib/paraglide --strategy localStorage preferredLanguage baseLocale && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "postinstall": "paraglide-js compile --project ./project.inlang --outdir ./src/lib/paraglide --strategy localStorage preferredLanguage baseLocale"
   },
   "dependencies": {
     "@lucide/svelte": "^0.575.0",
@@ -26,7 +27,9 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260608.1",
+    "@inlang/paraglide-js": "^2.18.2",
     "@tailwindcss/vite": "^4.2.0",
+    "@types/node": "^25.9.2",
     "svelte-check": "^4.4.3",
     "tailwindcss": "^4.2.0",
     "typescript": "^5.9.3",
