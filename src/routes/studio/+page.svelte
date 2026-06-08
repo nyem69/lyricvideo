@@ -17,9 +17,13 @@
   }
 </script>
 
+<svelte:head>
+  <title>Lyric Studio</title>
+</svelte:head>
+
 <div class="min-h-screen bg-surface text-white">
   <header class="flex items-center justify-between px-6 py-4 border-b border-gold/10">
-    <h1 class="text-gold text-lg tracking-[0.3em] uppercase" style="font-family:'Raleway',sans-serif">Lyrics Video</h1>
+    <h1 class="text-gold text-lg tracking-[0.3em] uppercase" style="font-family:'Raleway',sans-serif">Lyric Studio</h1>
     <div class="flex gap-4 items-center">
       <a href="{base}/visualizer" class="text-gold/40 hover:text-gold text-xs uppercase tracking-wider">Audio Visualizer →</a>
       <a href="{base}/montage" class="text-gold/40 hover:text-gold text-xs uppercase tracking-wider">Photo montage →</a>
