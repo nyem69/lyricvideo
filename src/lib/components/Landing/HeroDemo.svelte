@@ -3,6 +3,7 @@
      equalizer, inside a 16:9 "video frame". Pure presentation, respects
      prefers-reduced-motion. -->
 <script lang="ts">
+  import * as m from '$lib/paraglide/messages';
   const bars = Array.from({ length: 28 }, (_, i) => i);
 </script>
 
@@ -21,7 +22,7 @@
   </div>
   <div class="pointer-events-none absolute left-3 top-3 flex items-center gap-2 rounded-full bg-black/40 px-2.5 py-1 ring-1 ring-white/10 backdrop-blur-sm">
     <span class="h-1.5 w-1.5 rounded-full bg-audio shadow-[0_0_6px_var(--color-audio)]"></span>
-    <span class="text-[9px] tracking-[0.2em] uppercase text-audio" style="font-family:'Raleway',sans-serif">Preview</span>
+    <span class="text-[9px] tracking-[0.2em] uppercase text-audio" style="font-family:'Raleway',sans-serif">{m.hero_preview_badge()}</span>
   </div>
 </div>
 
