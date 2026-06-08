@@ -10,6 +10,9 @@
   type Locale = (typeof locales)[number];
 
   const NATIVE: Partial<Record<string, string>> = { en: 'English', ms: 'Bahasa Melayu', id: 'Bahasa Indonesia' };
+  // Short codes for the compact mobile trigger (the long native names overflow the
+  // desktop-first header below ~640px). Full names stay in the dropdown + aria-label.
+  const SHORT: Partial<Record<string, string>> = { en: 'EN', ms: 'MS', id: 'ID' };
 
   // setLocale() reloads the page, so getLocale() is fixed for this page load — read it once.
   let open = $state(false);
@@ -32,12 +35,14 @@
   <button
     type="button"
     onclick={() => (open = !open)}
-    aria-label={m.header_language()}
+    aria-label={`${m.header_language()}: ${NATIVE[current] ?? current}`}
     aria-expanded={open}
     class="flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-gold/25 text-gold/80 hover:text-gold hover:border-gold/50 transition-colors"
     style="font-family:'Raleway',sans-serif"
   >
-    <span class="text-xs uppercase tracking-wider">{NATIVE[current] ?? current}</span>
+    <!-- compact code on mobile, full native name from sm+ (desktop stays polished) -->
+    <span class="text-xs uppercase tracking-wider sm:hidden">{SHORT[current] ?? current}</span>
+    <span class="text-xs uppercase tracking-wider hidden sm:inline">{NATIVE[current] ?? current}</span>
     <ChevronDown class="w-3.5 h-3.5 transition-transform {open ? 'rotate-180' : ''}" />
   </button>
 
