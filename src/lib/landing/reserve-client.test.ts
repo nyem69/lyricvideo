@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
+import { getLocale, overwriteGetLocale } from '$lib/paraglide/runtime';
 import { validateEmail, buildMailtoFallback, submitReserve } from './reserve-client';
 
 describe('validateEmail', () => {
@@ -8,13 +9,32 @@ describe('validateEmail', () => {
 });
 
 describe('buildMailtoFallback', () => {
-  it('encodes email + note into a mailto url', () => {
+  it('encodes email + note + localized labels into a mailto url', () => {
     const url = buildMailtoFallback('me@x.com', 'a reggae video');
     expect(url.startsWith('mailto:')).toBe(true);
     expect(url).toContain('subject=');
-    expect(decodeURIComponent(url)).toContain('me@x.com');
-    expect(decodeURIComponent(url)).toContain('a reggae video');
     expect(url).toContain('founders@lyricstudio.app'); // pins the branded default inbox
+    const decoded = decodeURIComponent(url);
+    expect(decoded).toContain('me@x.com');
+    expect(decoded).toContain('a reggae video');
+    expect(decoded).toContain('Lyric Studio'); // from reserve_mailto_subject (en)
+    expect(decoded).toContain('Email'); // reserve_mailto_email (en)
+  });
+  it('uses the unspecified label when note is empty', () => {
+    expect(decodeURIComponent(buildMailtoFallback('me@x.com', ''))).toContain('(not specified)');
+  });
+  it('localizes the subject + labels to the active locale (proves it reads messages, not hardcoded en)', () => {
+    const origGetLocale = getLocale; // snapshot the real resolver so isolation survives reordering
+    overwriteGetLocale(() => 'ms');
+    try {
+      const decoded = decodeURIComponent(buildMailtoFallback('me@x.com', ''));
+      expect(decoded).toContain('Tempah akses Founder'); // ms reserve_mailto_subject
+      expect(decoded).toContain('E-mel'); // ms reserve_mailto_email
+      expect(decoded).toContain('(tidak dinyatakan)'); // ms reserve_mailto_unspecified
+      expect(decoded).not.toContain('(not specified)'); // en label must NOT leak through
+    } finally {
+      overwriteGetLocale(origGetLocale); // restore the original resolver, not a constant stub
+    }
   });
 });
 

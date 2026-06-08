@@ -1,4 +1,5 @@
 // src/lib/landing/reserve-client.ts
+import * as m from '$lib/paraglide/messages';
 
 // Fallback inbox used when the /api/reserve Function isn't reachable (e.g. the
 // GitHub Pages static mirror, or before the Function is deployed). NEVER a personal
@@ -13,9 +14,8 @@ export function validateEmail(email: string): boolean {
 }
 
 export function buildMailtoFallback(email: string, note: string): string {
-  const subject = 'Reserve founder access — Lyric Studio';
-  const body = `Email: ${email}\nWhat I'll make: ${note || '(not specified)'}`;
-  return `mailto:${FOUNDER_INBOX}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  const body = `${m.reserve_mailto_email()}: ${email}\n${m.reserve_mailto_make()}: ${note || m.reserve_mailto_unspecified()}`;
+  return `mailto:${FOUNDER_INBOX}?subject=${encodeURIComponent(m.reserve_mailto_subject())}&body=${encodeURIComponent(body)}`;
 }
 
 export interface ReserveInput {
