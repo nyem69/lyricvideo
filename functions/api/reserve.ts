@@ -4,6 +4,17 @@ import { decideReserve } from '../../src/lib/server/reserve-logic';
 interface Env {
   FOUNDERS: KVNamespace;
   RESEND_API_KEY?: string;
+  RESEND_SENDER_EMAIL?: string;
+  RESEND_SENDER_NAME?: string;
+}
+
+// Build the Resend `from:` header from configured sender env, falling back to the
+// branded default. The sender domain must be verified in Resend or the send is rejected.
+function resolveSender(env: Env): string {
+  if (env.RESEND_SENDER_EMAIL) {
+    return `${env.RESEND_SENDER_NAME ?? 'Lyric Studio'} <${env.RESEND_SENDER_EMAIL}>`;
+  }
+  return 'Lyric Studio <founders@lyricstudio.app>';
 }
 
 function json(body: unknown, status = 200): Response {
@@ -43,7 +54,7 @@ export const onRequest: PagesFunction<Env> = async ({ request, env }) => {
         // best-effort confirmation; fire-and-forget so the response isn't blocked
         // on email delivery. (Slice-2 hardening: wrap in context.waitUntil(...) so
         // CF doesn't cancel it on worker teardown — acceptable to drop occasionally in MVP.)
-        sendConfirmation(env.RESEND_API_KEY, decision.key).catch(() => {});
+        sendConfirmation(env.RESEND_API_KEY, decision.key, resolveSender(env)).catch(() => {});
       }
     }
     return json({ ok: true });
@@ -52,7 +63,7 @@ export const onRequest: PagesFunction<Env> = async ({ request, env }) => {
   }
 };
 
-async function sendConfirmation(apiKey: string, email: string): Promise<void> {
+async function sendConfirmation(apiKey: string, email: string, from: string): Promise<void> {
   await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
@@ -62,7 +73,7 @@ async function sendConfirmation(apiKey: string, email: string): Promise<void> {
       'user-agent': 'Mozilla/5.0 (LyricStudio reserve)'
     },
     body: JSON.stringify({
-      from: 'Lyric Studio <founders@lyricstudio.app>',
+      from,
       to: email,
       subject: "You're on the Founder list — Lyric Studio",
       text: "Thanks for reserving the $24 founder price. No charge today — we'll email you a checkout link when Founder access opens."
