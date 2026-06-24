@@ -1,5 +1,5 @@
 import type { Song, StyleMap, PresetId } from '$lib/model/types';
-import { parseSunoTimestamps } from '$lib/parser/suno';
+import { parseLyrics } from '$lib/parser/lyrics';
 import { playerStore } from './player.svelte';
 
 class ProjectStore {
@@ -21,7 +21,7 @@ class ProjectStore {
   });
 
   importTimestamps(text: string) {
-    const result = parseSunoTimestamps(text);
+    const result = parseLyrics(text);
     this.song = result;
     playerStore.setDuration(result.duration);
   }

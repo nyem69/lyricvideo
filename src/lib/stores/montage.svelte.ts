@@ -5,7 +5,7 @@ import { DEFAULT_SETTINGS, DEFAULT_TITLE_STYLE, DEFAULT_BAND_STYLE } from '$lib/
 import { coerceTextStyle } from '$lib/montage/fonts';
 import { deriveBands } from '$lib/montage/bands';
 import { buildTimeline } from '$lib/montage/timeline';
-import { parseSunoTimestamps } from '$lib/parser/suno';
+import { parseLyrics } from '$lib/parser/lyrics';
 import { downscaleToBlob } from '$lib/renderer/image-cache';
 import { putAsset, getAsset, deleteAsset } from '$lib/storage/asset-store';
 import { saveProject, loadProject, localStorageBackend } from '$lib/storage/project-store';
@@ -31,7 +31,7 @@ class MontageStore {
   // during export or the two would interleave draws and corrupt the capture.
   exporting = $state(false);
 
-  private song = $derived(this.lyricsText ? parseSunoTimestamps(this.lyricsText) : null);
+  private song = $derived(this.lyricsText ? parseLyrics(this.lyricsText) : null);
   readonly bands = $derived(deriveBands(this.song));
   readonly cuts = $derived.by(() => {
     // [GUARD] clamp duration to a finite value before buildTimeline — playerStore
@@ -99,7 +99,7 @@ class MontageStore {
 
   importLyrics(text: string) {
     this.lyricsText = text;
-    const song = parseSunoTimestamps(text);
+    const song = parseLyrics(text);
     if (!this.audioKey) {
       this.songDuration = song.duration;
       playerStore.setDuration(song.duration);
