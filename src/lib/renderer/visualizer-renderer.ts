@@ -29,6 +29,7 @@ export class VisualizerRenderer {
   private wave: Uint8Array<ArrayBuffer> = new Uint8Array(new ArrayBuffer(2048));
 
   private styleId: VizStyleId = 'bars';
+  private accent: string = ACCENT;
   private vizAnchor: VAnchor = DEFAULT_VIZ_ANCHOR;
   private lyricAnchor: VAnchor = DEFAULT_LYRIC_ANCHOR;
   private bands: LyricBand[] = [];
@@ -57,6 +58,9 @@ export class VisualizerRenderer {
   }
   setStyle(id: VizStyleId) {
     this.styleId = id;
+  }
+  setAccent(color: string) {
+    this.accent = color || ACCENT;
   }
   setAnchors(viz: VAnchor, lyric: VAnchor) {
     this.vizAnchor = viz;
@@ -120,7 +124,7 @@ export class VisualizerRenderer {
     if (energy === 0) {
       this.drawIdle(W, H, this.idleFrame++ / 60);
     } else {
-      style.draw({ ctx, w: W, h: H, freq: this.freq, wave: this.wave, t, accent: ACCENT });
+      style.draw({ ctx, w: W, h: H, freq: this.freq, wave: this.wave, t, accent: this.accent });
     }
     ctx.restore();
 

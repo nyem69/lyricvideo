@@ -14,7 +14,7 @@ export interface VizFrame {
   freq: Uint8Array; // 0..255 per bin
   wave: Uint8Array; // 0..255, silence = 128
   t: number; // seconds since start (rotations / drift)
-  accent: string; // active accent color (reserved; styles use the gold palette in v1)
+  accent: string; // active accent color as `#rrggbb` — every style draws in this
 }
 
 export interface VizStyle {
@@ -28,9 +28,28 @@ export interface VizStyle {
   draw: (f: VizFrame) => void;
 }
 
-const GOLD = '#d4af37';
+// Neutral highlights/surface that read well over ANY accent — kept color-fixed
+// on purpose: the cream specular caps and the dark centre wells are not tinted.
+const CREAM = '#fdf6e3';
+const WELL = '10,26,10'; // surface green, used as an rgb triple in gradient stops
 
 // ---- shared helpers ---------------------------------------------------------
+
+/** `#rgb`/`#rrggbb` -> `rgba(r,g,b,a)`. Lets every style derive translucent
+ *  fills/strokes/glows from the single chosen accent hex. */
+export function rgba(hex: string, a = 1): string {
+  let h = hex.replace('#', '').trim();
+  if (h.length === 3)
+    h = h
+      .split('')
+      .map((c) => c + c)
+      .join('');
+  const n = Number.parseInt(h, 16);
+  const r = (n >> 16) & 255;
+  const g = (n >> 8) & 255;
+  const b = n & 255;
+  return `rgba(${r}, ${g}, ${b}, ${a})`;
+}
 
 /** Average `freq` down to `bins` buckets, emphasising the audible low/mid range
  *  (the top of the FFT is mostly empty for music). Returns 0..1 values. */
@@ -63,7 +82,7 @@ const bars: VizStyle = {
   desc: 'Classic bottom-anchored frequency bars with a gold gradient. The safe, universally-readable default.',
   anchor: 'bottom',
   draw: (f) => {
-    const { ctx, w, h } = f;
+    const { ctx, w, h, accent } = f;
     const N = 64;
     const vals = buckets(f.freq, N);
     const gap = w * 0.004;
@@ -74,12 +93,12 @@ const bars: VizStyle = {
       const x = gap + i * (bw + gap);
       const y = h - bh;
       const grad = ctx.createLinearGradient(0, h, 0, y);
-      grad.addColorStop(0, 'rgba(212,175,55,0.35)');
-      grad.addColorStop(1, GOLD);
+      grad.addColorStop(0, rgba(accent, 0.35));
+      grad.addColorStop(1, accent);
       ctx.fillStyle = grad;
       ctx.fillRect(x, y, bw, bh);
       // reflection glow cap
-      ctx.fillStyle = 'rgba(253,246,227,0.85)';
+      ctx.fillStyle = rgba(CREAM, 0.85);
       ctx.fillRect(x, y, bw, Math.max(1, h * 0.004));
     }
   },
@@ -91,7 +110,7 @@ const mirror: VizStyle = {
   desc: 'Bars grow symmetrically from a centre line. Feels balanced and "designed"; title sits cleanly above or below.',
   anchor: 'center',
   draw: (f) => {
-    const { ctx, w, h } = f;
+    const { ctx, w, h, accent } = f;
     const N = 72;
     const vals = buckets(f.freq, N);
     const mid = h / 2;
@@ -102,13 +121,13 @@ const mirror: VizStyle = {
       const half = Math.max(1, v * h * 0.42);
       const x = gap + i * (bw + gap);
       const grad = ctx.createLinearGradient(0, mid - half, 0, mid + half);
-      grad.addColorStop(0, GOLD);
-      grad.addColorStop(0.5, 'rgba(212,175,55,0.25)');
-      grad.addColorStop(1, GOLD);
+      grad.addColorStop(0, accent);
+      grad.addColorStop(0.5, rgba(accent, 0.25));
+      grad.addColorStop(1, accent);
       ctx.fillStyle = grad;
       ctx.fillRect(x, mid - half, bw, half * 2);
     }
-    ctx.fillStyle = 'rgba(212,175,55,0.15)';
+    ctx.fillStyle = rgba(accent, 0.15);
     ctx.fillRect(0, mid - 1, w, 2);
   },
 };
@@ -119,7 +138,7 @@ const radial: VizStyle = {
   desc: 'Bars radiate from a centre disc that slowly rotates and pulses with the bass. Title (or album art) lives in the middle. The most "music-app" look.',
   anchor: 'center',
   draw: (f) => {
-    const { ctx, w, h, t } = f;
+    const { ctx, w, h, t, accent } = f;
     const cx = w / 2;
     const cy = h / 2;
     const b = bass(f.freq);
@@ -140,7 +159,7 @@ const radial: VizStyle = {
       const y1 = Math.sin(ang) * r0;
       const x2 = Math.cos(ang) * (r0 + len);
       const y2 = Math.sin(ang) * (r0 + len);
-      ctx.strokeStyle = `rgba(212,175,55,${0.4 + v * 0.6})`;
+      ctx.strokeStyle = rgba(accent, 0.4 + v * 0.6);
       ctx.beginPath();
       ctx.moveTo(x1, y1);
       ctx.lineTo(x2, y2);
@@ -148,13 +167,13 @@ const radial: VizStyle = {
     }
     // centre disc
     const glow = ctx.createRadialGradient(0, 0, r0 * 0.2, 0, 0, r0);
-    glow.addColorStop(0, 'rgba(212,175,55,0.25)');
-    glow.addColorStop(1, 'rgba(10,26,10,0.9)');
+    glow.addColorStop(0, rgba(accent, 0.25));
+    glow.addColorStop(1, `rgba(${WELL},0.9)`);
     ctx.fillStyle = glow;
     ctx.beginPath();
     ctx.arc(0, 0, r0, 0, Math.PI * 2);
     ctx.fill();
-    ctx.strokeStyle = 'rgba(212,175,55,0.5)';
+    ctx.strokeStyle = rgba(accent, 0.5);
     ctx.lineWidth = Math.max(1, h * 0.002);
     ctx.stroke();
     ctx.restore();
@@ -167,14 +186,14 @@ const wave: VizStyle = {
   desc: 'A single glowing oscilloscope line traces the raw audio waveform. Minimal, elegant, very legible behind lyrics.',
   anchor: 'center',
   draw: (f) => {
-    const { ctx, w, h } = f;
+    const { ctx, w, h, accent } = f;
     const mid = h / 2;
     const amp = h * 0.34;
     const step = w / f.wave.length;
     ctx.save();
     ctx.lineWidth = Math.max(2, h * 0.005);
-    ctx.strokeStyle = GOLD;
-    ctx.shadowColor = 'rgba(212,175,55,0.8)';
+    ctx.strokeStyle = accent;
+    ctx.shadowColor = rgba(accent, 0.8);
     ctx.shadowBlur = h * 0.03;
     ctx.lineJoin = 'round';
     ctx.beginPath();
@@ -199,7 +218,7 @@ const area: VizStyle = {
   desc: 'A smooth filled curve over the spectrum with a soft gradient — a calmer, more cinematic take on bars.',
   anchor: 'bottom',
   draw: (f) => {
-    const { ctx, w, h } = f;
+    const { ctx, w, h, accent } = f;
     const N = 96;
     const vals = buckets(f.freq, N);
     const pts = vals.map((v, i) => ({
@@ -207,8 +226,8 @@ const area: VizStyle = {
       y: h - Math.max(2, v * h * 0.82),
     }));
     const grad = ctx.createLinearGradient(0, h * 0.2, 0, h);
-    grad.addColorStop(0, 'rgba(212,175,55,0.85)');
-    grad.addColorStop(1, 'rgba(212,175,55,0.05)');
+    grad.addColorStop(0, rgba(accent, 0.85));
+    grad.addColorStop(1, rgba(accent, 0.05));
     ctx.fillStyle = grad;
     ctx.beginPath();
     ctx.moveTo(0, h);
@@ -222,7 +241,7 @@ const area: VizStyle = {
     ctx.closePath();
     ctx.fill();
     // crest line
-    ctx.strokeStyle = '#fdf6e3';
+    ctx.strokeStyle = CREAM;
     ctx.lineWidth = Math.max(1, h * 0.003);
     ctx.beginPath();
     ctx.moveTo(pts[0].x, pts[0].y);
@@ -241,7 +260,7 @@ const orb: VizStyle = {
   desc: 'A bass-reactive glowing orb wrapped in a ring of dots that flare with the mids. Abstract and hypnotic; great for ambient tracks.',
   anchor: 'center',
   draw: (f) => {
-    const { ctx, w, h, t } = f;
+    const { ctx, w, h, t, accent } = f;
     const cx = w / 2;
     const cy = h / 2;
     const b = bass(f.freq);
@@ -250,14 +269,14 @@ const orb: VizStyle = {
     // does NOT clear the background (outer stop is fully transparent), so the
     // renderer's background layer underneath is preserved. Not a bg clear.
     const glow = ctx.createRadialGradient(cx, cy, R * 0.3, cx, cy, R * 2.4);
-    glow.addColorStop(0, `rgba(212,175,55,${0.4 + b * 0.4})`);
-    glow.addColorStop(1, 'rgba(10,26,10,0)');
+    glow.addColorStop(0, rgba(accent, 0.4 + b * 0.4));
+    glow.addColorStop(1, `rgba(${WELL},0)`);
     ctx.fillStyle = glow;
     ctx.fillRect(0, 0, w, h);
     // core
     ctx.beginPath();
     ctx.arc(cx, cy, R, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(253,246,227,0.9)';
+    ctx.fillStyle = rgba(CREAM, 0.9);
     ctx.fill();
     // ring of mid-reactive dots
     const N = 80;
@@ -271,7 +290,7 @@ const orb: VizStyle = {
       const y = cy + Math.sin(ang) * rr;
       ctx.beginPath();
       ctx.arc(x, y, Math.max(1, v * h * 0.012 + h * 0.002), 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(212,175,55,${0.3 + v * 0.7})`;
+      ctx.fillStyle = rgba(accent, 0.3 + v * 0.7);
       ctx.fill();
     }
   },
