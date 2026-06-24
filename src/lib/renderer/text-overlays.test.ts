@@ -98,6 +98,17 @@ describe('overlay draws (smoke)', () => {
     expect((ctx as unknown as { __ys: number[] }).__ys[0]).toBeCloseTo(expected, 0);
   });
 
+  it('glitch band adds chromatic-split passes (3 fillText/line vs 1)', () => {
+    const plain = stubCtx();
+    const glitch = stubCtx();
+    drawLyricBand(plain, BAND, 1920, 1080, DEFAULT_BAND_STYLE, 1 / 2, 1.5);
+    drawLyricBand(glitch, BAND, 1920, 1080, { ...DEFAULT_BAND_STYLE, glitch: true }, 1 / 2, 1.5);
+    const count = (c: CanvasRenderingContext2D) =>
+      (c as unknown as { __calls: string[] }).__calls.filter((k) => k === 'fillText').length;
+    expect(count(plain)).toBe(1); // single line: one fill
+    expect(count(glitch)).toBe(3); // cyan ghost + magenta ghost + main fill
+  });
+
   it('drawTitleCard issues fill + stroke calls without throwing', () => {
     const ctx = stubCtx();
     drawTitleCard(ctx, 'My Title', 1920, 1080, DEFAULT_TITLE_STYLE, {

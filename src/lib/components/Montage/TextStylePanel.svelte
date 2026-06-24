@@ -15,7 +15,12 @@
   const pxAt1080 = (pct: number) => Math.round(1080 * pct);
 </script>
 
-{#snippet group(label: string, style: TextStyle, set: (patch: Partial<TextStyle>) => void)}
+{#snippet group(
+  label: string,
+  style: TextStyle,
+  set: (patch: Partial<TextStyle>) => void,
+  showGlitch = false
+)}
   <div class="flex flex-col gap-2">
     <span class="text-xs tracking-wider text-gold/50 uppercase" style="font-family:'Raleway',sans-serif">{label}</span>
 
@@ -63,6 +68,19 @@
         class="w-8 h-8 rounded cursor-pointer bg-transparent border border-gold/20"
       />
     </div>
+
+    {#if showGlitch}
+      <label class="flex items-center gap-2 cursor-pointer select-none text-sm text-white/70">
+        <input
+          aria-label="{label} glitch effect"
+          type="checkbox"
+          checked={style.glitch ?? false}
+          onchange={(e) => set({ glitch: (e.target as HTMLInputElement).checked })}
+          class="accent-gold"
+        />
+        <span class="tracking-wider uppercase text-xs text-gold/50" style="font-family:'Raleway',sans-serif">Glitch effect</span>
+      </label>
+    {/if}
   </div>
 {/snippet}
 
@@ -75,6 +93,6 @@
   </summary>
   <div class="flex flex-col gap-4 px-3 pb-3 pt-1">
     {@render group('Title', titleStyle, (p) => setTitleStyle(p))}
-    {@render group('Lyrics', bandStyle, (p) => setBandStyle(p))}
+    {@render group('Lyrics', bandStyle, (p) => setBandStyle(p), true)}
   </div>
 </details>

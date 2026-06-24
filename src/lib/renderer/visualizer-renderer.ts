@@ -144,7 +144,7 @@ export class VisualizerRenderer {
     }
 
     const band = this.bands.find((b) => t >= b.start && t < b.end) ?? null;
-    if (band) drawLyricBand(ctx, band, W, H, this.bandStyle, V_ANCHOR_FRAC[this.lyricAnchor]);
+    if (band) drawLyricBand(ctx, band, W, H, this.bandStyle, V_ANCHOR_FRAC[this.lyricAnchor], t);
   }
 
   // A calm centered EQ that breathes via a few out-of-phase sine waves — no
