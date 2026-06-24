@@ -758,6 +758,90 @@ const flower: VizStyle = {
   },
 };
 
+const garden: VizStyle = {
+  id: 'garden',
+  name: 'Garden',
+  desc: 'A row of flowers growing from the floor on swaying stems, each rising to its own frequency band and blooming on the bass. A side-view, botanical counterpart to the radial Flower.',
+  anchor: 'bottom',
+  draw: (f) => {
+    const { ctx, w, h, t, accent } = f;
+    const b = bass(f.freq);
+    const N = 7; // stems across the frame
+    const vals = buckets(f.freq, N);
+    const unit = Math.min(w, h);
+    ctx.save();
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    for (let i = 0; i < N; i++) {
+      const band = vals[i];
+      const baseX = ((i + 0.5) / N) * w + (hash01(i, 1) - 0.5) * (w / N) * 0.4;
+      const stemH = h * (0.28 + b * 0.18 + band * 0.4); // grows with bass + its band
+      const topY = h - stemH;
+      const swayPhase = hash01(i, 2) * Math.PI * 2;
+      const sway = Math.sin(t * 0.8 + swayPhase) * unit * (0.02 + b * 0.03);
+      const lean = (hash01(i, 3) - 0.5) * unit * 0.05;
+      const topX = baseX + sway + lean;
+      const ctrlX = baseX + (topX - baseX) * 0.5; // a gentle bow up the stem
+      const ctrlY = h - stemH * 0.55;
+      // stem
+      ctx.strokeStyle = rgba(accent, 0.5);
+      ctx.lineWidth = Math.max(1.5, unit * 0.005 * (0.6 + band * 0.5));
+      ctx.beginPath();
+      ctx.moveTo(baseX, h);
+      ctx.quadraticCurveTo(ctrlX, ctrlY, topX, topY);
+      ctx.stroke();
+      // two leaves part-way up the stem, angled out opposite ways
+      for (const lf of [0.4, 0.65]) {
+        const lx = baseX + (topX - baseX) * lf;
+        const ly = h - stemH * lf;
+        const dir = lf === 0.4 ? -1 : 1;
+        const ls = unit * 0.05 * (0.7 + band * 0.5);
+        ctx.save();
+        ctx.translate(lx, ly);
+        ctx.rotate(dir * 0.9 + sway * 0.02);
+        ctx.fillStyle = rgba(accent, 0.35);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.quadraticCurveTo(ls * 0.5, -ls * 0.4, ls, 0);
+        ctx.quadraticCurveTo(ls * 0.5, ls * 0.4, 0, 0);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+      // flower head: a small petal ring that opens with the bass
+      const headR = unit * (0.03 + b * 0.02 + band * 0.03);
+      const PETALS = 8;
+      ctx.save();
+      ctx.translate(topX, topY);
+      ctx.rotate(t * 0.2 + i);
+      for (let p = 0; p < PETALS; p++) {
+        const pl = headR * (1.4 + b * 0.8);
+        const pw = pl * 0.5;
+        ctx.save();
+        ctx.rotate((p / PETALS) * Math.PI * 2);
+        const g = ctx.createLinearGradient(0, headR * 0.3, 0, headR * 0.3 + pl);
+        g.addColorStop(0, rgba(accent, 0.3));
+        g.addColorStop(1, rgba(accent, 0.9));
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.moveTo(0, headR * 0.3);
+        ctx.quadraticCurveTo(pw, headR * 0.3 + pl * 0.5, 0, headR * 0.3 + pl);
+        ctx.quadraticCurveTo(-pw, headR * 0.3 + pl * 0.5, 0, headR * 0.3);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+      // pistil
+      ctx.fillStyle = rgba(CREAM, 0.9);
+      ctx.beginPath();
+      ctx.arc(0, 0, Math.max(1, headR * 0.5), 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+    ctx.restore();
+  },
+};
+
 export const VIZ_STYLES: VizStyle[] = [
   bars,
   mirror,
@@ -775,6 +859,7 @@ export const VIZ_STYLES: VizStyle[] = [
   starfield,
   fog,
   flower,
+  garden,
 ];
 export const VIZ_STYLE_MAP: Record<string, VizStyle> = Object.fromEntries(
   VIZ_STYLES.map((s) => [s.id, s])
