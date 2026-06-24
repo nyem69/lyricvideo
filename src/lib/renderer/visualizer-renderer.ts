@@ -3,7 +3,6 @@ import type { LyricBand, TextStyle, MontageSettings } from '$lib/montage/model';
 import { DEFAULT_TITLE_STYLE, DEFAULT_BAND_STYLE } from '$lib/montage/model';
 import { VIZ_STYLE_MAP } from '$lib/visualizer/viz-styles';
 import {
-  VIZ_TITLE_THEME,
   V_ANCHOR_FRAC,
   DEFAULT_VIZ_ANCHOR,
   DEFAULT_LYRIC_ANCHOR,
@@ -140,11 +139,18 @@ export class VisualizerRenderer {
     ctx.restore();
 
     if (this.title && titleVisible(t, this.settings.openingDuration, this.bands)) {
-      drawTitleCard(ctx, this.title, W, H, this.titleStyle, VIZ_TITLE_THEME);
+      // Title over the LIVE visualizer (translucent backdrop, not an opaque card)
+      // so the coloured bars show through during the opening — otherwise the
+      // visualizer is hidden for the first ~2s and a colour change isn't visible
+      // while paused on the title. The divider also follows the chosen colour.
+      drawTitleCard(ctx, this.title, W, H, this.titleStyle, {
+        background: 'rgba(10,26,10,0.5)',
+        accent: this.accent,
+      });
     }
 
     const band = this.bands.find((b) => t >= b.start && t < b.end) ?? null;
-    if (band) drawLyricBand(ctx, band, W, H, this.bandStyle, V_ANCHOR_FRAC[this.lyricAnchor]);
+    if (band) drawLyricBand(ctx, band, W, H, this.bandStyle, V_ANCHOR_FRAC[this.lyricAnchor], t);
   }
 
   // A calm centered EQ that breathes via a few out-of-phase sine waves — no
