@@ -18,7 +18,8 @@ export type VizStyleId =
   | 'starfield'
   | 'fog'
   | 'flower'
-  | 'garden';
+  | 'garden'
+  | 'sakura';
 export const DEFAULT_VIZ_STYLE: VizStyleId = 'bars';
 
 /** Preset vertical placement for the visualizer graphics and the lyric band.

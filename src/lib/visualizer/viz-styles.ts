@@ -842,6 +842,54 @@ const garden: VizStyle = {
   },
 };
 
+const sakura: VizStyle = {
+  id: 'sakura',
+  name: 'Sakura',
+  desc: 'Cherry-blossom petals tumbling and drifting down on a soft diagonal breeze, flurrying and swelling with the bass. Delicate and atmospheric.',
+  anchor: 'center',
+  draw: (f) => {
+    const { ctx, w, h, t, accent } = f;
+    const b = bass(f.freq);
+    const N = 90;
+    const unit = Math.min(w, h);
+    const speed = 0.07 + b * 0.06; // slow descent, lifts on bass
+    const wind = w * (0.05 + b * 0.04); // diagonal drift across the fall
+    for (let i = 0; i < N; i++) {
+      const phase = hash01(i, 1);
+      const sp = 0.5 + hash01(i, 4); // per-petal speed variance
+      const fall = (t * speed * sp + phase) % 1; // 0 (top) .. 1 (bottom)
+      const baseX = hash01(i, 2) * (w + wind) - wind;
+      const swayAmp = w * (0.02 + hash01(i, 5) * 0.04);
+      const x = baseX + wind * fall + Math.sin(t * (0.6 + sp) + i * 1.7) * swayAmp;
+      const y = -unit * 0.05 + fall * (h + unit * 0.1);
+      const size = unit * (0.012 + hash01(i, 3) * 0.012) * (1 + b * 0.4);
+      // Tumble: a continuous spin whose width is squashed by |cos| so the petal
+      // appears to turn edge-on and flutter (cheap pseudo-3D, fully deterministic).
+      const tumble = t * (1.2 + sp) + phase * Math.PI * 2;
+      const flip = Math.abs(Math.cos(tumble * 0.8)) * 0.85 + 0.15; // 0.15..1 width
+      const a = 0.35 + hash01(i, 6) * 0.45;
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(Math.sin(tumble) * 0.6 + (hash01(i, 7) - 0.5)); // gentle rock + lean
+      ctx.scale(flip, 1);
+      // Notched cherry-blossom petal: narrow base (top) widening to a split tip.
+      const g = ctx.createLinearGradient(0, -size, 0, size);
+      g.addColorStop(0, rgba(accent, a));
+      g.addColorStop(1, rgba(accent, a * 0.4));
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.moveTo(0, -size);
+      ctx.quadraticCurveTo(size * 0.9, -size * 0.2, size * 0.5, size);
+      ctx.quadraticCurveTo(size * 0.2, size * 0.6, 0, size * 0.78); // tip notch in
+      ctx.quadraticCurveTo(-size * 0.2, size * 0.6, -size * 0.5, size);
+      ctx.quadraticCurveTo(-size * 0.9, -size * 0.2, 0, -size);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+  },
+};
+
 export const VIZ_STYLES: VizStyle[] = [
   bars,
   mirror,
@@ -860,6 +908,7 @@ export const VIZ_STYLES: VizStyle[] = [
   fog,
   flower,
   garden,
+  sakura,
 ];
 export const VIZ_STYLE_MAP: Record<string, VizStyle> = Object.fromEntries(
   VIZ_STYLES.map((s) => [s.id, s])

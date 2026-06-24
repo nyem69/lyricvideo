@@ -62,7 +62,7 @@ function frame(w: number, h: number, fill: number): VizFrame {
 }
 
 describe('viz styles', () => {
-  it('exposes all seventeen styles', () => {
+  it('exposes all eighteen styles', () => {
     expect(VIZ_STYLES.map((s) => s.id)).toEqual([
       'bars',
       'mirror',
@@ -81,6 +81,7 @@ describe('viz styles', () => {
       'fog',
       'flower',
       'garden',
+      'sakura',
     ]);
     expect(Object.keys(VIZ_STYLE_MAP).sort()).toEqual([
       'area',
@@ -96,6 +97,7 @@ describe('viz styles', () => {
       'radial',
       'rain',
       'ringwave',
+      'sakura',
       'smoke',
       'snow',
       'starfield',
