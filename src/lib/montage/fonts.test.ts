@@ -1,4 +1,5 @@
 // src/lib/montage/fonts.test.ts
+import { readFileSync } from 'node:fs';
 import { describe, it, expect } from 'vitest';
 import {
   FONT_FAMILIES,
@@ -11,9 +12,34 @@ import { DEFAULT_TITLE_STYLE } from './model';
 
 describe('font catalog', () => {
   it('exposes only families whose webfonts are actually loaded', () => {
-    expect(FONT_FAMILIES.map((f) => f.id).sort()).toEqual(
-      ['bebas', 'great-vibes', 'playfair', 'raleway']
-    );
+    // Keep in lockstep with the <link> in app.html — a family here that isn't
+    // loaded there silently renders as a system fallback on the canvas.
+    expect(FONT_FAMILIES.map((f) => f.id).sort()).toEqual([
+      'anton',
+      'bebas',
+      'bungee',
+      'great-vibes',
+      'metal-mania',
+      'nosifer',
+      'playfair',
+      'raleway',
+      'rubik-distressed',
+      'rubik-spray',
+      'special-elite',
+    ]);
+  });
+
+  it('every catalog family is loaded by the app.html font link', () => {
+    const html = readFileSync('src/app.html', 'utf8');
+    const link = html.match(/fonts\.googleapis\.com\/css2\?[^"']+/)?.[0] ?? '';
+    expect(link).not.toBe('');
+    for (const f of FONT_FAMILIES) {
+      const name = f.stack.match(/'([^']+)'/)?.[1] ?? '';
+      const token = name.replace(/ /g, '+');
+      expect(link, `${f.id} (${name}) must be in the app.html font link`).toContain(
+        `family=${token}`
+      );
+    }
   });
 
   it('every family has a defaultWeight that is one of its weights', () => {

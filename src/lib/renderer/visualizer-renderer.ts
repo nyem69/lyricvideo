@@ -14,9 +14,20 @@ import { drawLyricBand, drawTitleCard } from './text-overlays';
 
 const SURFACE = '#0a1a0a';
 const ACCENT = '#d4af37';
-// Teal cue used ONLY for the idle (no-signal) shimmer, mirroring the
-// audio-reactive accent in the editor chrome. Live playback uses gold (ACCENT).
-const IDLE_ACCENT = '#46d6c8';
+
+/**
+ * Whether the opening title card should be drawn at time `t`.
+ *
+ * The title belongs to the opening only and must yield the instant the first
+ * lyric appears: lyrics are audio-synced and can't be delayed, so if
+ * `openingDuration` runs past the first lyric's start the two would overlap
+ * on-screen. The effective title window is therefore the SHORTER of
+ * `openingDuration` and the first lyric's start time.
+ */
+export function titleVisible(t: number, openingDuration: number, bands: LyricBand[]): boolean {
+  const firstLyric = bands.reduce((min, b) => Math.min(min, b.start), Infinity);
+  return t < Math.min(openingDuration, firstLyric);
+}
 
 export class VisualizerRenderer {
   private canvas: HTMLCanvasElement;
@@ -128,7 +139,7 @@ export class VisualizerRenderer {
     }
     ctx.restore();
 
-    if (t < this.settings.openingDuration && this.title) {
+    if (this.title && titleVisible(t, this.settings.openingDuration, this.bands)) {
       drawTitleCard(ctx, this.title, W, H, this.titleStyle, VIZ_TITLE_THEME);
     }
 
@@ -138,7 +149,8 @@ export class VisualizerRenderer {
 
   // A calm centered EQ that breathes via a few out-of-phase sine waves — no
   // randomness so a paused/seeking preview stays deterministic and an idle
-  // export is reproducible. Teal, low alpha, so it never competes with a title.
+  // export is reproducible. Drawn in the chosen accent (low alpha) so picking a
+  // color is visible immediately, before any audio plays.
   private drawIdle(W: number, H: number, t: number) {
     const { ctx } = this;
     const bars = 48;
@@ -147,7 +159,7 @@ export class VisualizerRenderer {
     const mid = H / 2;
     const maxH = H * 0.16;
     ctx.save();
-    ctx.fillStyle = IDLE_ACCENT;
+    ctx.fillStyle = this.accent;
     for (let i = 0; i < bars; i++) {
       const phase = t * 1.6 + i * 0.32;
       const env = 0.55 + 0.45 * Math.sin(i / bars * Math.PI); // taller in the middle
