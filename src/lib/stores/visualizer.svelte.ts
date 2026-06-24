@@ -17,6 +17,7 @@ import {
   DEFAULT_VIZ_ANCHOR,
   DEFAULT_LYRIC_ANCHOR,
   DEFAULT_VIZ_COLOR,
+  DEFAULT_VIZ_BG,
   type VisualizerProject,
   type VizStyleId,
   type VAnchor,
@@ -31,6 +32,7 @@ class VisualizerStore {
   bandStyle = $state<TextStyle>({ ...DEFAULT_BAND_STYLE });
   vizStyleId = $state<VizStyleId>(DEFAULT_VIZ_STYLE);
   vizColor = $state<string>(DEFAULT_VIZ_COLOR);
+  vizBg = $state<string>(DEFAULT_VIZ_BG);
   vizAnchor = $state<VAnchor>(DEFAULT_VIZ_ANCHOR);
   lyricAnchor = $state<VAnchor>(DEFAULT_LYRIC_ANCHOR);
   formatId = $state<string>(DEFAULT_FORMAT);
@@ -118,6 +120,11 @@ class VisualizerStore {
     this.persist();
   }
 
+  setVizBg(color: string) {
+    this.vizBg = color;
+    this.persist();
+  }
+
   setVizAnchor(a: VAnchor) {
     this.vizAnchor = a;
     this.persist();
@@ -163,6 +170,7 @@ class VisualizerStore {
       bandStyle: this.bandStyle,
       vizStyleId: this.vizStyleId,
       vizColor: this.vizColor,
+      vizBg: this.vizBg,
       vizAnchor: this.vizAnchor,
       lyricAnchor: this.lyricAnchor,
       formatId: this.formatId,
@@ -186,6 +194,7 @@ class VisualizerStore {
       this.bandStyle = coerceTextStyle({ ...DEFAULT_BAND_STYLE, ...project.bandStyle });
       this.vizStyleId = project.vizStyleId;
       this.vizColor = project.vizColor ?? DEFAULT_VIZ_COLOR;
+      this.vizBg = project.vizBg ?? DEFAULT_VIZ_BG;
       this.vizAnchor = project.vizAnchor ?? DEFAULT_VIZ_ANCHOR;
       this.lyricAnchor = project.lyricAnchor ?? DEFAULT_LYRIC_ANCHOR;
       this.formatId = project.formatId;

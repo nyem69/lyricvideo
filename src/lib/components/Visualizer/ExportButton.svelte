@@ -32,6 +32,7 @@
     renderer.resize(visualizerStore.dims.width, visualizerStore.dims.height);
     renderer.setStyle(visualizerStore.vizStyleId);
     renderer.setAccent(visualizerStore.vizColor);
+    renderer.setSurface(visualizerStore.vizBg);
     renderer.setAnchors(visualizerStore.vizAnchor, visualizerStore.lyricAnchor);
     renderer.setBands(visualizerStore.bands);
     renderer.setTitle(visualizerStore.title);
