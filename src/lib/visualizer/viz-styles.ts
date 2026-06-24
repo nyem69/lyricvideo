@@ -74,6 +74,15 @@ function bass(freq: Uint8Array): number {
   return s / n / 255; // 0..1
 }
 
+/** Deterministic pseudo-random value in [0,1) from two integer-ish seeds. Pure —
+ *  the particle styles below use it for fixed per-index spawn params (angle,
+ *  phase, speed) so a given frame replays byte-identically. NEVER Math.random,
+ *  which would desync export/seeking. Same `Math.sin`-hash the glitch style uses. */
+function hash01(i: number, salt: number): number {
+  const s = Math.sin(i * 127.1 + salt * 311.7) * 43758.5453;
+  return s - Math.floor(s);
+}
+
 // ---- styles -----------------------------------------------------------------
 
 const bars: VizStyle = {
@@ -524,6 +533,159 @@ const smoke: VizStyle = {
   },
 };
 
+const rain: VizStyle = {
+  id: 'rain',
+  name: 'Rain',
+  desc: 'Translucent streaks falling on a diagonal wind, thickening and speeding up with the bass. Moody and kinetic — built for street / grunge looks.',
+  anchor: 'center',
+  draw: (f) => {
+    const { ctx, w, h, t, accent } = f;
+    const b = bass(f.freq);
+    const N = 130;
+    const speed = 0.5 + b * 0.7; // fall cycles/sec, lifts on bass
+    const wind = w * (0.06 + b * 0.05); // horizontal travel over a full fall
+    const len = h * (0.06 + b * 0.05); // streak length
+    const dxLen = (wind * len) / (h + len * 2); // horizontal run over one streak
+    ctx.save();
+    ctx.lineCap = 'round';
+    ctx.lineWidth = Math.max(1, Math.min(w, h) * 0.0025);
+    for (let i = 0; i < N; i++) {
+      const phase = hash01(i, 1);
+      const sp = 0.6 + hash01(i, 4) * 0.8; // per-drop speed variance
+      const fall = (t * speed * sp + phase) % 1; // 0 (top) .. 1 (bottom)
+      const baseX = hash01(i, 2) * (w + wind) - wind; // start left of frame so wind fills it
+      const hx = baseX + wind * fall; // head drifts right as it descends
+      const hy = -len + fall * (h + len * 2);
+      const a = 0.15 + hash01(i, 3) * 0.25 + b * 0.2;
+      const grad = ctx.createLinearGradient(hx - dxLen, hy - len, hx, hy);
+      grad.addColorStop(0, rgba(accent, 0)); // faded tail (up-wind)
+      grad.addColorStop(1, rgba(accent, a)); // bright head
+      ctx.strokeStyle = grad;
+      ctx.beginPath();
+      ctx.moveTo(hx - dxLen, hy - len);
+      ctx.lineTo(hx, hy);
+      ctx.stroke();
+    }
+    ctx.restore();
+  },
+};
+
+const snow: VizStyle = {
+  id: 'snow',
+  name: 'Snow',
+  desc: 'Soft flakes drifting down with a gentle sway, flurrying and swelling on the bass. Calm and atmospheric.',
+  anchor: 'center',
+  draw: (f) => {
+    const { ctx, w, h, t, accent } = f;
+    const b = bass(f.freq);
+    const N = 120;
+    const speed = 0.06 + b * 0.06; // slow descent
+    for (let i = 0; i < N; i++) {
+      const phase = hash01(i, 1);
+      const sp = 0.5 + hash01(i, 4); // per-flake speed
+      const fall = (t * speed * sp + phase) % 1;
+      const baseX = hash01(i, 2) * w;
+      const swayAmp = w * (0.01 + hash01(i, 5) * 0.03);
+      const x = baseX + Math.sin(t * (0.5 + sp) + i * 1.3) * swayAmp;
+      const y = -10 + fall * (h + 20);
+      const r = Math.min(w, h) * (0.004 + hash01(i, 3) * 0.008) * (1 + b * 0.5);
+      const a = 0.3 + hash01(i, 6) * 0.5;
+      const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+      g.addColorStop(0, rgba(accent, a));
+      g.addColorStop(0.6, rgba(accent, a * 0.4));
+      g.addColorStop(1, rgba(accent, 0));
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  },
+};
+
+const starfield: VizStyle = {
+  id: 'starfield',
+  name: 'Starfield',
+  desc: 'Stars streaming out of the centre in a hyperspace warp, accelerating and trailing on the bass. Dynamic and immersive.',
+  anchor: 'center',
+  draw: (f) => {
+    const { ctx, w, h, t, accent } = f;
+    const b = bass(f.freq);
+    const cx = w / 2;
+    const cy = h / 2;
+    const maxR = Math.hypot(w, h) / 2;
+    const N = 150;
+    const speed = 0.1 + b * 0.18; // warp speed lifts on bass
+    const trail = 0.03 + b * 0.1; // streak length (in depth) lifts on bass
+    ctx.save();
+    ctx.lineCap = 'round';
+    for (let i = 0; i < N; i++) {
+      const ang = hash01(i, 1) * Math.PI * 2;
+      const phase = hash01(i, 2);
+      const sp = 0.6 + hash01(i, 4) * 0.8;
+      const z = (t * speed * sp + phase) % 1; // 0 (centre) .. 1 (edge)
+      const zt = Math.max(0, z - trail);
+      const rHead = z * z * maxR; // accelerate outward
+      const rTail = zt * zt * maxR;
+      const cos = Math.cos(ang);
+      const sin = Math.sin(ang);
+      const hx = cx + cos * rHead;
+      const hy = cy + sin * rHead;
+      const tx = cx + cos * rTail;
+      const ty = cy + sin * rTail;
+      const a = Math.min(1, z * 1.6);
+      const lw = Math.max(1, Math.min(w, h) * 0.001 * (0.5 + z * 3));
+      const grad = ctx.createLinearGradient(tx, ty, hx, hy);
+      grad.addColorStop(0, rgba(accent, 0));
+      grad.addColorStop(1, rgba(accent, a));
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = lw;
+      ctx.beginPath();
+      ctx.moveTo(tx, ty);
+      ctx.lineTo(hx, hy);
+      ctx.stroke();
+      // bright specular head
+      ctx.fillStyle = rgba(CREAM, a * 0.85);
+      ctx.beginPath();
+      ctx.arc(hx, hy, lw * 0.7, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  },
+};
+
+const fog: VizStyle = {
+  id: 'fog',
+  name: 'Fog',
+  desc: 'Slow banks of haze drifting across the frame, swelling and brightening with the bass. Ambient and cinematic.',
+  anchor: 'center',
+  draw: (f) => {
+    const { ctx, w, h, t, accent } = f;
+    const b = bass(f.freq);
+    const N = 22; // soft puffs that overlap into drifting banks
+    ctx.save();
+    // Additive so overlapping puffs build into brighter haze (state is restored).
+    ctx.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < N; i++) {
+      const phase = hash01(i, 1);
+      const sp = 0.4 + hash01(i, 4) * 0.6;
+      const dir = hash01(i, 5) > 0.5 ? 1 : -1; // some banks drift left, some right
+      const off = (t * 0.02 * sp + phase) % 1; // 0..1, slow horizontal crawl
+      const x = dir > 0 ? -0.3 * w + off * 1.6 * w : 1.3 * w - off * 1.6 * w;
+      const y = h * (0.12 + hash01(i, 2) * 0.76) + Math.sin(t * 0.3 + i) * h * 0.03;
+      const r = Math.min(w, h) * (0.18 + hash01(i, 3) * 0.22) * (1 + b * 0.3);
+      const a = 0.05 + hash01(i, 6) * 0.06 + b * 0.05;
+      const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+      g.addColorStop(0, rgba(accent, a));
+      g.addColorStop(1, rgba(accent, 0));
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  },
+};
+
 export const VIZ_STYLES: VizStyle[] = [
   bars,
   mirror,
@@ -536,6 +698,10 @@ export const VIZ_STYLES: VizStyle[] = [
   matrix,
   glitch,
   smoke,
+  rain,
+  snow,
+  starfield,
+  fog,
 ];
 export const VIZ_STYLE_MAP: Record<string, VizStyle> = Object.fromEntries(
   VIZ_STYLES.map((s) => [s.id, s])
