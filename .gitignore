@@ -10,3 +10,5 @@ project.inlang/cache/
 .env
 .env.*
 !.env.example
+
+.claude
