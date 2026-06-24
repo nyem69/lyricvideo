@@ -11,7 +11,8 @@ export type VizStyleId =
   | 'ringwave'
   | 'blob'
   | 'matrix'
-  | 'glitch';
+  | 'glitch'
+  | 'smoke';
 export const DEFAULT_VIZ_STYLE: VizStyleId = 'bars';
 
 /** Preset vertical placement for the visualizer graphics and the lyric band.

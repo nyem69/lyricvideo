@@ -62,7 +62,7 @@ function frame(w: number, h: number, fill: number): VizFrame {
 }
 
 describe('viz styles', () => {
-  it('exposes all ten styles', () => {
+  it('exposes all eleven styles', () => {
     expect(VIZ_STYLES.map((s) => s.id)).toEqual([
       'bars',
       'mirror',
@@ -74,10 +74,21 @@ describe('viz styles', () => {
       'blob',
       'matrix',
       'glitch',
+      'smoke',
     ]);
-    expect(Object.keys(VIZ_STYLE_MAP).sort()).toEqual(
-      ['area', 'bars', 'blob', 'glitch', 'matrix', 'mirror', 'orb', 'radial', 'ringwave', 'wave']
-    );
+    expect(Object.keys(VIZ_STYLE_MAP).sort()).toEqual([
+      'area',
+      'bars',
+      'blob',
+      'glitch',
+      'matrix',
+      'mirror',
+      'orb',
+      'radial',
+      'ringwave',
+      'smoke',
+      'wave',
+    ]);
   });
 
   it('every style declares a valid anchor', () => {
