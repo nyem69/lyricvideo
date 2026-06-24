@@ -4,7 +4,7 @@ import type { TextStyle } from '$lib/montage/model';
 import { DEFAULT_SETTINGS, DEFAULT_TITLE_STYLE, DEFAULT_BAND_STYLE } from '$lib/montage/model';
 import { coerceTextStyle } from '$lib/montage/fonts';
 import { deriveBands } from '$lib/montage/bands';
-import { parseSunoTimestamps } from '$lib/parser/suno';
+import { parseLyrics } from '$lib/parser/lyrics';
 import { putAsset, getAsset, deleteAsset } from '$lib/storage/asset-store';
 import {
   saveVisualizerProject,
@@ -45,7 +45,7 @@ class VisualizerStore {
   ready = $state(false);
   exporting = $state(false);
 
-  private song = $derived(this.lyricsText ? parseSunoTimestamps(this.lyricsText) : null);
+  private song = $derived(this.lyricsText ? parseLyrics(this.lyricsText) : null);
   readonly bands = $derived(deriveBands(this.song));
   readonly title = $derived(this.videoTitle.trim() || 'Visualizer');
   readonly dims = $derived(
@@ -61,7 +61,7 @@ class VisualizerStore {
 
   importLyrics(text: string) {
     this.lyricsText = text;
-    const song = parseSunoTimestamps(text);
+    const song = parseLyrics(text);
     if (!this.audioKey) {
       this.songDuration = song.duration;
       playerStore.setDuration(song.duration);

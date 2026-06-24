@@ -113,12 +113,12 @@
       <PlacementPicker />
 
       <div class="flex flex-col gap-2">
-        <span class="text-sm tracking-wider text-gold/60 uppercase" style="font-family:'Raleway',sans-serif">Lyrics (timestamps)</span>
+        <span class="text-sm tracking-wider text-gold/60 uppercase" style="font-family:'Raleway',sans-serif">Lyrics (Suno / LRC / SRT)</span>
         <textarea
           value={visualizerStore.lyricsText}
           oninput={(e) => visualizerStore.importLyrics((e.target as HTMLTextAreaElement).value)}
           rows="8"
-          placeholder={"[00:11.162] Sembah [00:11.392] berlalu..."}
+          placeholder={"Paste Suno [00:11.16] word timestamps, an .lrc, or an .srt — auto-detected"}
           class="w-full bg-white/5 border border-gold/20 rounded px-3 py-2 text-sm text-white/80 font-mono placeholder:text-white/20 focus:outline-none focus:border-gold/50 resize-y"
         ></textarea>
       </div>
