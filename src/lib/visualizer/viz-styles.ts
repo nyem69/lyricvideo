@@ -686,6 +686,78 @@ const fog: VizStyle = {
   },
 };
 
+const flower: VizStyle = {
+  id: 'flower',
+  name: 'Flower',
+  desc: 'A layered bloom of petals that opens on the bass, each petal flaring to its own frequency band while the rings slowly counter-rotate around a pulsing pistil. A procedural, audio-reactive take on the FlowerJS look.',
+  anchor: 'center',
+  draw: (f) => {
+    const { ctx, w, h, t, accent } = f;
+    const cx = w / 2;
+    const cy = h / 2;
+    const b = bass(f.freq);
+    const PETALS = 12;
+    const PILES = 3; // concentric rings, outer -> inner
+    const vals = buckets(f.freq, PETALS);
+    const unit = Math.min(w, h);
+    const baseR = unit * 0.05; // inner radius the petals spring from
+
+    // Soft bloom glow behind the flower. Outer stop is fully transparent, so this
+    // is an additive wash over the existing background, NOT a background clear.
+    const bloom = ctx.createRadialGradient(cx, cy, baseR, cx, cy, unit * 0.34 * (1 + b * 0.2));
+    bloom.addColorStop(0, rgba(accent, 0.18 + b * 0.15));
+    bloom.addColorStop(1, rgba(accent, 0));
+    ctx.fillStyle = bloom;
+    ctx.fillRect(0, 0, w, h);
+
+    // Rings: layer 0 = outermost & largest (drawn first / behind), inner rings
+    // are smaller, brighter and drawn on top. Alternate rings counter-rotate.
+    for (let layer = 0; layer < PILES; layer++) {
+      const scale = 1 - layer * 0.26;
+      const layerAlpha = 0.45 + (layer / PILES) * 0.45;
+      const dir = layer % 2 === 0 ? 1 : -1;
+      const spin = t * 0.15 * dir + layer * (Math.PI / PETALS); // counter-rotate + interleave
+      for (let i = 0; i < PETALS; i++) {
+        const v = vals[(i + layer) % PETALS];
+        const ang = (i / PETALS) * Math.PI * 2 + spin;
+        const L = unit * 0.2 * scale * (0.5 + b * 0.5 + v * 0.7); // bloom + per-band flare
+        const W = L * 0.42;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(ang);
+        // Petal: a teardrop closed by two quadratics bulging out to +/-W, base at
+        // baseR, tip at baseR+L. Gradient runs translucent base -> bright tip.
+        const grad = ctx.createLinearGradient(0, baseR, 0, baseR + L);
+        grad.addColorStop(0, rgba(accent, 0.2 * layerAlpha));
+        grad.addColorStop(1, rgba(accent, 0.9 * layerAlpha));
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.moveTo(0, baseR);
+        ctx.quadraticCurveTo(W, baseR + L * 0.5, 0, baseR + L);
+        ctx.quadraticCurveTo(-W, baseR + L * 0.5, 0, baseR);
+        ctx.closePath();
+        ctx.fill();
+        // faint cream edge so overlapping petals stay legible
+        ctx.strokeStyle = rgba(CREAM, 0.12 * layerAlpha);
+        ctx.lineWidth = Math.max(1, unit * 0.0015);
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+
+    // Pistil — a seed disc that pulses with the bass.
+    const pr = baseR * (1.5 + b * 0.6);
+    const pistil = ctx.createRadialGradient(cx, cy, 0, cx, cy, pr);
+    pistil.addColorStop(0, rgba(CREAM, 0.95));
+    pistil.addColorStop(0.6, rgba(accent, 0.9));
+    pistil.addColorStop(1, rgba(accent, 0.2));
+    ctx.fillStyle = pistil;
+    ctx.beginPath();
+    ctx.arc(cx, cy, pr, 0, Math.PI * 2);
+    ctx.fill();
+  },
+};
+
 export const VIZ_STYLES: VizStyle[] = [
   bars,
   mirror,
@@ -702,6 +774,7 @@ export const VIZ_STYLES: VizStyle[] = [
   snow,
   starfield,
   fog,
+  flower,
 ];
 export const VIZ_STYLE_MAP: Record<string, VizStyle> = Object.fromEntries(
   VIZ_STYLES.map((s) => [s.id, s])
