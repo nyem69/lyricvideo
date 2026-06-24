@@ -41,6 +41,57 @@ export const FONT_FAMILIES: FontFamily[] = [
     weights: [100, 200, 300, 400, 600],
     defaultWeight: 400,
   },
+  // ---- Heavy display ----
+  {
+    id: 'anton',
+    label: 'Anton',
+    stack: "'Anton', sans-serif",
+    weights: [400],
+    defaultWeight: 400,
+  },
+  {
+    id: 'bungee',
+    label: 'Bungee',
+    stack: "'Bungee', sans-serif",
+    weights: [400],
+    defaultWeight: 400,
+  },
+  // ---- Grunge / distressed ----
+  {
+    id: 'rubik-distressed',
+    label: 'Rubik Distressed',
+    stack: "'Rubik Distressed', system-ui, sans-serif",
+    weights: [400],
+    defaultWeight: 400,
+  },
+  {
+    id: 'rubik-spray',
+    label: 'Rubik Spray Paint',
+    stack: "'Rubik Spray Paint', system-ui, sans-serif",
+    weights: [400],
+    defaultWeight: 400,
+  },
+  {
+    id: 'metal-mania',
+    label: 'Metal Mania',
+    stack: "'Metal Mania', system-ui, cursive",
+    weights: [400],
+    defaultWeight: 400,
+  },
+  {
+    id: 'nosifer',
+    label: 'Nosifer',
+    stack: "'Nosifer', system-ui, cursive",
+    weights: [400],
+    defaultWeight: 400,
+  },
+  {
+    id: 'special-elite',
+    label: 'Special Elite (Typewriter)',
+    stack: "'Special Elite', system-ui, serif",
+    weights: [400],
+    defaultWeight: 400,
+  },
 ];
 
 const FALLBACK = FONT_FAMILIES[0]; // playfair
