@@ -9,6 +9,10 @@ export interface ExportOptions {
   /** When present, an AnalyserNode is tapped off the export audio source and
    *  handed back before recording starts, so renderFrame can read live FFT. */
   onAnalyserReady?: (analyser: AnalyserNode) => void;
+  /** Abort an in-progress export. On abort the recorder + audio are torn down
+   *  and the promise rejects with an `AbortError` DOMException — no partial file
+   *  is returned (a half-rendered lyric video is unusable). */
+  signal?: AbortSignal;
 }
 
 function pickMimeType(): string {
@@ -25,7 +29,10 @@ function pickMimeType(): string {
 
 /** Record the canvas + (optional) audio to a WebM blob. Resolves when recording stops. */
 export async function exportMontage(opts: ExportOptions): Promise<Blob> {
-  const { canvas, audioFile, durationSec, fps, renderFrame, onProgress, onAnalyserReady } = opts;
+  const { canvas, audioFile, durationSec, fps, renderFrame, onProgress, onAnalyserReady, signal } =
+    opts;
+
+  if (signal?.aborted) throw new DOMException('Export canceled', 'AbortError');
 
   const videoStream = canvas.captureStream(fps);
   const tracks = [...videoStream.getVideoTracks()];
@@ -74,28 +81,42 @@ export async function exportMontage(opts: ExportOptions): Promise<Blob> {
   }
 
   // Export-local clock: drive frames from elapsed wall time, not playerStore.
+  // The frame loop resolves on completion or rejects (AbortError) if `signal`
+  // fires; either way the `finally` tears down the recorder + audio.
   const startMs = performance.now();
-  await new Promise<void>((resolve) => {
-    const tick = async () => {
-      const t = (performance.now() - startMs) / 1000;
-      if (t >= durationSec) {
-        await renderFrame(durationSec);
-        resolve();
-        return;
-      }
-      await renderFrame(t);
-      onProgress?.(t / durationSec);
-      requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  });
-
-  recorder.stop();
-  if (audioEl) {
-    audioEl.pause();
-    URL.revokeObjectURL(audioEl.src);
+  let rafId = 0;
+  try {
+    await new Promise<void>((resolve, reject) => {
+      const onAbort = () => {
+        cancelAnimationFrame(rafId);
+        reject(new DOMException('Export canceled', 'AbortError'));
+      };
+      signal?.addEventListener('abort', onAbort, { once: true });
+      const tick = async () => {
+        if (signal?.aborted) return; // onAbort already rejected; stop scheduling
+        const t = (performance.now() - startMs) / 1000;
+        if (t >= durationSec) {
+          await renderFrame(durationSec);
+          signal?.removeEventListener('abort', onAbort);
+          resolve();
+          return;
+        }
+        await renderFrame(t);
+        onProgress?.(t / durationSec);
+        rafId = requestAnimationFrame(tick);
+      };
+      rafId = requestAnimationFrame(tick);
+    });
+  } finally {
+    // Stop the recorder and tear down audio whether we finished or were aborted,
+    // so MediaStream tracks and the AudioContext never leak on cancel.
+    if (recorder.state !== 'inactive') recorder.stop();
+    if (audioEl) {
+      audioEl.pause();
+      URL.revokeObjectURL(audioEl.src);
+    }
+    await audioCtx?.close();
   }
-  await audioCtx?.close();
 
   return done;
 }
