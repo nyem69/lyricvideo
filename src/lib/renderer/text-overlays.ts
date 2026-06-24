@@ -28,7 +28,11 @@ export function drawLyricBand(
   band: LyricBand,
   W: number,
   H: number,
-  bandStyle: TextStyle
+  bandStyle: TextStyle,
+  // Optional vertical CENTRE of the lyric block as a fraction of H. When omitted
+  // the legacy bottom-edge placement (block bottom at 0.86·H) is used unchanged,
+  // so the montage renderer — which doesn't pass this — keeps its exact look.
+  anchorY?: number
 ): void {
   // save() first so font/align/baseline (set below, needed for measureText) are
   // restored too — this is a shared helper, it must not leak ctx state to callers.
@@ -40,8 +44,15 @@ export function drawLyricBand(
 
   const lines = wrapText(ctx, band.primary, W * 0.82);
   const lineH = fontPx * 1.25;
-  const bottomY = H * 0.86;
   const blockH = lines.length * lineH;
+  const half = blockH / 2;
+  // Legacy (anchorY undefined): block BOTTOM sits at 0.86·H. Preset placement:
+  // centre the block on the anchor line, clamped with a 4% margin so a tall/
+  // multi-line block near an edge never spills off-canvas.
+  const topY =
+    anchorY === undefined
+      ? H * 0.86 - blockH
+      : Math.min(H - half - H * 0.04, Math.max(half + H * 0.04, H * anchorY)) - half;
 
   // No scrim bar — legibility comes from a soft drop shadow plus a thin dark
   // glyph outline, so the text reads over bright/busy photo areas (e.g. sky).
@@ -50,7 +61,7 @@ export function drawLyricBand(
   ctx.strokeStyle = 'rgba(0,0,0,0.85)';
   ctx.fillStyle = bandStyle.color;
   lines.forEach((ln, i) => {
-    const y = bottomY - blockH + i * lineH + lineH / 2;
+    const y = topY + i * lineH + lineH / 2;
     // Pass 1: outline carries the shadow (densest halo around the glyph edge).
     ctx.shadowColor = 'rgba(0,0,0,0.7)';
     ctx.shadowBlur = fontPx * 0.5;

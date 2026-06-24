@@ -41,6 +41,7 @@
     const loop = () => {
       if (!destroyed && renderer && !visualizerStore.exporting) {
         renderer.setStyle(visualizerStore.vizStyleId);
+        renderer.setAnchors(visualizerStore.vizAnchor, visualizerStore.lyricAnchor);
         renderer.setBands(visualizerStore.bands);
         renderer.setTitle(visualizerStore.title);
         renderer.setTextStyles(visualizerStore.titleStyle, visualizerStore.bandStyle);

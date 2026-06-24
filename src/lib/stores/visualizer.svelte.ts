@@ -14,8 +14,11 @@ import {
 import {
   computeTotalDuration,
   DEFAULT_VIZ_STYLE,
+  DEFAULT_VIZ_ANCHOR,
+  DEFAULT_LYRIC_ANCHOR,
   type VisualizerProject,
   type VizStyleId,
+  type VAnchor,
 } from '$lib/visualizer/model';
 import { DEFAULT_FORMAT, resolveFormat } from '$lib/visualizer/formats';
 import { playerStore } from './player.svelte';
@@ -26,6 +29,8 @@ class VisualizerStore {
   titleStyle = $state<TextStyle>({ ...DEFAULT_TITLE_STYLE });
   bandStyle = $state<TextStyle>({ ...DEFAULT_BAND_STYLE });
   vizStyleId = $state<VizStyleId>(DEFAULT_VIZ_STYLE);
+  vizAnchor = $state<VAnchor>(DEFAULT_VIZ_ANCHOR);
+  lyricAnchor = $state<VAnchor>(DEFAULT_LYRIC_ANCHOR);
   formatId = $state<string>(DEFAULT_FORMAT);
   customWidth = $state<number | undefined>(undefined);
   customHeight = $state<number | undefined>(undefined);
@@ -106,6 +111,16 @@ class VisualizerStore {
     this.persist();
   }
 
+  setVizAnchor(a: VAnchor) {
+    this.vizAnchor = a;
+    this.persist();
+  }
+
+  setLyricAnchor(a: VAnchor) {
+    this.lyricAnchor = a;
+    this.persist();
+  }
+
   setFormat(id: string) {
     this.formatId = id;
     this.persist();
@@ -140,6 +155,8 @@ class VisualizerStore {
       titleStyle: this.titleStyle,
       bandStyle: this.bandStyle,
       vizStyleId: this.vizStyleId,
+      vizAnchor: this.vizAnchor,
+      lyricAnchor: this.lyricAnchor,
       formatId: this.formatId,
       customWidth: this.customWidth,
       customHeight: this.customHeight,
@@ -160,6 +177,8 @@ class VisualizerStore {
       this.titleStyle = coerceTextStyle({ ...DEFAULT_TITLE_STYLE, ...project.titleStyle });
       this.bandStyle = coerceTextStyle({ ...DEFAULT_BAND_STYLE, ...project.bandStyle });
       this.vizStyleId = project.vizStyleId;
+      this.vizAnchor = project.vizAnchor ?? DEFAULT_VIZ_ANCHOR;
+      this.lyricAnchor = project.lyricAnchor ?? DEFAULT_LYRIC_ANCHOR;
       this.formatId = project.formatId;
       this.customWidth = project.customWidth;
       this.customHeight = project.customHeight;

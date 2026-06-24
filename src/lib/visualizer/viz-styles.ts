@@ -21,6 +21,10 @@ export interface VizStyle {
   id: VizStyleId;
   name: string;
   desc: string;
+  /** Where the style's graphics naturally sit vertically. 'bottom' styles rise
+   *  from the canvas floor and can be raised but never pushed below it; 'center'
+   *  styles are symmetric about the midline and follow any placement preset. */
+  anchor: 'center' | 'bottom';
   draw: (f: VizFrame) => void;
 }
 
@@ -57,6 +61,7 @@ const bars: VizStyle = {
   id: 'bars',
   name: 'Spectrum Bars',
   desc: 'Classic bottom-anchored frequency bars with a gold gradient. The safe, universally-readable default.',
+  anchor: 'bottom',
   draw: (f) => {
     const { ctx, w, h } = f;
     const N = 64;
@@ -84,6 +89,7 @@ const mirror: VizStyle = {
   id: 'mirror',
   name: 'Mirror Bars',
   desc: 'Bars grow symmetrically from a centre line. Feels balanced and "designed"; title sits cleanly above or below.',
+  anchor: 'center',
   draw: (f) => {
     const { ctx, w, h } = f;
     const N = 72;
@@ -111,6 +117,7 @@ const radial: VizStyle = {
   id: 'radial',
   name: 'Radial Spectrum',
   desc: 'Bars radiate from a centre disc that slowly rotates and pulses with the bass. Title (or album art) lives in the middle. The most "music-app" look.',
+  anchor: 'center',
   draw: (f) => {
     const { ctx, w, h, t } = f;
     const cx = w / 2;
@@ -158,6 +165,7 @@ const wave: VizStyle = {
   id: 'wave',
   name: 'Waveform',
   desc: 'A single glowing oscilloscope line traces the raw audio waveform. Minimal, elegant, very legible behind lyrics.',
+  anchor: 'center',
   draw: (f) => {
     const { ctx, w, h } = f;
     const mid = h / 2;
@@ -189,6 +197,7 @@ const area: VizStyle = {
   id: 'area',
   name: 'Filled Spectrum',
   desc: 'A smooth filled curve over the spectrum with a soft gradient — a calmer, more cinematic take on bars.',
+  anchor: 'bottom',
   draw: (f) => {
     const { ctx, w, h } = f;
     const N = 96;
@@ -230,6 +239,7 @@ const orb: VizStyle = {
   id: 'orb',
   name: 'Pulsing Orb',
   desc: 'A bass-reactive glowing orb wrapped in a ring of dots that flare with the mids. Abstract and hypnotic; great for ambient tracks.',
+  anchor: 'center',
   draw: (f) => {
     const { ctx, w, h, t } = f;
     const cx = w / 2;

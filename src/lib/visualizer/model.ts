@@ -4,6 +4,21 @@ import type { TextStyle, MontageSettings, LyricBand } from '$lib/montage/model';
 export type VizStyleId = 'bars' | 'mirror' | 'radial' | 'wave' | 'area' | 'orb';
 export const DEFAULT_VIZ_STYLE: VizStyleId = 'bars';
 
+/** Preset vertical placement for the visualizer graphics and the lyric band.
+ *  Values are the element's vertical CENTRE as a fraction of canvas height:
+ *  top = 1/3 from the top, bottom = 1/3 from the bottom, center = halfway. */
+export type VAnchor = 'top' | 'center' | 'bottom';
+export const V_ANCHOR_FRAC: Record<VAnchor, number> = {
+  top: 1 / 3,
+  center: 1 / 2,
+  bottom: 2 / 3,
+};
+// Defaults preserve the prior look as closely as the 3 presets allow:
+// the visualizer keeps its per-style home (center => zero shift), and the
+// lyric sits low (the 1/3-from-bottom line).
+export const DEFAULT_VIZ_ANCHOR: VAnchor = 'center';
+export const DEFAULT_LYRIC_ANCHOR: VAnchor = 'bottom';
+
 /** Colors the shared title-card overlay needs (a subset of MontageStyle):
  *  dark-green surface background + antique-gold divider/accent. */
 export const VIZ_TITLE_THEME = { background: '#0a1a0a', accent: '#d4af37' };
@@ -15,6 +30,10 @@ export interface VisualizerProject {
   titleStyle?: TextStyle;
   bandStyle?: TextStyle;
   vizStyleId: VizStyleId;
+  // Optional for back-compat: projects saved before placement presets existed
+  // restore to the defaults above.
+  vizAnchor?: VAnchor;
+  lyricAnchor?: VAnchor;
   formatId: string;
   customWidth?: number;
   customHeight?: number;

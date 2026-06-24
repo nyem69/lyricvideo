@@ -2,7 +2,14 @@
 import type { LyricBand, TextStyle, MontageSettings } from '$lib/montage/model';
 import { DEFAULT_TITLE_STYLE, DEFAULT_BAND_STYLE } from '$lib/montage/model';
 import { VIZ_STYLE_MAP } from '$lib/visualizer/viz-styles';
-import { VIZ_TITLE_THEME, type VizStyleId } from '$lib/visualizer/model';
+import {
+  VIZ_TITLE_THEME,
+  V_ANCHOR_FRAC,
+  DEFAULT_VIZ_ANCHOR,
+  DEFAULT_LYRIC_ANCHOR,
+  type VizStyleId,
+  type VAnchor,
+} from '$lib/visualizer/model';
 import { drawLyricBand, drawTitleCard } from './text-overlays';
 
 const SURFACE = '#0a1a0a';
@@ -22,6 +29,8 @@ export class VisualizerRenderer {
   private wave: Uint8Array<ArrayBuffer> = new Uint8Array(new ArrayBuffer(2048));
 
   private styleId: VizStyleId = 'bars';
+  private vizAnchor: VAnchor = DEFAULT_VIZ_ANCHOR;
+  private lyricAnchor: VAnchor = DEFAULT_LYRIC_ANCHOR;
   private bands: LyricBand[] = [];
   private title = '';
   private titleStyle: TextStyle = DEFAULT_TITLE_STYLE;
@@ -48,6 +57,10 @@ export class VisualizerRenderer {
   }
   setStyle(id: VizStyleId) {
     this.styleId = id;
+  }
+  setAnchors(viz: VAnchor, lyric: VAnchor) {
+    this.vizAnchor = viz;
+    this.lyricAnchor = lyric;
   }
   setBands(bands: LyricBand[]) {
     this.bands = bands;
@@ -95,19 +108,28 @@ export class VisualizerRenderer {
     // the stage always looks alive. Live playback (energy > 0) takes over.
     let energy = 0;
     for (let i = 0; i < this.freq.length; i++) energy += this.freq[i];
+    const style = VIZ_STYLE_MAP[this.styleId] ?? VIZ_STYLE_MAP.bars;
+    // Placement preset shifts the visualizer vertically. 'center' (default) =>
+    // zero shift, so each style keeps its original home. Floor-anchored styles
+    // (bars/area) can be raised but are clamped at the floor (dy<=0), since they
+    // grow upward and pushing them down would clip the bars off-canvas.
+    let dy = (V_ANCHOR_FRAC[this.vizAnchor] - 0.5) * H;
+    if (energy > 0 && style.anchor === 'bottom' && dy > 0) dy = 0;
+    ctx.save();
+    ctx.translate(0, dy);
     if (energy === 0) {
       this.drawIdle(W, H, this.idleFrame++ / 60);
     } else {
-      const style = VIZ_STYLE_MAP[this.styleId] ?? VIZ_STYLE_MAP.bars;
       style.draw({ ctx, w: W, h: H, freq: this.freq, wave: this.wave, t, accent: ACCENT });
     }
+    ctx.restore();
 
     if (t < this.settings.openingDuration && this.title) {
       drawTitleCard(ctx, this.title, W, H, this.titleStyle, VIZ_TITLE_THEME);
     }
 
     const band = this.bands.find((b) => t >= b.start && t < b.end) ?? null;
-    if (band) drawLyricBand(ctx, band, W, H, this.bandStyle);
+    if (band) drawLyricBand(ctx, band, W, H, this.bandStyle, V_ANCHOR_FRAC[this.lyricAnchor]);
   }
 
   // A calm centered EQ that breathes via a few out-of-phase sine waves — no

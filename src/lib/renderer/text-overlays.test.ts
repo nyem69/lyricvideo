@@ -46,6 +46,58 @@ describe('overlay draws (smoke)', () => {
     expect((ctx as unknown as { __calls: string[] }).__calls).toContain('fillText');
     expect((ctx as unknown as { __calls: string[] }).__calls).toContain('strokeText');
   });
+  // Capture the y-coord passed to fillText so we can assert vertical placement.
+  function yCapturingCtx() {
+    const ys: number[] = [];
+    const ctx = new Proxy(
+      {},
+      {
+        get(_t, prop: string) {
+          if (prop === '__ys') return ys;
+          if (prop === 'measureText') return (s: string) => ({ width: String(s).length * 6 });
+          if (prop === 'createLinearGradient' || prop === 'createRadialGradient')
+            return () => ({ addColorStop() {} });
+          if (prop === 'fillText')
+            return (_s: string, _x: number, y: number) => {
+              ys.push(y);
+            };
+          return () => {};
+        },
+        set() {
+          return true;
+        },
+      }
+    ) as unknown as CanvasRenderingContext2D;
+    return ctx;
+  }
+
+  const BAND = { id: 'a', start: 0, end: 2, primary: 'a lyric line' };
+
+  it('drawLyricBand moves the block up as anchorY decreases', () => {
+    const top = yCapturingCtx();
+    const center = yCapturingCtx();
+    const bottom = yCapturingCtx();
+    drawLyricBand(top, BAND, 1920, 1080, DEFAULT_BAND_STYLE, 1 / 3);
+    drawLyricBand(center, BAND, 1920, 1080, DEFAULT_BAND_STYLE, 1 / 2);
+    drawLyricBand(bottom, BAND, 1920, 1080, DEFAULT_BAND_STYLE, 2 / 3);
+    const yTop = (top as unknown as { __ys: number[] }).__ys[0];
+    const yCenter = (center as unknown as { __ys: number[] }).__ys[0];
+    const yBottom = (bottom as unknown as { __ys: number[] }).__ys[0];
+    expect(yTop).toBeLessThan(yCenter);
+    expect(yCenter).toBeLessThan(yBottom);
+    // center preset centres a single line near the canvas midline
+    expect(yCenter).toBeCloseTo(540, 0);
+  });
+
+  it('drawLyricBand legacy (no anchorY) keeps the historical bottom placement', () => {
+    const ctx = yCapturingCtx();
+    drawLyricBand(ctx, BAND, 1920, 1080, DEFAULT_BAND_STYLE);
+    // One line: topY = 0.86*H - blockH, y = topY + lineH/2 = 0.86*H - lineH/2.
+    const fontPx = Math.round(1080 * DEFAULT_BAND_STYLE.sizePct);
+    const expected = 0.86 * 1080 - (fontPx * 1.25) / 2;
+    expect((ctx as unknown as { __ys: number[] }).__ys[0]).toBeCloseTo(expected, 0);
+  });
+
   it('drawTitleCard issues fill + stroke calls without throwing', () => {
     const ctx = stubCtx();
     drawTitleCard(ctx, 'My Title', 1920, 1080, DEFAULT_TITLE_STYLE, {
