@@ -15,6 +15,20 @@ import { drawLyricBand, drawTitleCard } from './text-overlays';
 const SURFACE = '#0a1a0a';
 const ACCENT = '#d4af37';
 
+/**
+ * Whether the opening title card should be drawn at time `t`.
+ *
+ * The title belongs to the opening only and must yield the instant the first
+ * lyric appears: lyrics are audio-synced and can't be delayed, so if
+ * `openingDuration` runs past the first lyric's start the two would overlap
+ * on-screen. The effective title window is therefore the SHORTER of
+ * `openingDuration` and the first lyric's start time.
+ */
+export function titleVisible(t: number, openingDuration: number, bands: LyricBand[]): boolean {
+  const firstLyric = bands.reduce((min, b) => Math.min(min, b.start), Infinity);
+  return t < Math.min(openingDuration, firstLyric);
+}
+
 export class VisualizerRenderer {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
@@ -125,7 +139,7 @@ export class VisualizerRenderer {
     }
     ctx.restore();
 
-    if (t < this.settings.openingDuration && this.title) {
+    if (this.title && titleVisible(t, this.settings.openingDuration, this.bands)) {
       drawTitleCard(ctx, this.title, W, H, this.titleStyle, VIZ_TITLE_THEME);
     }
 

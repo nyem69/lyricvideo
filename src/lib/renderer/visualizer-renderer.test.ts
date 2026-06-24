@@ -1,7 +1,11 @@
 // src/lib/renderer/visualizer-renderer.test.ts
 import { describe, it, expect } from 'vitest';
-import { VisualizerRenderer } from './visualizer-renderer';
+import { VisualizerRenderer, titleVisible } from './visualizer-renderer';
 import { DEFAULT_SETTINGS } from '$lib/montage/model';
+import type { LyricBand } from '$lib/montage/model';
+
+const band = (start: number, end: number): LyricBand =>
+  ({ start, end, text: 'x' }) as unknown as LyricBand;
 
 // A canvas whose 2d context records every translate() call. Other ctx methods
 // are recording no-ops; gradient factories return an addColorStop stub.
@@ -58,5 +62,33 @@ describe('VisualizerRenderer placement', () => {
     renderer.setStyle('bars');
     renderer.renderAt(0); // no setAnchors -> defaults
     expect(translates[0][1]).toBeCloseTo(0, 5);
+  });
+});
+
+describe('titleVisible (title yields to the first lyric)', () => {
+  const OPENING = 2.5;
+
+  it('hides the title the instant the first lyric starts, even before openingDuration', () => {
+    const bands = [band(2.074, 5), band(5, 8)]; // Kota Pagoh: first lyric at 2.074
+    expect(titleVisible(2.0, OPENING, bands)).toBe(true); // before the lyric
+    expect(titleVisible(2.074, OPENING, bands)).toBe(false); // exactly at the lyric
+    expect(titleVisible(2.3, OPENING, bands)).toBe(false); // the old overlap window
+  });
+
+  it('falls back to openingDuration when the first lyric starts later', () => {
+    const bands = [band(5, 8)];
+    expect(titleVisible(2.4, OPENING, bands)).toBe(true);
+    expect(titleVisible(2.5, OPENING, bands)).toBe(false); // openingDuration wins
+  });
+
+  it('uses openingDuration when there are no lyrics', () => {
+    expect(titleVisible(2.4, OPENING, [])).toBe(true);
+    expect(titleVisible(2.6, OPENING, [])).toBe(false);
+  });
+
+  it('takes the earliest band start regardless of order', () => {
+    const bands = [band(6, 9), band(1.5, 4)]; // unordered
+    expect(titleVisible(1.4, OPENING, bands)).toBe(true);
+    expect(titleVisible(1.5, OPENING, bands)).toBe(false);
   });
 });
