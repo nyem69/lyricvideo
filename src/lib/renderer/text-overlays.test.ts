@@ -109,6 +109,33 @@ describe('overlay draws (smoke)', () => {
     expect(count(glitch)).toBe(3); // cyan ghost + magenta ghost + main fill
   });
 
+  it('glitch strength scales the chromatic-split spread', () => {
+    // Capture the x of every fillText; the cyan/magenta ghosts straddle the main
+    // fill, so the x-spread per line == 2*split, which scales with strength.
+    function xCapturingCtx() {
+      const xs: number[] = [];
+      return new Proxy(
+        {},
+        {
+          get(_t, prop: string) {
+            if (prop === '__xs') return xs;
+            if (prop === 'measureText') return (s: string) => ({ width: String(s).length * 6 });
+            if (prop === 'fillText') return (_s: string, x: number) => xs.push(x);
+            return () => {};
+          },
+          set: () => true,
+        }
+      ) as unknown as CanvasRenderingContext2D;
+    }
+    const spread = (strength: number) => {
+      const ctx = xCapturingCtx();
+      drawLyricBand(ctx, BAND, 1920, 1080, { ...DEFAULT_BAND_STYLE, glitch: true, glitchStrength: strength }, 1 / 2, 1.5);
+      const xs = (ctx as unknown as { __xs: number[] }).__xs;
+      return Math.max(...xs) - Math.min(...xs);
+    };
+    expect(spread(2.0)).toBeGreaterThan(spread(0.5));
+  });
+
   it('drawTitleCard issues fill + stroke calls without throwing', () => {
     const ctx = stubCtx();
     drawTitleCard(ctx, 'My Title', 1920, 1080, DEFAULT_TITLE_STYLE, {

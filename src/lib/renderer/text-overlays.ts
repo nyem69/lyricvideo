@@ -37,13 +37,15 @@ function drawGlitchLine(
   fontPx: number,
   color: string,
   t: number,
-  seed: number
+  seed: number,
+  strength: number
 ): void {
   const hash = (n: number) => {
     const s = Math.sin(n * 12.9898 + t * 8) * 43758.5453;
     return s - Math.floor(s);
   };
-  const unit = fontPx * 0.05;
+  // strength scales every displacement (jitter, split, ghost offset); 1 = default.
+  const unit = fontPx * 0.05 * strength;
   let jx = (hash(seed) - 0.5) * unit * 2;
   if (hash(seed + 7) > 0.82) jx *= 3.5; // occasional hard tear
   const split = unit * (0.7 + hash(seed + 3) * 1.1);
@@ -114,7 +116,8 @@ export function drawLyricBand(
   lines.forEach((ln, i) => {
     const y = topY + i * lineH + lineH / 2;
     if (bandStyle.glitch) {
-      drawGlitchLine(ctx, ln, W / 2, y, fontPx, bandStyle.color, t, i + 1);
+      const strength = Math.max(0, Math.min(3, bandStyle.glitchStrength ?? 1));
+      drawGlitchLine(ctx, ln, W / 2, y, fontPx, bandStyle.color, t, i + 1, strength);
       return;
     }
     // Pass 1: outline carries the shadow (densest halo around the glyph edge).

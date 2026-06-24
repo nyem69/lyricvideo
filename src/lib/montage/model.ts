@@ -46,6 +46,7 @@ export interface TextStyle {
   sizePct: number;      // glyph height as a fraction of the 1080p frame height
   color: string;        // hex fill
   glitch?: boolean;     // animated chromatic-split glitch on the text (lyrics only)
+  glitchStrength?: number; // glitch intensity multiplier (~0.2 subtle .. 2.5 heavy); default 1
 }
 
 export const DEFAULT_TITLE_STYLE: TextStyle = {

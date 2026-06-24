@@ -80,6 +80,22 @@
         />
         <span class="tracking-wider uppercase text-xs text-gold/50" style="font-family:'Raleway',sans-serif">Glitch effect</span>
       </label>
+      {#if style.glitch}
+        <div class="flex items-center gap-3 pl-6">
+          <span class="text-xs tracking-wider text-gold/40 uppercase w-14" style="font-family:'Raleway',sans-serif">Strength</span>
+          <input
+            aria-label="{label} glitch strength"
+            type="range"
+            min="0.2"
+            max="2.5"
+            step="0.1"
+            value={style.glitchStrength ?? 1}
+            oninput={(e) => set({ glitchStrength: Number((e.target as HTMLInputElement).value) })}
+            class="flex-1 accent-gold"
+          />
+          <span class="text-xs text-white/40 tabular-nums w-10 text-right">{(style.glitchStrength ?? 1).toFixed(1)}×</span>
+        </div>
+      {/if}
     {/if}
   </div>
 {/snippet}
