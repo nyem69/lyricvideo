@@ -12,7 +12,11 @@ export type VizStyleId =
   | 'blob'
   | 'matrix'
   | 'glitch'
-  | 'smoke';
+  | 'smoke'
+  | 'rain'
+  | 'snow'
+  | 'starfield'
+  | 'fog';
 export const DEFAULT_VIZ_STYLE: VizStyleId = 'bars';
 
 /** Preset vertical placement for the visualizer graphics and the lyric band.
