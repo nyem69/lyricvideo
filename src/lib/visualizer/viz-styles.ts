@@ -466,6 +466,64 @@ const glitch: VizStyle = {
   },
 };
 
+const smoke: VizStyle = {
+  id: 'smoke',
+  name: 'Smoke',
+  desc: 'A rising column of soft, glowing smoke puffs that bloom and drift on the bass — a deterministic take on the classic particle plume. Moody and atmospheric; built for street / grunge looks.',
+  anchor: 'bottom',
+  draw: (f) => {
+    const { ctx, w, h, t, accent } = f;
+    const b = bass(f.freq);
+    // Coarse spectral modulation so individual puffs flare on different bands.
+    const vals = buckets(f.freq, 8);
+    const N = 84; // fixed particle pool — no per-frame allocation/state
+    const life = 3.4; // seconds a puff lives before recycling
+    const emitX = w / 2;
+    const emitY = h * 0.94; // bottom-floor emitter (style is bottom-anchored)
+    const rise = h * 1.05; // travel over a full life at unit rise speed
+    // Deterministic per-particle hash in [0,1) from (index, salt) — pure, so an
+    // export of a given frame is byte-identical (no Math.random, which would
+    // break frame replay / seeking). Same trick the glitch style uses.
+    const hash = (i: number, salt: number) => {
+      const s = Math.sin(i * 127.1 + salt * 311.7) * 43758.5453;
+      return s - Math.floor(s);
+    };
+    ctx.save();
+    // Additive blend so overlapping puffs bloom into brighter haze over the dark
+    // surface (state is pushed/popped, so it never leaks to later layers).
+    ctx.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < N; i++) {
+      // Stagger each particle's birth across the life cycle so the plume reads as
+      // a continuous stream rather than synchronized pulses.
+      const phase = hash(i, 1);
+      const age = (t / life + phase) % 1; // 0 (just born) .. 1 (about to die)
+      // Horizontal: a seeded sideways drift (widening with age) plus a slow,
+      // bass-driven sway. Quadratic sway term => puffs curl as they rise.
+      const drift = (hash(i, 2) - 0.5) * w * 0.22;
+      const sway = Math.sin(t * 0.5 + i * 1.7) * w * (0.025 + b * 0.06);
+      const x = emitX + drift * age + sway * age * age;
+      // Vertical: rises faster on bass; eased so it slows and thins near the top.
+      const y = emitY - age * rise * (0.7 + b * 0.5);
+      // Size blooms as the puff ages and cools; seeded base radius for variety.
+      const r = Math.min(w, h) * (0.04 + hash(i, 3) * 0.05) * (0.5 + age * 2.4);
+      // Alpha: quick fade-in, long fade-out toward death, lifted by bass and by
+      // this puff's assigned spectral band so the column breathes with the mix.
+      const band = vals[i % vals.length];
+      const a = Math.min(1, age * 6) * (1 - age) * (0.16 + b * 0.5 + band * 0.3);
+      if (a <= 0.01) continue; // skip invisible puffs (born/dead tails)
+      const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+      g.addColorStop(0, rgba(accent, a));
+      g.addColorStop(0.5, rgba(accent, a * 0.35));
+      g.addColorStop(1, rgba(accent, 0));
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  },
+};
+
 export const VIZ_STYLES: VizStyle[] = [
   bars,
   mirror,
@@ -477,6 +535,7 @@ export const VIZ_STYLES: VizStyle[] = [
   blob,
   matrix,
   glitch,
+  smoke,
 ];
 export const VIZ_STYLE_MAP: Record<string, VizStyle> = Object.fromEntries(
   VIZ_STYLES.map((s) => [s.id, s])
