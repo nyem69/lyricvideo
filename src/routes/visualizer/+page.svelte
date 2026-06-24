@@ -7,6 +7,7 @@
   import VisualizerStage from '$lib/components/Visualizer/VisualizerStage.svelte';
   import VizStylePicker from '$lib/components/Visualizer/VizStylePicker.svelte';
   import FormatPicker from '$lib/components/Visualizer/FormatPicker.svelte';
+  import PlacementPicker from '$lib/components/Visualizer/PlacementPicker.svelte';
   import ExportButton from '$lib/components/Visualizer/ExportButton.svelte';
   import { visualizerStore } from '$lib/stores/visualizer.svelte';
 
@@ -82,6 +83,7 @@
 
       <VizStylePicker />
       <FormatPicker />
+      <PlacementPicker />
 
       <div class="flex flex-col gap-2">
         <span class="text-sm tracking-wider text-gold/60 uppercase" style="font-family:'Raleway',sans-serif">Lyrics (timestamps)</span>
