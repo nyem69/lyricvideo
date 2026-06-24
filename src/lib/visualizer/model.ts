@@ -19,6 +19,10 @@ export const V_ANCHOR_FRAC: Record<VAnchor, number> = {
 export const DEFAULT_VIZ_ANCHOR: VAnchor = 'center';
 export const DEFAULT_LYRIC_ANCHOR: VAnchor = 'bottom';
 
+/** Accent color the visualizer graphics are drawn in (antique gold by default).
+ *  A `#rrggbb` hex — every style derives its fills/strokes/glows from this. */
+export const DEFAULT_VIZ_COLOR = '#d4af37';
+
 /** Colors the shared title-card overlay needs (a subset of MontageStyle):
  *  dark-green surface background + antique-gold divider/accent. */
 export const VIZ_TITLE_THEME = { background: '#0a1a0a', accent: '#d4af37' };
@@ -34,6 +38,9 @@ export interface VisualizerProject {
   // restore to the defaults above.
   vizAnchor?: VAnchor;
   lyricAnchor?: VAnchor;
+  // Optional for back-compat: projects saved before the color control existed
+  // restore to DEFAULT_VIZ_COLOR (gold).
+  vizColor?: string;
   formatId: string;
   customWidth?: number;
   customHeight?: number;

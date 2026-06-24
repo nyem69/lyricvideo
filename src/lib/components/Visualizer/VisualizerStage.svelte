@@ -41,6 +41,7 @@
     const loop = () => {
       if (!destroyed && renderer && !visualizerStore.exporting) {
         renderer.setStyle(visualizerStore.vizStyleId);
+        renderer.setAccent(visualizerStore.vizColor);
         renderer.setAnchors(visualizerStore.vizAnchor, visualizerStore.lyricAnchor);
         renderer.setBands(visualizerStore.bands);
         renderer.setTitle(visualizerStore.title);
@@ -123,6 +124,19 @@
     void ensureFontLoaded(getFontFamily(t.fontFamilyId).stack, t.fontWeight);
     void ensureFontLoaded(getFontFamily(b.fontFamilyId).stack, b.fontWeight);
   });
+
+  // Portrait (vertical-video) preview: a w-full box would span the whole stage
+  // and tower far taller than the viewport on desktop. Cap its WIDTH so the box
+  // never grows past PORTRAIT_PREVIEW_VH of viewport height (width follows from
+  // the aspect ratio) and centre it. Export is unaffected — the renderer still
+  // draws at full dims.{width,height}; this is display sizing only.
+  const PORTRAIT_PREVIEW_VH = 72;
+  const portrait = $derived(visualizerStore.dims.height > visualizerStore.dims.width);
+  const previewMaxWidth = $derived(
+    portrait
+      ? `calc(${PORTRAIT_PREVIEW_VH}svh * ${visualizerStore.dims.width} / ${visualizerStore.dims.height})`
+      : undefined
+  );
 </script>
 
 <!-- Stage surface: a framed plinth a shade cooler than the page, with a teal
@@ -131,8 +145,10 @@
   class="rounded-xl p-3 ring-1 ring-gold/10 bg-[radial-gradient(120%_80%_at_50%_-10%,rgba(70,214,200,0.06),transparent_60%)]"
 >
   <div
-    class="relative w-full bg-black rounded-lg overflow-hidden ring-1 ring-gold/20 shadow-[0_18px_50px_-18px_rgba(0,0,0,0.8)]"
-    style="aspect-ratio: {visualizerStore.dims.width} / {visualizerStore.dims.height}"
+    class="relative w-full mx-auto bg-black rounded-lg overflow-hidden ring-1 ring-gold/20 shadow-[0_18px_50px_-18px_rgba(0,0,0,0.8)]"
+    style="aspect-ratio: {visualizerStore.dims.width} / {visualizerStore.dims.height}{previewMaxWidth
+      ? `; max-width: ${previewMaxWidth}`
+      : ''}"
   >
     <canvas bind:this={canvas} class="w-full h-full object-contain"></canvas>
 

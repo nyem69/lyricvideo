@@ -6,6 +6,7 @@
   import TextStylePanel from '$lib/components/Montage/TextStylePanel.svelte';
   import VisualizerStage from '$lib/components/Visualizer/VisualizerStage.svelte';
   import VizStylePicker from '$lib/components/Visualizer/VizStylePicker.svelte';
+  import ColorPicker from '$lib/components/Visualizer/ColorPicker.svelte';
   import FormatPicker from '$lib/components/Visualizer/FormatPicker.svelte';
   import PlacementPicker from '$lib/components/Visualizer/PlacementPicker.svelte';
   import ExportButton from '$lib/components/Visualizer/ExportButton.svelte';
@@ -82,6 +83,7 @@
       </div>
 
       <VizStylePicker />
+      <ColorPicker />
       <FormatPicker />
       <PlacementPicker />
 
