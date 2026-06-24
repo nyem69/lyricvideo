@@ -65,6 +65,57 @@ describe('VisualizerRenderer placement', () => {
   });
 });
 
+// A canvas whose 2d context records every fillStyle assigned, so we can assert
+// the background is painted in the chosen surface color (and the default).
+function rendererWithFillSpy(width: number, height: number) {
+  const fills: string[] = [];
+  const ctx = new Proxy(
+    {},
+    {
+      get(_t, prop: string) {
+        if (prop === 'measureText') return (s: string) => ({ width: String(s).length * 6 });
+        if (prop === 'createLinearGradient' || prop === 'createRadialGradient')
+          return () => ({ addColorStop() {} });
+        return () => {};
+      },
+      set(_t, prop: string, value: unknown) {
+        if (prop === 'fillStyle' && typeof value === 'string') fills.push(value);
+        return true;
+      },
+    }
+  );
+  const canvas = { width, height, getContext: () => ctx } as unknown as HTMLCanvasElement;
+  const renderer = new VisualizerRenderer({ canvas });
+  renderer.setSettings(DEFAULT_SETTINGS);
+  return { renderer, fills };
+}
+
+describe('VisualizerRenderer background color', () => {
+  it('paints the default forest surface when none is set', () => {
+    const { renderer, fills } = rendererWithFillSpy(1080, 1080);
+    renderer.setStyle('wave');
+    renderer.renderAt(0);
+    expect(fills).toContain('#0a1a0a');
+  });
+
+  it('paints the chosen surface color', () => {
+    const { renderer, fills } = rendererWithFillSpy(1080, 1080);
+    renderer.setStyle('wave');
+    renderer.setSurface('#1a0d22');
+    renderer.renderAt(0);
+    expect(fills).toContain('#1a0d22');
+    expect(fills).not.toContain('#0a1a0a');
+  });
+
+  it('falls back to the default when handed an empty color', () => {
+    const { renderer, fills } = rendererWithFillSpy(1080, 1080);
+    renderer.setStyle('wave');
+    renderer.setSurface('');
+    renderer.renderAt(0);
+    expect(fills).toContain('#0a1a0a');
+  });
+});
+
 describe('titleVisible (title yields to the first lyric)', () => {
   const OPENING = 2.5;
 

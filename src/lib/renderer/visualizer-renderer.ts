@@ -1,7 +1,7 @@
 // src/lib/renderer/visualizer-renderer.ts
 import type { LyricBand, TextStyle, MontageSettings } from '$lib/montage/model';
 import { DEFAULT_TITLE_STYLE, DEFAULT_BAND_STYLE } from '$lib/montage/model';
-import { VIZ_STYLE_MAP } from '$lib/visualizer/viz-styles';
+import { VIZ_STYLE_MAP, rgba } from '$lib/visualizer/viz-styles';
 import {
   V_ANCHOR_FRAC,
   DEFAULT_VIZ_ANCHOR,
@@ -40,6 +40,7 @@ export class VisualizerRenderer {
 
   private styleId: VizStyleId = 'bars';
   private accent: string = ACCENT;
+  private surface: string = SURFACE;
   private vizAnchor: VAnchor = DEFAULT_VIZ_ANCHOR;
   private lyricAnchor: VAnchor = DEFAULT_LYRIC_ANCHOR;
   private bands: LyricBand[] = [];
@@ -71,6 +72,9 @@ export class VisualizerRenderer {
   }
   setAccent(color: string) {
     this.accent = color || ACCENT;
+  }
+  setSurface(color: string) {
+    this.surface = color || SURFACE;
   }
   setAnchors(viz: VAnchor, lyric: VAnchor) {
     this.vizAnchor = viz;
@@ -144,7 +148,7 @@ export class VisualizerRenderer {
       // visualizer is hidden for the first ~2s and a colour change isn't visible
       // while paused on the title. The divider also follows the chosen colour.
       drawTitleCard(ctx, this.title, W, H, this.titleStyle, {
-        background: 'rgba(10,26,10,0.5)',
+        background: rgba(this.surface, 0.5),
         accent: this.accent,
       });
     }
@@ -186,11 +190,12 @@ export class VisualizerRenderer {
       const w = bg.width * scale;
       const h = bg.height * scale;
       ctx.drawImage(bg, (W - w) / 2, (H - h) / 2, w, h);
-      // dim so a bright cover doesn't drown the visualizer/text
-      ctx.fillStyle = `rgba(10,26,10,${this.bgDim})`;
+      // dim so a bright cover doesn't drown the visualizer/text — tinted to the
+      // chosen surface color so an image + a custom background read as one scene
+      ctx.fillStyle = rgba(this.surface, this.bgDim);
       ctx.fillRect(0, 0, W, H);
     } else {
-      ctx.fillStyle = SURFACE;
+      ctx.fillStyle = this.surface;
       ctx.fillRect(0, 0, W, H);
     }
   }

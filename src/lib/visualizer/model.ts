@@ -33,6 +33,12 @@ export const DEFAULT_LYRIC_ANCHOR: VAnchor = 'bottom';
  *  A `#rrggbb` hex — every style derives its fills/strokes/glows from this. */
 export const DEFAULT_VIZ_COLOR = '#d4af37';
 
+/** Surface (background) color painted behind the visualizer when no background
+ *  image is set. A `#rrggbb` hex; defaults to the deep-forest stage green. When
+ *  a background IMAGE is present this color also tints its dim overlay and the
+ *  opening title-card backdrop, so the whole stage stays cohesive. */
+export const DEFAULT_VIZ_BG = '#0a1a0a';
+
 /** Colors the shared title-card overlay needs (a subset of MontageStyle):
  *  dark-green surface background + antique-gold divider/accent. */
 export const VIZ_TITLE_THEME = { background: '#0a1a0a', accent: '#d4af37' };
@@ -51,6 +57,9 @@ export interface VisualizerProject {
   // Optional for back-compat: projects saved before the color control existed
   // restore to DEFAULT_VIZ_COLOR (gold).
   vizColor?: string;
+  // Optional for back-compat: projects saved before the background-color control
+  // existed restore to DEFAULT_VIZ_BG (forest green).
+  vizBg?: string;
   formatId: string;
   customWidth?: number;
   customHeight?: number;

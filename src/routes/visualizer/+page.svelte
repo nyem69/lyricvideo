@@ -11,6 +11,21 @@
   import PlacementPicker from '$lib/components/Visualizer/PlacementPicker.svelte';
   import ExportButton from '$lib/components/Visualizer/ExportButton.svelte';
   import { visualizerStore } from '$lib/stores/visualizer.svelte';
+  import { DEFAULT_VIZ_BG } from '$lib/visualizer/model';
+
+  // Background swatches lean dark so the visualizer/text stay legible; the first
+  // is the default forest green, then neutral darks and a couple of light cards.
+  const BG_PRESETS = [
+    { hex: DEFAULT_VIZ_BG, name: 'Forest' },
+    { hex: '#000000', name: 'Black' },
+    { hex: '#0f172a', name: 'Navy' },
+    { hex: '#141414', name: 'Charcoal' },
+    { hex: '#1a0d22', name: 'Aubergine' },
+    { hex: '#1c1008', name: 'Espresso' },
+    { hex: '#0a1f2a', name: 'Midnight' },
+    { hex: '#f5f0e1', name: 'Bone' },
+    { hex: '#ffffff', name: 'White' },
+  ];
 
   let canvasEl = $state<HTMLCanvasElement>();
   let audioInput: HTMLInputElement;
@@ -83,7 +98,17 @@
       </div>
 
       <VizStylePicker />
-      <ColorPicker />
+      <ColorPicker
+        label="Visualizer Color"
+        value={visualizerStore.vizColor}
+        onPick={(c) => visualizerStore.setVizColor(c)}
+      />
+      <ColorPicker
+        label="Background Color"
+        value={visualizerStore.vizBg}
+        onPick={(c) => visualizerStore.setVizBg(c)}
+        presets={BG_PRESETS}
+      />
       <FormatPicker />
       <PlacementPicker />
 
