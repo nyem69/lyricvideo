@@ -296,7 +296,188 @@ const orb: VizStyle = {
   },
 };
 
-export const VIZ_STYLES: VizStyle[] = [bars, mirror, radial, wave, area, orb];
+const ringwave: VizStyle = {
+  id: 'ringwave',
+  name: 'Ring Waveform',
+  desc: 'The raw oscilloscope wrapped into a slowly rotating ring. Minimal and very legible behind dense lyrics.',
+  anchor: 'center',
+  draw: (f) => {
+    const { ctx, w, h, t, accent } = f;
+    const cx = w / 2;
+    const cy = h / 2;
+    const b = bass(f.freq);
+    const baseR = Math.min(w, h) * (0.22 + b * 0.03);
+    const amp = Math.min(w, h) * 0.1;
+    const N = f.wave.length;
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(t * 0.08);
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = accent;
+    ctx.shadowColor = rgba(accent, 0.7);
+    ctx.shadowBlur = Math.min(w, h) * 0.02;
+    ctx.lineWidth = Math.max(2, Math.min(w, h) * 0.005);
+    ctx.beginPath();
+    // i<=N with idx=i%N wraps the last point back to the first, closing the ring
+    // smoothly with no seam.
+    for (let i = 0; i <= N; i++) {
+      const ang = (i / N) * Math.PI * 2;
+      const r = baseR + ((f.wave[i % N] - 128) / 128) * amp;
+      const x = Math.cos(ang) * r;
+      const y = Math.sin(ang) * r;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    // faint thicker echo for body
+    ctx.globalAlpha = 0.25;
+    ctx.lineWidth = Math.max(1, Math.min(w, h) * 0.012);
+    ctx.stroke();
+    ctx.restore();
+  },
+};
+
+const blob: VizStyle = {
+  id: 'blob',
+  name: 'Spectrum Blob',
+  desc: 'The spectrum wrapped into a smooth closed shape, filled with the accent and pumping on the bass. The most organic, music-app look.',
+  anchor: 'center',
+  draw: (f) => {
+    const { ctx, w, h, t, accent } = f;
+    const cx = w / 2;
+    const cy = h / 2;
+    const b = bass(f.freq);
+    // Mirror the buckets into a palindrome so the closed curve meets itself with
+    // no seam (the last sample equals the first going the other way round).
+    const half = buckets(f.freq, 48);
+    const vals = half.concat([...half].reverse());
+    const N = vals.length;
+    const baseR = Math.min(w, h) * (0.16 + b * 0.06);
+    const span = Math.min(w, h) * 0.16;
+    const pts: { x: number; y: number }[] = [];
+    for (let i = 0; i < N; i++) {
+      const ang = (i / N) * Math.PI * 2 + t * 0.1;
+      const r = baseR + vals[i] * span;
+      pts.push({ x: cx + Math.cos(ang) * r, y: cy + Math.sin(ang) * r });
+    }
+    const grad = ctx.createRadialGradient(cx, cy, baseR * 0.3, cx, cy, baseR + span);
+    grad.addColorStop(0, rgba(accent, 0.55));
+    grad.addColorStop(1, rgba(accent, 0.12));
+    ctx.fillStyle = grad;
+    // Smooth closed curve: a quadratic through each point's midpoint with the
+    // point itself as the control handle (a cheap Catmull-Rom-ish loop).
+    ctx.beginPath();
+    ctx.moveTo((pts[N - 1].x + pts[0].x) / 2, (pts[N - 1].y + pts[0].y) / 2);
+    for (let i = 0; i < N; i++) {
+      const cur = pts[i];
+      const next = pts[(i + 1) % N];
+      ctx.quadraticCurveTo(cur.x, cur.y, (cur.x + next.x) / 2, (cur.y + next.y) / 2);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = accent;
+    ctx.lineWidth = Math.max(1.5, Math.min(w, h) * 0.004);
+    ctx.shadowColor = rgba(accent, 0.6);
+    ctx.shadowBlur = Math.min(w, h) * 0.015;
+    ctx.stroke();
+  },
+};
+
+const matrix: VizStyle = {
+  id: 'matrix',
+  name: 'LED Matrix',
+  desc: 'A grid of cells lit by the spectrum, like a hardware equalizer with peak-hold caps. Punchy and retro; bottom-anchored.',
+  anchor: 'bottom',
+  draw: (f) => {
+    const { ctx, w, h, accent } = f;
+    const COLS = 32;
+    const ROWS = 16;
+    const vals = buckets(f.freq, COLS);
+    const gap = Math.min(w, h) * 0.004;
+    const cellW = (w - gap * (COLS + 1)) / COLS;
+    const rowPitch = (h * 0.82) / ROWS;
+    const cellH = rowPitch - gap;
+    for (let c = 0; c < COLS; c++) {
+      const x = gap + c * (cellW + gap);
+      const lit = Math.round(vals[c] * ROWS);
+      for (let r = 0; r < ROWS; r++) {
+        const y = h - (r + 1) * rowPitch; // r=0 is the bottom row
+        if (r < lit) {
+          ctx.fillStyle = rgba(accent, 0.45 + (r / ROWS) * 0.55); // brighter up the stack
+        } else {
+          ctx.fillStyle = rgba(accent, 0.06); // unlit cell ghost
+        }
+        ctx.fillRect(x, y, cellW, cellH);
+      }
+      // peak-hold cap
+      if (lit > 0) {
+        const y = h - lit * rowPitch;
+        ctx.fillStyle = rgba(CREAM, 0.9);
+        ctx.fillRect(x, y, cellW, Math.max(1, cellH * 0.5));
+      }
+    }
+  },
+};
+
+const glitch: VizStyle = {
+  id: 'glitch',
+  name: 'Glitch',
+  desc: 'Spectrum torn into displaced horizontal bands with a chromatic split. Gritty and kinetic — built for raw street / grunge looks.',
+  anchor: 'center',
+  draw: (f) => {
+    const { ctx, w, h, t, accent } = f;
+    const BANDS = 24;
+    const vals = buckets(f.freq, BANDS);
+    const b = bass(f.freq);
+    const midY = h / 2;
+    const fieldH = h * 0.6;
+    const bandH = fieldH / BANDS;
+    // Deterministic hash in [0,1) from (band, time) — pure, so an export of the
+    // same frame is identical (no Math.random, which would break frame replay).
+    const hash = (i: number) => {
+      const s = Math.sin(i * 12.9898 + t * 6) * 43758.5453;
+      return s - Math.floor(s);
+    };
+    for (let i = 0; i < BANDS; i++) {
+      const v = vals[i];
+      const y = midY - fieldH / 2 + i * bandH;
+      const len = (0.12 + v * 0.85) * w;
+      const tear = hash(i);
+      const dx = (tear - 0.5) * w * (0.04 + b * 0.12) * (tear > 0.7 ? 3 : 1);
+      const x = (w - len) / 2 + dx;
+      const hh = Math.max(1, bandH * 0.7);
+      const split = (2 + b * 10) * (Math.min(w, h) / 1000 + 0.6);
+      // chromatic ghosts on either side, then the solid accent band on top
+      ctx.fillStyle = rgba(accent, 0.25);
+      ctx.fillRect(x - split, y, len, hh);
+      ctx.fillStyle = rgba(CREAM, 0.18);
+      ctx.fillRect(x + split, y, len, hh);
+      ctx.fillStyle = rgba(accent, 0.85);
+      ctx.fillRect(x, y, len, hh);
+    }
+    // occasional full-width scan-tear line
+    const scan = hash(99);
+    if (scan > 0.85) {
+      const y = midY - fieldH / 2 + scan * fieldH;
+      ctx.fillStyle = rgba(CREAM, 0.5);
+      ctx.fillRect(0, y, w, Math.max(1, h * 0.004));
+    }
+  },
+};
+
+export const VIZ_STYLES: VizStyle[] = [
+  bars,
+  mirror,
+  radial,
+  wave,
+  area,
+  orb,
+  ringwave,
+  blob,
+  matrix,
+  glitch,
+];
 export const VIZ_STYLE_MAP: Record<string, VizStyle> = Object.fromEntries(
   VIZ_STYLES.map((s) => [s.id, s])
 );

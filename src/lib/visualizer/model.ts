@@ -1,7 +1,17 @@
 // src/lib/visualizer/model.ts
 import type { TextStyle, MontageSettings, LyricBand } from '$lib/montage/model';
 
-export type VizStyleId = 'bars' | 'mirror' | 'radial' | 'wave' | 'area' | 'orb';
+export type VizStyleId =
+  | 'bars'
+  | 'mirror'
+  | 'radial'
+  | 'wave'
+  | 'area'
+  | 'orb'
+  | 'ringwave'
+  | 'blob'
+  | 'matrix'
+  | 'glitch';
 export const DEFAULT_VIZ_STYLE: VizStyleId = 'bars';
 
 /** Preset vertical placement for the visualizer graphics and the lyric band.
