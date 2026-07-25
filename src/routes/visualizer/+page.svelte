@@ -4,6 +4,7 @@
   import { AUDIO_ACCEPT } from '$lib/media/accept';
   import { base } from '$app/paths';
   import Controls from '$lib/components/Player/Controls.svelte';
+  import SyncPanel from '$lib/components/Visualizer/SyncPanel.svelte';
   import TextStylePanel from '$lib/components/Montage/TextStylePanel.svelte';
   import VisualizerStage from '$lib/components/Visualizer/VisualizerStage.svelte';
   import VizStylePicker from '$lib/components/Visualizer/VizStylePicker.svelte';
@@ -114,14 +115,24 @@
       <PlacementPicker />
 
       <div class="flex flex-col gap-2">
-        <span class="text-sm tracking-wider text-gold/60 uppercase" style="font-family:'Raleway',sans-serif">Lyrics (Suno / LRC / SRT)</span>
+        <span class="text-sm tracking-wider text-gold/60 uppercase" style="font-family:'Raleway',sans-serif">Lyrics (Suno / LRC / SRT / plain)</span>
         <textarea
           value={visualizerStore.lyricsText}
           oninput={(e) => visualizerStore.importLyrics((e.target as HTMLTextAreaElement).value)}
           rows="8"
-          placeholder={"Paste Suno [00:11.16] word timestamps, an .lrc, or an .srt — auto-detected"}
+          placeholder={"Paste Suno [00:11.16] word timestamps, an .lrc, an .srt, or plain lyrics — auto-detected"}
           class="w-full bg-white/5 border border-gold/20 rounded px-3 py-2 text-sm text-white/80 font-mono placeholder:text-white/20 focus:outline-none focus:border-gold/50 resize-y"
         ></textarea>
+
+        {#if visualizerStore.needsTimestamps}
+          <div class="flex flex-col gap-2 rounded border border-amber-400/30 bg-amber-400/5 p-2.5">
+            <p class="text-[11px] leading-relaxed text-amber-200/80">
+              <span class="font-semibold">No timestamps found.</span> Lines are spread evenly as a
+              placeholder, so the timings are wrong until you sync them.
+            </p>
+            <SyncPanel />
+          </div>
+        {/if}
       </div>
 
       <TextStylePanel
