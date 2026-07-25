@@ -42,4 +42,4 @@ PRs should include a description, rationale, test results, and screenshots or re
 
 ## Architecture & Configuration Notes
 
-The app is client-rendered only: `src/routes/+layout.ts` disables SSR. Deployment uses `@sveltejs/adapter-static`; the base path is `/lyricvideo` unless `CAPACITOR=true`. Do not add server-only logic unless the architecture changes. Keep lyrics and audio client-side.
+The app is client-rendered only: `src/routes/+layout.ts` disables SSR. Deployment uses `@sveltejs/adapter-static` to **Cloudflare only**, served at the domain root, so the base path is always `''` (GitHub Pages retired 2026-07-25). Do not add server-only logic unless the architecture changes. Keep lyrics and audio client-side.

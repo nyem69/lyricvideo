@@ -22,7 +22,7 @@ Package manager is **pnpm** (pnpm-lock.yaml, pnpm-workspace.yaml). Tests run in 
 
 SvelteKit 2 + **Svelte 5 (runes)**, TypeScript strict, Tailwind **v4** (configured in CSS via `@theme` in `src/app.css`, not a JS config), `@sveltejs/adapter-static`. UI deps: `@lucide/svelte` (Svelte 5 only — never `lucide-svelte`), `bits-ui`, `svelte-sonner` (toasts), `nanoid` (IDs).
 
-- Deploys to GitHub Pages via `.github/workflows/deploy.yml`. Base path is `/lyricvideo` (svelte.config.js) — **unless** `CAPACITOR=true`, which sets base to `''` for a future mobile wrapper.
+- Deploys to **Cloudflare only**, served at the domain root — **base path is always `''`** (svelte.config.js). GitHub Pages was retired 2026-07-25; its `/lyricvideo` subpath base made local dev diverge from prod and blocked the localized-crawler SEO work. Don't reintroduce env-conditional `paths.base` — two bases means every asset URL has two truths.
 - `src/routes/+layout.ts` sets `ssr = false` / `prerender = false` — this is a fully client-rendered SPA. Don't add server-side load logic.
 - Fonts (Playfair Display, Great Vibes, Bebas Neue, Raleway) are loaded via Google Fonts `<link>` in `src/app.html`; preset `fontFamily` values depend on them.
 
