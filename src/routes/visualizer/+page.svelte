@@ -1,6 +1,7 @@
 <!-- src/routes/visualizer/+page.svelte -->
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { AUDIO_ACCEPT } from '$lib/media/accept';
   import { base } from '$app/paths';
   import Controls from '$lib/components/Player/Controls.svelte';
   import TextStylePanel from '$lib/components/Montage/TextStylePanel.svelte';
@@ -71,7 +72,7 @@
 
       <div class="flex flex-col gap-2">
         <span class="text-sm tracking-wider text-gold/60 uppercase" style="font-family:'Raleway',sans-serif">Song</span>
-        <input bind:this={audioInput} type="file" accept="audio/*" class="hidden" onchange={onAudio} />
+        <input bind:this={audioInput} type="file" accept={AUDIO_ACCEPT} class="hidden" onchange={onAudio} />
         <button
           onclick={() => audioInput.click()}
           class="bg-gold/15 border border-gold/30 text-gold px-4 py-2 text-sm tracking-widest uppercase rounded cursor-pointer hover:bg-gold/30 transition-all"
