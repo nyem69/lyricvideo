@@ -1,12 +1,12 @@
 <!-- src/lib/components/Landing/Faq.svelte -->
 <script lang="ts">
   import * as m from '$lib/paraglide/messages';
+  // The two founder-billing questions ("what do I get", "will I be charged")
+  // went with the retired Founder tier; the rest renumbered down.
   const faqs = [
     { q: m.faq_q1, a: m.faq_a1 },
     { q: m.faq_q2, a: m.faq_a2 },
-    { q: m.faq_q3, a: m.faq_a3 },
-    { q: m.faq_q4, a: m.faq_a4 },
-    { q: m.faq_q5, a: m.faq_a5 }
+    { q: m.faq_q3, a: m.faq_a3 }
   ];
 </script>
 

@@ -15,9 +15,11 @@
       <p class="mt-5 text-white/60 text-lg max-w-md leading-relaxed">
         {m.hero_subhead()}
       </p>
+      <!-- Single CTA since the founder-reserve path was retired: "try it free" was
+           the secondary outlined button and is promoted to primary here, rather
+           than left as the only button in a de-emphasised style. -->
       <div class="mt-7 flex flex-wrap gap-3">
-        <a href="#reserve" class="bg-gold text-surface font-semibold text-sm px-6 py-3.5 rounded-lg shadow-[0_10px_30px_-10px_var(--color-gold)] hover:bg-gold/90 transition-all" style="font-family:'Raleway',sans-serif">{m.hero_cta_reserve()}</a>
-        <a href="{base}/studio" class="text-gold text-sm px-6 py-3.5 rounded-lg border border-gold/30 hover:border-gold/60 transition-all" style="font-family:'Raleway',sans-serif">{m.hero_cta_try()}</a>
+        <a href="{base}/studio" class="bg-gold text-surface font-semibold text-sm px-6 py-3.5 rounded-lg shadow-[0_10px_30px_-10px_var(--color-gold)] hover:bg-gold/90 transition-all" style="font-family:'Raleway',sans-serif">{m.hero_cta_try()}</a>
       </div>
       <p class="mt-6 flex items-center gap-2 text-sm text-audio/90">
         <span class="h-1.5 w-1.5 rounded-full bg-audio shadow-[0_0_8px_var(--color-audio)]"></span>

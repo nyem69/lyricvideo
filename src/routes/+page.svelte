@@ -7,7 +7,6 @@
   import ToolsTrio from '$lib/components/Landing/ToolsTrio.svelte';
   import Formats from '$lib/components/Landing/Formats.svelte';
   import Pricing from '$lib/components/Landing/Pricing.svelte';
-  import ReserveSection from '$lib/components/Landing/ReserveSection.svelte';
   import Faq from '$lib/components/Landing/Faq.svelte';
   import SiteFooter from '$lib/components/Landing/SiteFooter.svelte';
   import * as m from '$lib/paraglide/messages';
@@ -35,13 +34,12 @@
   <ToolsTrio />
   <Formats />
   <Pricing />
-  <ReserveSection />
   <Faq />
   <SiteFooter />
 </div>
 
 <style>
-  /* Smooth-scroll for the in-page anchor links (#features, #pricing, #reserve, #faq).
+  /* Smooth-scroll for the in-page anchor links (#features, #pricing, #faq).
      Must target the scroll container (html), not an inner div, to take effect. */
   :global(html) { scroll-behavior: smooth; }
 </style>
