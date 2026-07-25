@@ -2,7 +2,7 @@
 <script lang="ts">
   import { montageStore } from '$lib/stores/montage.svelte';
   import { playerStore } from '$lib/stores/player.svelte';
-  import { exportMontage } from '$lib/montage/export';
+  import { exportMontage, extensionForMimeType } from '$lib/montage/export';
   import { MontageRenderer } from '$lib/renderer/montage-renderer';
   import { ImageCache } from '$lib/renderer/image-cache';
   import { getMontageStyle } from '$lib/montage/style';
@@ -68,7 +68,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${montageStore.title.replace(/\s+/g, '-').toLowerCase()}.webm`;
+      a.download = `${montageStore.title.replace(/\s+/g, '-').toLowerCase()}.${extensionForMimeType(blob.type)}`;
       a.click();
       URL.revokeObjectURL(url);
       toast.success('Video downloaded');
