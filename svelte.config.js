@@ -1,12 +1,14 @@
 import adapterStatic from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
-const isCapacitor = process.env.CAPACITOR === 'true';
-// Cloudflare Pages sets CF_PAGES=1 during its build. There the site is served
-// at the domain root, so the GitHub-Pages subpath base ('/lyricvideo') must be
-// dropped or every asset 404s. GitHub Pages still gets the subpath base.
-const isCloudflarePages = process.env.CF_PAGES === '1';
-const useRootBase = isCapacitor || isCloudflarePages;
+// Single deploy target: Cloudflare, served at the domain root, so the base path
+// is always ''. GitHub Pages was retired 2026-07-25 (its subpath base forced
+// `/lyricvideo`, which made local dev diverge from prod and blocked the
+// localized-crawler SEO work). A root base is also what a Capacitor wrapper
+// wants, so the old CAPACITOR branch is redundant rather than lost.
+//
+// If a subpath deploy is ever needed again, set it here — do NOT reintroduce
+// env-conditional paths: two bases means every asset URL has two truths.
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -19,7 +21,7 @@ const config = {
       precompress: false
     }),
     paths: {
-      base: useRootBase ? '' : '/lyricvideo'
+      base: ''
     },
     alias: {
       $components: 'src/lib/components'
