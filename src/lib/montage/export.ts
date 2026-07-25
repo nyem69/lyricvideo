@@ -17,21 +17,46 @@ export interface ExportOptions {
 
 /** Recording formats in preference order.
  *
- *  WebM stays FIRST so desktop output is unchanged — Chrome/Firefox keep picking
- *  VP9 exactly as before. Safari supports none of the WebM entries and falls
- *  through to MP4, which is the only thing it can record (H.264+AAC).
+ *  MP4/H.264 FIRST, everywhere. Two reasons:
  *
- *  Before MP4 was listed, the loop found nothing on Safari and returned a
- *  hardcoded 'video/webm' anyway, so `new MediaRecorder(...)` threw
- *  NotSupportedError and export was dead on every iPhone/iPad.
+ *  1. iOS. Modern Safari *can* record WebM, but on an iPhone that is a dead end
+ *     — Photos won't import it, WhatsApp won't play it, and there is no
+ *     transcode step on the device. Supported and useful are not the same thing.
+ *     (An earlier revision put WebM first assuming Safari couldn't record it at
+ *     all; a real iPhone export came back as a .webm and disproved that.)
+ *  2. Desktop. The pipeline here records and then transcodes to H.264 anyway, so
+ *     recording VP9 first only adds a lossy generation. Going straight to H.264
+ *     removes a re-encode.
+ *
+ *  WebM remains as fallback for browsers that cannot record MP4.
  */
 export const EXPORT_MIME_CANDIDATES = [
+  'video/mp4;codecs=h264,aac',
+  'video/mp4',
   'video/webm;codecs=vp9,opus',
   'video/webm;codecs=vp8,opus',
   'video/webm',
-  'video/mp4;codecs=h264,aac',
-  'video/mp4',
 ] as const;
+
+/** Video bitrate target, in bits per pixel per second — calibrated so a
+ *  1920x1080 export lands at ~4 Mbps (roughly 150 MB for a 5-minute song).
+ *
+ *  Without an explicit cap MediaRecorder uses a browser default, and those vary
+ *  wildly: a 5:07 iPhone export came out at 371 MB (~9.7 Mbps) while desktop
+ *  produced ~1.4 Mbps from the same kind of content. Pinning the rate keeps
+ *  output predictable across browsers and small enough to actually share. */
+export const VIDEO_BITS_PER_PIXEL_SECOND = 4_000_000 / (1920 * 1080);
+
+/** Opus/AAC at this rate is transparent for music at the sizes we target. */
+export const AUDIO_BITS_PER_SECOND = 128_000;
+
+/** Bitrate for a canvas of the given size, clamped to a sane band so an odd
+ *  custom format cannot ask for a 0.1 Mbps smear or a 50 Mbps monster. */
+export function videoBitrateFor(width: number, height: number): number {
+  const pixels = Math.max(1, Math.round(width) * Math.round(height));
+  const raw = pixels * VIDEO_BITS_PER_PIXEL_SECOND;
+  return Math.round(Math.min(12_000_000, Math.max(500_000, raw)));
+}
 
 /** First supported candidate, or '' when none match — '' means "let the browser
  *  choose its own default", which is strictly better than forcing a type we
@@ -87,7 +112,11 @@ export async function exportMontage(opts: ExportOptions): Promise<Blob> {
 
   const mixed = new MediaStream(tracks);
   const mimeType = pickMimeType();
-  const recorder = new MediaRecorder(mixed, mimeType ? { mimeType } : undefined);
+  const recorder = new MediaRecorder(mixed, {
+    ...(mimeType ? { mimeType } : {}),
+    videoBitsPerSecond: videoBitrateFor(canvas.width, canvas.height),
+    audioBitsPerSecond: AUDIO_BITS_PER_SECOND,
+  });
   const chunks: BlobPart[] = [];
   recorder.ondataavailable = (e) => {
     if (e.data.size > 0) chunks.push(e.data);
