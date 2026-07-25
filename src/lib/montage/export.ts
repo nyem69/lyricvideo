@@ -15,19 +15,44 @@ export interface ExportOptions {
   signal?: AbortSignal;
 }
 
-function pickMimeType(): string {
-  const candidates = [
-    'video/webm;codecs=vp9,opus',
-    'video/webm;codecs=vp8,opus',
-    'video/webm',
-  ];
-  for (const c of candidates) {
-    if (typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported(c)) return c;
+/** Recording formats in preference order.
+ *
+ *  WebM stays FIRST so desktop output is unchanged — Chrome/Firefox keep picking
+ *  VP9 exactly as before. Safari supports none of the WebM entries and falls
+ *  through to MP4, which is the only thing it can record (H.264+AAC).
+ *
+ *  Before MP4 was listed, the loop found nothing on Safari and returned a
+ *  hardcoded 'video/webm' anyway, so `new MediaRecorder(...)` threw
+ *  NotSupportedError and export was dead on every iPhone/iPad.
+ */
+export const EXPORT_MIME_CANDIDATES = [
+  'video/webm;codecs=vp9,opus',
+  'video/webm;codecs=vp8,opus',
+  'video/webm',
+  'video/mp4;codecs=h264,aac',
+  'video/mp4',
+] as const;
+
+/** First supported candidate, or '' when none match — '' means "let the browser
+ *  choose its own default", which is strictly better than forcing a type we
+ *  already know is unsupported. */
+export function pickMimeType(): string {
+  if (typeof MediaRecorder === 'undefined') return '';
+  for (const c of EXPORT_MIME_CANDIDATES) {
+    if (MediaRecorder.isTypeSupported(c)) return c;
   }
-  return 'video/webm';
+  return '';
 }
 
-/** Record the canvas + (optional) audio to a WebM blob. Resolves when recording stops. */
+/** Download extension for a recorder mime type. Params (`;codecs=…`) are
+ *  ignored; anything not MP4 is treated as WebM. */
+export function extensionForMimeType(mime: string): string {
+  return /^video\/mp4/i.test(mime) ? 'mp4' : 'webm';
+}
+
+/** Record the canvas + (optional) audio to a video blob — WebM where supported,
+ *  MP4 on Safari/iOS. Read `blob.type` for what you actually got. Resolves when
+ *  recording stops. */
 export async function exportMontage(opts: ExportOptions): Promise<Blob> {
   const { canvas, audioFile, durationSec, fps, renderFrame, onProgress, onAnalyserReady, signal } =
     opts;
@@ -61,14 +86,19 @@ export async function exportMontage(opts: ExportOptions): Promise<Blob> {
   }
 
   const mixed = new MediaStream(tracks);
-  const recorder = new MediaRecorder(mixed, { mimeType: pickMimeType() });
+  const mimeType = pickMimeType();
+  const recorder = new MediaRecorder(mixed, mimeType ? { mimeType } : undefined);
   const chunks: BlobPart[] = [];
   recorder.ondataavailable = (e) => {
     if (e.data.size > 0) chunks.push(e.data);
   };
 
   const done = new Promise<Blob>((resolve) => {
-    recorder.onstop = () => resolve(new Blob(chunks, { type: 'video/webm' }));
+    // Tag the blob with what the recorder ACTUALLY produced, not an assumption —
+    // on Safari that's MP4, and a WebM-labelled MP4 confuses both the download
+    // filename and anything downstream that sniffs the type.
+    recorder.onstop = () =>
+      resolve(new Blob(chunks, { type: recorder.mimeType || mimeType || 'video/webm' }));
   });
 
   // Timeslice: flush a chunk every second instead of buffering the whole video

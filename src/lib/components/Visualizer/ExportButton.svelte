@@ -2,7 +2,7 @@
 <script lang="ts">
   import { visualizerStore } from '$lib/stores/visualizer.svelte';
   import { playerStore } from '$lib/stores/player.svelte';
-  import { exportMontage } from '$lib/montage/export';
+  import { exportMontage, extensionForMimeType } from '$lib/montage/export';
   import { VisualizerRenderer } from '$lib/renderer/visualizer-renderer';
   import { getAsset } from '$lib/storage/asset-store';
   import { toast } from 'svelte-sonner';
@@ -73,7 +73,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${visualizerStore.title.replace(/\s+/g, '-').toLowerCase()}.webm`;
+      a.download = `${visualizerStore.title.replace(/\s+/g, '-').toLowerCase()}.${extensionForMimeType(blob.type)}`;
       a.click();
       URL.revokeObjectURL(url);
       toast.success('Video downloaded');
