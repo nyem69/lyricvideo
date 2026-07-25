@@ -2,6 +2,7 @@
 <!-- DEV MOCKUP — live audio-reactive preview of one visualizer style. -->
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
+  import { AUDIO_ACCEPT } from '$lib/media/accept';
   import { page } from '$app/stores';
   import { base } from '$app/paths';
   import { VizAudio } from '$lib/dev/visualizer/audio-harness';
@@ -103,7 +104,7 @@
         <input
           bind:this={fileInput}
           type="file"
-          accept="audio/*"
+          accept={AUDIO_ACCEPT}
           class="hidden"
           onchange={onFile}
         />

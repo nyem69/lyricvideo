@@ -1,5 +1,6 @@
 <script lang="ts">
   import { playerStore } from '$lib/stores/player.svelte';
+  import { AUDIO_ACCEPT } from '$lib/media/accept';
   import { Play, Pause, RotateCcw, Upload } from '@lucide/svelte';
 
   // Montage route hides this: there, audio must go through montageStore.loadAudio
@@ -81,7 +82,7 @@
     <input
       bind:this={audioInput}
       type="file"
-      accept="audio/*"
+      accept={AUDIO_ACCEPT}
       onchange={handleAudioUpload}
       class="hidden"
     />
