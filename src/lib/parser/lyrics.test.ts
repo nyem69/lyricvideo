@@ -38,9 +38,14 @@ describe('detectLyricFormat', () => {
   it('detects Suno by multi-timestamp lines', () => {
     expect(detectLyricFormat(SUNO)).toBe('suno');
   });
-  it('falls back to Suno for empty / untimed input', () => {
+  it('falls back to Suno for empty input', () => {
     expect(detectLyricFormat('')).toBe('suno');
-    expect(detectLyricFormat('just some text')).toBe('suno');
+  });
+  it('reports untimed text as plain, not Suno', () => {
+    // Was 'suno', which meant the Suno parser found no tags and returned zero
+    // sections — the paste vanished with no warning.
+    expect(detectLyricFormat('just some text')).toBe('plain');
+    expect(detectLyricFormat('line one\nline two\n\nline three')).toBe('plain');
   });
 });
 

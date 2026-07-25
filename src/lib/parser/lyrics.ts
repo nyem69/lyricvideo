@@ -10,7 +10,11 @@ import { nanoid } from 'nanoid';
 import type { Song, Section, SectionType, Line, Word } from '../model/types';
 import { parseSunoTimestamps } from './suno';
 
-export type LyricFormat = 'suno' | 'lrc' | 'srt';
+export type LyricFormat = 'suno' | 'lrc' | 'srt' | 'plain';
+
+/** Pacing used when plain lyrics arrive before any audio, so the paste still
+ *  produces something visible instead of nothing. */
+export const PLAIN_FALLBACK_SECONDS_PER_LINE = 3;
 
 // A timestamp tag: [mm:ss], [mm:ss.xx] (LRC centiseconds) or [mm:ss.mmm] (Suno).
 const TS_TAG = /\[(\d{1,2}):(\d{2})(?:[.:](\d{1,3}))?\]/g;
@@ -52,22 +56,117 @@ export function detectLyricFormat(input: string): LyricFormat {
       if (n >= 2) multi++;
     }
   }
-  if (stamped === 0) return 'suno';
+  // No timestamps anywhere: a plain lyric sheet. Reporting this as 'suno' (as it
+  // once did) meant the Suno parser found no tags and returned ZERO sections —
+  // the paste vanished silently and the export came out with no lyrics at all.
+  if (stamped === 0) return 'plain';
   // Word-level Suno lines routinely carry 2+ tags; a line-level LRC never does.
   return multi / stamped >= 0.2 ? 'suno' : 'lrc';
 }
 
 /** Parse using whichever format `input` looks like. The single entry point the
  *  stores call so a paste in any supported format Just Works. */
-export function parseLyrics(input: string): Song {
+export function parseLyrics(input: string, opts?: { durationSec?: number }): Song {
   switch (detectLyricFormat(input)) {
     case 'srt':
       return parseSrt(input);
     case 'lrc':
       return parseLrc(input);
+    case 'plain':
+      return parsePlain(input, opts?.durationSec ?? 0);
     default:
       return parseSunoTimestamps(input);
   }
+}
+
+/** One entry of an untimestamped paste: a lyric line, or a `[SECTION]` marker. */
+export interface PlainEntry {
+  kind: 'line' | 'label';
+  text: string;
+}
+
+/** Split an untimestamped paste into its lines and `[SECTION]` labels, in order.
+ *  Blank lines are dropped — LRC has no blank-line section break, so they cannot
+ *  survive a round trip anyway. */
+export function plainEntries(input: string): PlainEntry[] {
+  const out: PlainEntry[] = [];
+  for (const raw of input.split('\n')) {
+    const line = raw.trim();
+    if (!line) continue;
+    const label = line.match(/^\[([^\]]+)\]$/);
+    out.push(
+      label ? { kind: 'label', text: label[1].trim() } : { kind: 'line', text: line }
+    );
+  }
+  return out;
+}
+
+/**
+ * Parse plain, untimestamped lyrics by spreading the lines EVENLY across the
+ * song. This is a starting point, not an alignment — the timings are wrong until
+ * they're synced by hand — but it beats the previous behaviour of silently
+ * yielding nothing, and it gives the sync UI something to nudge.
+ *
+ * With no audio yet (`durationSec` 0) it paces at
+ * {@link PLAIN_FALLBACK_SECONDS_PER_LINE} so a paste is still visible.
+ */
+export function parsePlain(input: string, durationSec = 0): Song {
+  const entries = plainEntries(input);
+  const lineCount = entries.reduce((n, e) => n + (e.kind === 'line' ? 1 : 0), 0);
+  if (lineCount === 0) return { id: nanoid(), title: '', duration: 0, sections: [] };
+
+  const span = durationSec > 0 ? durationSec : lineCount * PLAIN_FALLBACK_SECONDS_PER_LINE;
+  const step = span / lineCount;
+
+  const sections: RawSection[] = [];
+  let current: RawSection | null = null;
+  let pendingLabel: string | undefined;
+  const ensureSection = (): RawSection => {
+    if (!current) {
+      current = { label: pendingLabel, lines: [] };
+      pendingLabel = undefined;
+      sections.push(current);
+    }
+    return current;
+  };
+
+  let i = 0;
+  for (const e of entries) {
+    if (e.kind === 'label') {
+      // A label opens a new section, whose start is the next line's time.
+      current = null;
+      pendingLabel = e.text;
+      continue;
+    }
+    const startTime = Number((i * step).toFixed(3));
+    ensureSection().lines.push({
+      startTime,
+      text: e.text,
+      words: lineWords(e.text, startTime),
+    });
+    i++;
+  }
+
+  const song = finalizeSong('', '', sections);
+  // finalizeSong ends the song at lastTimestamp+5; when we know the real audio
+  // length, that is the truth.
+  if (durationSec > 0) song.duration = durationSec;
+  return song;
+}
+
+/** Seconds as an LRC tag: `[mm:ss.xx]` (centiseconds). */
+export function formatLrcTime(sec: number): string {
+  const s = Math.max(0, sec);
+  const m = Math.floor(s / 60);
+  return `[${String(m).padStart(2, '0')}:${(s - m * 60).toFixed(2).padStart(5, '0')}]`;
+}
+
+/** Render timed entries as LRC text. `label: true` emits a `[ts][SECTION]`
+ *  marker, the same shape {@link parseLrc} reads back as a section break. */
+export function toLrc(items: { text: string; startTime: number; label?: boolean }[]): string {
+  return items
+    .map((i) => `${formatLrcTime(i.startTime)}${i.label ? `[${i.text}]` : i.text}`)
+    .join('\n');
 }
 
 // A pre-finalised line: timing + text, words attached.

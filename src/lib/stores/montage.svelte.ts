@@ -31,7 +31,9 @@ class MontageStore {
   // during export or the two would interleave draws and corrupt the capture.
   exporting = $state(false);
 
-  private song = $derived(this.lyricsText ? parseLyrics(this.lyricsText) : null);
+  private song = $derived(
+    this.lyricsText ? parseLyrics(this.lyricsText, { durationSec: this.songDuration }) : null
+  );
   readonly bands = $derived(deriveBands(this.song));
   readonly cuts = $derived.by(() => {
     // [GUARD] clamp duration to a finite value before buildTimeline — playerStore
@@ -99,7 +101,7 @@ class MontageStore {
 
   importLyrics(text: string) {
     this.lyricsText = text;
-    const song = parseLyrics(text);
+    const song = parseLyrics(text, { durationSec: this.songDuration });
     if (!this.audioKey) {
       this.songDuration = song.duration;
       playerStore.setDuration(song.duration);
