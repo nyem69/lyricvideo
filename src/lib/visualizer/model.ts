@@ -71,6 +71,9 @@ export interface VisualizerProject {
   formatId: string;
   customWidth?: number;
   customHeight?: number;
+  // Optional for back-compat: projects saved before the export-quality control
+  // existed restore to DEFAULT_QUALITY (full resolution).
+  quality?: string;
   backgroundKey?: string;
   audioKey?: string;
   // Non-optional (unlike MontageProject.songDuration?) by design: the store

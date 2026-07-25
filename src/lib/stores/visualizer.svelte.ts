@@ -23,6 +23,7 @@ import {
   type VAnchor,
 } from '$lib/visualizer/model';
 import { DEFAULT_FORMAT, resolveFormat } from '$lib/visualizer/formats';
+import { DEFAULT_QUALITY, scaleDims } from '$lib/visualizer/quality';
 import { playerStore } from './player.svelte';
 
 class VisualizerStore {
@@ -38,6 +39,7 @@ class VisualizerStore {
   formatId = $state<string>(DEFAULT_FORMAT);
   customWidth = $state<number | undefined>(undefined);
   customHeight = $state<number | undefined>(undefined);
+  quality = $state<string>(DEFAULT_QUALITY);
   backgroundKey = $state<string | undefined>(undefined);
   audioKey = $state<string | undefined>(undefined);
   songDuration = $state(0);
@@ -55,6 +57,10 @@ class VisualizerStore {
       customHeight: this.customHeight,
     })
   );
+  /** Dimensions the EXPORT records at — `dims` scaled by the quality setting.
+   *  Preview stays at full `dims`; the renderer is resolution-independent, so
+   *  the two are the same composition. */
+  readonly exportDims = $derived(scaleDims(this.dims, this.quality));
   readonly totalDuration = $derived(
     computeTotalDuration(this.songDuration || (this.song?.duration ?? 0), this.bands, this.settings)
   );
@@ -140,6 +146,11 @@ class VisualizerStore {
     this.persist();
   }
 
+  setQuality(id: string) {
+    this.quality = id;
+    this.persist();
+  }
+
   setCustomDims(width: number, height: number) {
     this.customWidth = width;
     this.customHeight = height;
@@ -176,6 +187,7 @@ class VisualizerStore {
       formatId: this.formatId,
       customWidth: this.customWidth,
       customHeight: this.customHeight,
+      quality: this.quality,
       backgroundKey: this.backgroundKey,
       audioKey: this.audioKey,
       songDuration: this.songDuration,
@@ -200,6 +212,8 @@ class VisualizerStore {
       this.formatId = project.formatId;
       this.customWidth = project.customWidth;
       this.customHeight = project.customHeight;
+      // Optional: projects saved before the quality control existed restore to full.
+      this.quality = project.quality ?? DEFAULT_QUALITY;
       this.backgroundKey = project.backgroundKey;
       this.audioKey = project.audioKey;
       // Guard a corrupted/non-finite persisted duration (probe only filters live loads).

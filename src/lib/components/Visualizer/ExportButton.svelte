@@ -36,7 +36,7 @@
     visualizerStore.exporting = true;
 
     const renderer = new VisualizerRenderer({ canvas });
-    renderer.resize(visualizerStore.dims.width, visualizerStore.dims.height);
+    renderer.resize(visualizerStore.exportDims.width, visualizerStore.exportDims.height);
     renderer.setStyle(visualizerStore.vizStyleId);
     renderer.setAccent(visualizerStore.vizColor);
     renderer.setSurface(visualizerStore.vizBg);
