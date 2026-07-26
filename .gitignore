@@ -2,7 +2,27 @@ node_modules/
 .svelte-kit/
 build/
 .DS_Store
-projects
+# projects/ is scratch, EXCEPT the align-spike L1 harness + its ground truth:
+# Phase L1 (corpus validation) runs these scripts 15-30x, and the pinned
+# regression baseline needs the two recipe ASR dumps + the Kota Pagoh GT.
+# Heavy/regenerable artifacts (wav, webm, merged/union outputs, logs) stay out.
+projects/*
+!projects/align-spike/
+projects/align-spike/*
+!projects/align-spike/*.ts
+!projects/align-spike/RESULTS.md
+!projects/align-spike/bench.html
+!projects/align-spike/serve.mjs
+!projects/align-spike/package.json
+!projects/align-spike/pnpm-lock.yaml
+!projects/align-spike/asr.base_timestamped.q8.json
+!projects/align-spike/asr.small_timestamped.q8.json
+!projects/align-spike/asr.browser.wasmunion.json
+!projects/align-spike/asr.mobile.wasmunion.json
+!projects/kotapagoh-v2/
+projects/kotapagoh-v2/*
+!projects/kotapagoh-v2/kota-pagoh.lrc
+!projects/kotapagoh-v2/kota-pagoh.words.json
 .superpowers/
 project.inlang/cache/
 

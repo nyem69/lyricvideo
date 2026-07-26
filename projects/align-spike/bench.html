@@ -1,0 +1,165 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>whisper bench</title>
+<style>
+  body { font: 13px/1.5 ui-monospace, monospace; margin: 1.5rem; max-width: 70rem; }
+  button { font: inherit; padding: 4px 10px; margin: 2px; }
+  table { border-collapse: collapse; margin: 1rem 0; }
+  td, th { border: 1px solid #999; padding: 3px 8px; text-align: right; }
+  td:first-child, th:first-child { text-align: left; }
+  #log { white-space: pre-wrap; background: #f4f4f4; padding: 8px; max-height: 20rem; overflow-y: auto; }
+</style>
+<h1>whisper browser bench</h1>
+<div id="env"></div>
+<div>
+  <button data-preset="base|wasm|q8">base wasm q8</button>
+  <button data-preset="small|wasm|q8">small wasm q8</button>
+  <button data-preset="base|webgpu|fp32">base webgpu fp32</button>
+  <button data-preset="base|webgpu|fp16">base webgpu fp16</button>
+  <button data-preset="small|webgpu|fp16">small webgpu fp16</button>
+  <button data-preset="small|webgpu|q4">small webgpu q4</button>
+  <button id="all">run wasm pair + webgpu pair</button>
+  <button id="mobile">📱 run mobile pair (base+small wasm q8)</button>
+</div>
+<p id="hint" style="color:#a00"></p>
+<table id="results">
+  <tr><th>model</th><th>device</th><th>dtype</th><th>load s</th><th>transcribe s</th><th>rtf</th><th>words</th><th>heap MB</th><th>note</th></tr>
+</table>
+<div id="log"></div>
+<script type="module">
+  import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1';
+
+  // Session init on iOS is SLOW (minutes of silent WASM compile) but works
+  // multithreaded — measured base q8 at rtf 0.54x on an iPhone. ?st=1 forces
+  // single-thread if a device does genuinely hang.
+  const isIOS = /iPhone|iPad/.test(navigator.userAgent);
+  const singleThread = new URLSearchParams(location.search).get('st') === '1';
+  if (singleThread) env.backends.onnx.wasm.numThreads = 1;
+
+  const logEl = document.getElementById('log');
+  const log = (m) => {
+    logEl.textContent += m + '\n';
+    logEl.scrollTop = logEl.scrollHeight;
+    console.log(m);
+    fetch('/log', { method: 'POST', body: m }).catch(() => {});
+  };
+  window.__results = [];
+  window.__busy = false;
+
+  const envEl = document.getElementById('env');
+  const gpu = navigator.gpu ? 'webgpu: yes' : 'webgpu: NO';
+  const sab = typeof SharedArrayBuffer !== 'undefined' ? 'SAB: yes (multithread wasm)' : 'SAB: NO (single-thread wasm!)';
+  envEl.textContent = `${navigator.userAgent} | cores=${navigator.hardwareConcurrency} | ${gpu} | ${sab}` +
+    (singleThread ? ' | numThreads=1 (?st=1)' : '');
+  log(`ENV: ${envEl.textContent} | isolated=${crossOriginIsolated}`);
+
+  // keep the screen awake during runs (iOS Safari 16.4+); reacquire on visibility
+  let wakeLock = null;
+  const wake = async () => { try { wakeLock = await navigator.wakeLock?.request('screen'); } catch {} };
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && window.__busy) wake(); });
+
+  // ---- audio: parse pcm_s16le mono 16k WAV by hand (no AudioContext quirks)
+  async function loadWav(url) {
+    const buf = new DataView(await (await fetch(url)).arrayBuffer());
+    let off = 12, sampleRate = 0, data = null;
+    const tag = (o) => String.fromCharCode(buf.getUint8(o), buf.getUint8(o + 1), buf.getUint8(o + 2), buf.getUint8(o + 3));
+    while (off + 8 <= buf.byteLength) {
+      const id = tag(off), size = buf.getUint32(off + 4, true);
+      if (id === 'fmt ') sampleRate = buf.getUint32(off + 12, true);
+      if (id === 'data') data = { start: off + 8, size };
+      off += 8 + size + (size % 2);
+    }
+    const n = data.size >> 1;
+    const samples = new Float32Array(n);
+    for (let i = 0; i < n; i++) samples[i] = buf.getInt16(data.start + i * 2, true) / 32768;
+    return { samples, sampleRate, durationSec: n / sampleRate };
+  }
+  const audioP = loadWav('kota-pagoh.16k.wav');
+
+  const heapMB = () => (performance.memory ? Math.round(performance.memory.usedJSHeapSize / 1048576) : -1);
+
+  async function run(suffix, device, dtype) {
+    const { samples, durationSec } = await audioP;
+    const model = `onnx-community/whisper-${suffix}_timestamped`;
+    log(`\n=== ${model} device=${device} dtype=${dtype} (audio ${durationSec.toFixed(1)}s)`);
+    const row = { model: suffix, device, dtype, loadSec: null, transcribeSec: null, rtf: null, words: null, heapMB: null, note: '' };
+    try {
+      const t0 = performance.now();
+      const seen = new Map(); // file -> last logged quartile
+      const tr = await pipeline('automatic-speech-recognition', model, {
+        device, dtype,
+        progress_callback: (p) => {
+          if (p.status === 'done') return log(`  dl ${p.file}: done — creating session...`);
+          if (p.status !== 'progress' || !p.total) return;
+          const q = Math.floor((p.loaded / p.total) * 4);
+          if ((seen.get(p.file) ?? -1) >= q) return;
+          seen.set(p.file, q);
+          log(`  dl ${p.file}: ${Math.round((p.loaded / p.total) * 100)}% of ${(p.total / 1048576).toFixed(0)}MB`);
+        },
+      });
+      row.loadSec = (performance.now() - t0) / 1000;
+      log(`loaded in ${row.loadSec.toFixed(1)}s`);
+      log(`transcribing...`);
+      const t1 = performance.now();
+      const out = await tr(samples, {
+        language: 'ms', task: 'transcribe',
+        chunk_length_s: 30, stride_length_s: 5,
+        return_timestamps: 'word',
+      });
+      row.transcribeSec = (performance.now() - t1) / 1000;
+      row.rtf = row.transcribeSec / durationSec;
+      row.words = (out.chunks ?? []).filter((c) => c.timestamp && c.timestamp[0] != null).length;
+      row.heapMB = heapMB();
+      row.chunks = (out.chunks ?? []).map((c) => ({ text: c.text, start: c.timestamp?.[0], end: c.timestamp?.[1] }));
+      log(`transcribed in ${row.transcribeSec.toFixed(1)}s (rtf ${row.rtf.toFixed(2)}x) — ${row.words} words, heap ${row.heapMB}MB`);
+      await tr.dispose();
+    } catch (e) {
+      row.note = String(e).slice(0, 200);
+      log(`FAILED: ${row.note}`);
+    }
+    window.__results.push(row);
+    const tr2 = document.createElement('tr');
+    for (const v of [row.model, row.device, row.dtype, row.loadSec?.toFixed(1) ?? '-',
+      row.transcribeSec?.toFixed(1) ?? '-', row.rtf?.toFixed(2) ?? '-',
+      row.words ?? '-', row.heapMB ?? '-', row.note]) {
+      const td = document.createElement('td');
+      td.textContent = String(v);
+      tr2.appendChild(td);
+    }
+    document.getElementById('results').appendChild(tr2);
+    return row;
+  }
+
+  async function guarded(fn) {
+    if (window.__busy) return log('busy — wait');
+    window.__busy = true;
+    await wake();
+    try { await fn(); } finally { window.__busy = false; try { wakeLock?.release(); } catch {} }
+  }
+
+  document.querySelectorAll('[data-preset]').forEach((b) => {
+    b.onclick = () => {
+      const [suffix, device, dtype] = b.dataset.preset.split('|');
+      guarded(() => run(suffix, device, dtype));
+    };
+  });
+  document.getElementById('all').onclick = () =>
+    guarded(async () => {
+      await run('base', 'wasm', 'q8');
+      await run('small', 'wasm', 'q8');
+      await run('base', 'webgpu', 'fp16');
+      await run('small', 'webgpu', 'fp16');
+      log('ALL DONE: ' + JSON.stringify(window.__results.map(r => ({ m: r.model, d: r.device, rtf: r.rtf, load: r.loadSec, note: r.note }))));
+    });
+  document.getElementById('mobile').onclick = () =>
+    guarded(async () => {
+      document.getElementById('hint').textContent = 'Keep this tab in the foreground and the screen on until DONE appears.';
+      await run('base', 'wasm', 'q8');
+      await run('small', 'wasm', 'q8');
+      document.getElementById('hint').textContent = 'DONE — you can put the phone down.';
+      log('MOBILE DONE: ' + JSON.stringify(window.__results.map(r => ({ m: r.model, d: r.device, load: r.loadSec, sec: r.transcribeSec, rtf: r.rtf, words: r.words, note: r.note }))));
+      // ship full word dumps so accuracy can be scored off-device
+      fetch('/log', { method: 'POST', body: 'MOBILE CHUNKS: ' + JSON.stringify(window.__results.map(r => ({ m: r.model, d: r.device, chunks: r.chunks ?? [] }))) }).catch(() => {});
+    });
+  log('ready');
+</script>

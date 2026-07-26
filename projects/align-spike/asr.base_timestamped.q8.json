@@ -1,0 +1,3147 @@
+{
+  "model": "onnx-community/whisper-base_timestamped",
+  "dtype": "q8",
+  "language": "ms",
+  "audio": "kota-pagoh.16k.wav",
+  "durationSec": 249.66,
+  "loadSec": 3.049322375,
+  "transcribeSec": 36.787827332999996,
+  "rtf": 0.14735170765440997,
+  "wordCount": 627,
+  "text": " Segemat pagu datang! Berdiri mega di tanah selatan Daerah kecil yang besar impian Suatu ketika tak pernah ternampakan, ini bagus melangkah kehadapah. Ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, Di teknologi marah melakar mesyu universiti Islam antara bamsat sedudi sesuai politik nitun shed nasir ilmu digali istitut kemahiran belian negara sempurna visi bersat tu sama berdiri ilmu dicari mengamu ar melakar sejarah Denai air pemhu bung da airah Hedagang lalu bersilin singga Di hulunya, berdiri gagah Berapa lama, kisah giri wajat Sultan alaudin riyaya, cakap punya hikayat Sultan ketudah di negeri penuh berdau lad Di istana hingga bagi naga ringdan mangkat Dia tak sedukit bersama di anagam Kampung raja bersemaya makam Lalu masyurlah seluruh alam Menjadis saksi Sejarah nanci lam Ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, ya, [MUH] Bago bukan sekar darna mayangga Bukan hanya mibandung dan udangga lah Baliknya gemilang lipat dan sejarah Udah paksin dan cu yang tak pernah gue yang tinggak pago jemput muda jamu selera wawakad dan dengan menulang kongber bisa arruk cak pertisdayan dapur ce lah yang istimewa apa fabriani ini paling enak sedap rasa Tumiran ikan bakar payah redan Jangan lupa, pagok yang indah Berdiri gagah, keyang melangkah, tak pernah kelah",
+  "words": [
+    {
+      "text": " Segemat",
+      "start": 1.4,
+      "end": 2.42
+    },
+    {
+      "text": " pagu",
+      "start": 2.42,
+      "end": 3.88
+    },
+    {
+      "text": " datang!",
+      "start": 3.88,
+      "end": 5.1
+    },
+    {
+      "text": " Berdiri",
+      "start": 8.36,
+      "end": 11.72
+    },
+    {
+      "text": " mega",
+      "start": 11.72,
+      "end": 12.18
+    },
+    {
+      "text": " di",
+      "start": 12.18,
+      "end": 13.26
+    },
+    {
+      "text": " tanah",
+      "start": 13.26,
+      "end": 13.74
+    },
+    {
+      "text": " selatan",
+      "start": 13.74,
+      "end": 14.52
+    },
+    {
+      "text": " Daerah",
+      "start": 14.52,
+      "end": 16.78
+    },
+    {
+      "text": " kecil",
+      "start": 16.78,
+      "end": 17.38
+    },
+    {
+      "text": " yang",
+      "start": 17.38,
+      "end": 17.76
+    },
+    {
+      "text": " besar",
+      "start": 17.76,
+      "end": 18.3
+    },
+    {
+      "text": " impian",
+      "start": 18.3,
+      "end": 19.3
+    },
+    {
+      "text": " Suatu",
+      "start": 19.3,
+      "end": 21.06
+    },
+    {
+      "text": " ketika",
+      "start": 21.06,
+      "end": 21.82
+    },
+    {
+      "text": " tak",
+      "start": 21.82,
+      "end": 22.44
+    },
+    {
+      "text": " pernah",
+      "start": 22.44,
+      "end": 22.82
+    },
+    {
+      "text": " ternampakan,",
+      "start": 22.82,
+      "end": 24.26
+    },
+    {
+      "text": " ini",
+      "start": 24.56,
+      "end": 25.62
+    },
+    {
+      "text": " bagus",
+      "start": 25.62,
+      "end": 27.08
+    },
+    {
+      "text": " melangkah",
+      "start": 27.08,
+      "end": 29.88
+    },
+    {
+      "text": " kehadapah.",
+      "start": 29.88,
+      "end": 36.18
+    },
+    {
+      "text": " Ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98,
+      "end": 69.98
+    },
+    {
+      "text": " ya,",
+      "start": 69.98
+    },
+    {
+      "text": " Di",
+      "start": 60,
+      "end": 60.1
+    },
+    {
+      "text": " teknologi",
+      "start": 60.1,
+      "end": 60.76
+    },
+    {
+      "text": " marah",
+      "start": 60.76,
+      "end": 61.1
+    },
+    {
+      "text": " melakar",
+      "start": 61.1,
+      "end": 61.62
+    },
+    {
+      "text": " mesyu",
+      "start": 61.62,
+      "end": 62.02
+    },
+    {
+      "text": " universiti",
+      "start": 62.02,
+      "end": 62.8
+    },
+    {
+      "text": " Islam",
+      "start": 62.8,
+      "end": 63.2
+    },
+    {
+      "text": " antara",
+      "start": 63.2,
+      "end": 63.6
+    },
+    {
+      "text": " bamsat",
+      "start": 63.6,
+      "end": 64.04
+    },
+    {
+      "text": " sedudi",
+      "start": 64.04,
+      "end": 64.44
+    },
+    {
+      "text": " sesuai",
+      "start": 64.44,
+      "end": 65.32
+    },
+    {
+      "text": " politik",
+      "start": 65.32,
+      "end": 65.76
+    },
+    {
+      "text": " nitun",
+      "start": 65.76,
+      "end": 66.14
+    },
+    {
+      "text": " shed",
+      "start": 66.14,
+      "end": 66.44
+    },
+    {
+      "text": " nasir",
+      "start": 66.44,
+      "end": 66.82
+    },
+    {
+      "text": " ilmu",
+      "start": 66.82,
+      "end": 67.12
+    },
+    {
+      "text": " digali",
+      "start": 67.12,
+      "end": 67.64
+    },
+    {
+      "text": " istitut",
+      "start": 67.64,
+      "end": 68.16
+    },
+    {
+      "text": " kemahiran",
+      "start": 68.16,
+      "end": 68.78
+    },
+    {
+      "text": " belian",
+      "start": 68.78,
+      "end": 69.22
+    },
+    {
+      "text": " negara",
+      "start": 69.22,
+      "end": 69.64
+    },
+    {
+      "text": " sempurna",
+      "start": 69.64,
+      "end": 70.3
+    },
+    {
+      "text": " visi",
+      "start": 70.3,
+      "end": 71.16
+    },
+    {
+      "text": " bersat",
+      "start": 71.16,
+      "end": 71.7
+    },
+    {
+      "text": " tu",
+      "start": 71.7,
+      "end": 72.04
+    },
+    {
+      "text": " sama",
+      "start": 72.04,
+      "end": 72.54
+    },
+    {
+      "text": " berdiri",
+      "start": 72.54,
+      "end": 73.62
+    },
+    {
+      "text": " ilmu",
+      "start": 73.62,
+      "end": 75.42
+    },
+    {
+      "text": " dicari",
+      "start": 75.42,
+      "end": 76.5
+    },
+    {
+      "text": " mengamu",
+      "start": 76.5,
+      "end": 77.16
+    },
+    {
+      "text": " ar",
+      "start": 77.16,
+      "end": 77.34
+    },
+    {
+      "text": " melakar",
+      "start": 77.34,
+      "end": 77.92
+    },
+    {
+      "text": " sejarah",
+      "start": 77.92,
+      "end": 79
+    },
+    {
+      "text": " Denai",
+      "start": 79,
+      "end": 79.78
+    },
+    {
+      "text": " air",
+      "start": 79.78,
+      "end": 80.04
+    },
+    {
+      "text": " pemhu",
+      "start": 80.04,
+      "end": 80.44
+    },
+    {
+      "text": " bung",
+      "start": 80.44,
+      "end": 80.7
+    },
+    {
+      "text": " da",
+      "start": 80.7,
+      "end": 80.96
+    },
+    {
+      "text": " airah",
+      "start": 80.96,
+      "end": 81.78
+    },
+    {
+      "text": " Hedagang",
+      "start": 81.78,
+      "end": 82.68
+    },
+    {
+      "text": " lalu",
+      "start": 82.68,
+      "end": 82.98
+    },
+    {
+      "text": " bersilin",
+      "start": 82.98,
+      "end": 83.58
+    },
+    {
+      "text": " singga",
+      "start": 83.58,
+      "end": 84.32
+    },
+    {
+      "text": " Di",
+      "start": 84.32,
+      "end": 84.58
+    },
+    {
+      "text": " hulunya,",
+      "start": 84.58,
+      "end": 85.42
+    },
+    {
+      "text": " berdiri",
+      "start": 85.7,
+      "end": 86.4
+    },
+    {
+      "text": " gagah",
+      "start": 86.4,
+      "end": 87.26
+    },
+    {
+      "text": " Berapa",
+      "start": 87.26,
+      "end": 87.78
+    },
+    {
+      "text": " lama,",
+      "start": 87.78,
+      "end": 88.2
+    },
+    {
+      "text": " kisah",
+      "start": 88.42,
+      "end": 88.7
+    },
+    {
+      "text": " giri",
+      "start": 88.7,
+      "end": 89
+    },
+    {
+      "text": " wajat",
+      "start": 89,
+      "end": 89.44
+    },
+    {
+      "text": " Sultan",
+      "start": 89.44,
+      "end": 89.82
+    },
+    {
+      "text": " alaudin",
+      "start": 89.82,
+      "end": 90.44
+    },
+    {
+      "text": " riyaya,",
+      "start": 90.44,
+      "end": 90.8
+    },
+    {
+      "text": " cakap",
+      "start": 90.8,
+      "end": 91.16
+    },
+    {
+      "text": " punya",
+      "start": 91.16,
+      "end": 91.56
+    },
+    {
+      "text": " hikayat",
+      "start": 91.56,
+      "end": 92.22
+    },
+    {
+      "text": " Sultan",
+      "start": 92.22,
+      "end": 92.58
+    },
+    {
+      "text": " ketudah",
+      "start": 92.58,
+      "end": 93.26
+    },
+    {
+      "text": " di",
+      "start": 93.26,
+      "end": 93.52
+    },
+    {
+      "text": " negeri",
+      "start": 93.52,
+      "end": 93.92
+    },
+    {
+      "text": " penuh",
+      "start": 93.92,
+      "end": 94.38
+    },
+    {
+      "text": " berdau",
+      "start": 94.38,
+      "end": 94.82
+    },
+    {
+      "text": " lad",
+      "start": 94.82,
+      "end": 95.16
+    },
+    {
+      "text": " Di",
+      "start": 95.16,
+      "end": 95.42
+    },
+    {
+      "text": " istana",
+      "start": 95.42,
+      "end": 95.82
+    },
+    {
+      "text": " hingga",
+      "start": 95.82,
+      "end": 96.24
+    },
+    {
+      "text": " bagi",
+      "start": 96.24,
+      "end": 96.6
+    },
+    {
+      "text": " naga",
+      "start": 96.6,
+      "end": 96.82
+    },
+    {
+      "text": " ringdan",
+      "start": 96.82,
+      "end": 97.38
+    },
+    {
+      "text": " mangkat",
+      "start": 97.38,
+      "end": 98.12
+    },
+    {
+      "text": " Dia",
+      "start": 98.12,
+      "end": 99.64
+    },
+    {
+      "text": " tak",
+      "start": 99.64,
+      "end": 99.92
+    },
+    {
+      "text": " sedukit",
+      "start": 99.92,
+      "end": 100.54
+    },
+    {
+      "text": " bersama",
+      "start": 100.54,
+      "end": 101.14
+    },
+    {
+      "text": " di",
+      "start": 101.14,
+      "end": 101.44
+    },
+    {
+      "text": " anagam",
+      "start": 101.44,
+      "end": 102.56
+    },
+    {
+      "text": " Kampung",
+      "start": 102.56,
+      "end": 103.88
+    },
+    {
+      "text": " raja",
+      "start": 103.88,
+      "end": 104.4
+    },
+    {
+      "text": " bersemaya",
+      "start": 104.4,
+      "end": 105.44
+    },
+    {
+      "text": " makam",
+      "start": 105.44,
+      "end": 106.46
+    },
+    {
+      "text": " Lalu",
+      "start": 106.46,
+      "end": 107.34
+    },
+    {
+      "text": " masyurlah",
+      "start": 107.34,
+      "end": 108.34
+    },
+    {
+      "text": " seluruh",
+      "start": 108.34,
+      "end": 109.24
+    },
+    {
+      "text": " alam",
+      "start": 109.24,
+      "end": 110.06
+    },
+    {
+      "text": " Menjadis",
+      "start": 110.06,
+      "end": 111.54
+    },
+    {
+      "text": " saksi",
+      "start": 111.54,
+      "end": 112.38
+    },
+    {
+      "text": " Sejarah",
+      "start": 112.38,
+      "end": 115.34
+    },
+    {
+      "text": " nanci",
+      "start": 115.34,
+      "end": 116.1
+    },
+    {
+      "text": " lam",
+      "start": 116.1,
+      "end": 116.98
+    },
+    {
+      "text": " Ya,",
+      "start": 121.78,
+      "end": 134.08
+    },
+    {
+      "text": " ya,",
+      "start": 134.46,
+      "end": 137.6
+    },
+    {
+      "text": " ya,",
+      "start": 138.16,
+      "end": 138.3
+    },
+    {
+      "text": " ya,",
+      "start": 138.5,
+      "end": 138.56
+    },
+    {
+      "text": " ya,",
+      "start": 138.56,
+      "end": 138.84
+    },
+    {
+      "text": " ya,",
+      "start": 138.84,
+      "end": 138.92
+    },
+    {
+      "text": " ya,",
+      "start": 138.92,
+      "end": 138.92
+    },
+    {
+      "text": " ya,",
+      "start": 138.92,
+      "end": 138.98
+    },
+    {
+      "text": " ya,",
+      "start": 138.98,
+      "end": 138.98
+    },
+    {
+      "text": " ya,",
+      "start": 138.98,
+      "end": 138.98
+    },
+    {
+      "text": " ya,",
+      "start": 138.98,
+      "end": 138.98
+    },
+    {
+      "text": " ya,",
+      "start": 138.98,
+      "end": 139
+    },
+    {
+      "text": " ya,",
+      "start": 139,
+      "end": 139.04
+    },
+    {
+      "text": " ya,",
+      "start": 139.04,
+      "end": 139.04
+    },
+    {
+      "text": " ya,",
+      "start": 139.04,
+      "end": 139.04
+    },
+    {
+      "text": " ya,",
+      "start": 139.04,
+      "end": 139.06
+    },
+    {
+      "text": " ya,",
+      "start": 139.4,
+      "end": 139.4
+    },
+    {
+      "text": " ya,",
+      "start": 139.4,
+      "end": 139.4
+    },
+    {
+      "text": " ya,",
+      "start": 139.4,
+      "end": 139.4
+    },
+    {
+      "text": " ya,",
+      "start": 139.4,
+      "end": 139.4
+    },
+    {
+      "text": " ya,",
+      "start": 139.4,
+      "end": 139.4
+    },
+    {
+      "text": " ya,",
+      "start": 139.4,
+      "end": 139.4
+    },
+    {
+      "text": " ya,",
+      "start": 139.4,
+      "end": 139.4
+    },
+    {
+      "text": " ya,",
+      "start": 139.4,
+      "end": 139.4
+    },
+    {
+      "text": " ya,",
+      "start": 139.4,
+      "end": 139.4
+    },
+    {
+      "text": " ya,",
+      "start": 139.4,
+      "end": 139.4
+    },
+    {
+      "text": " ya,",
+      "start": 139.4,
+      "end": 139.4
+    },
+    {
+      "text": " ya,",
+      "start": 139.4,
+      "end": 139.4
+    },
+    {
+      "text": " ya,",
+      "start": 139.4,
+      "end": 139.4
+    },
+    {
+      "text": " ya,",
+      "start": 139.4,
+      "end": 139.4
+    },
+    {
+      "text": " ya,",
+      "start": 139.4,
+      "end": 139.4
+    },
+    {
+      "text": " ya,",
+      "start": 139.4,
+      "end": 139.4
+    },
+    {
+      "text": " ya,",
+      "start": 139.4,
+      "end": 139.4
+    },
+    {
+      "text": " ya,",
+      "start": 139.4,
+      "end": 139.4
+    },
+    {
+      "text": " ya,",
+      "start": 139.4,
+      "end": 139.66
+    },
+    {
+      "text": " ya,",
+      "start": 139.66,
+      "end": 139.66
+    },
+    {
+      "text": " ya,",
+      "start": 139.66,
+      "end": 139.66
+    },
+    {
+      "text": " ya,",
+      "start": 139.66,
+      "end": 139.66
+    },
+    {
+      "text": " ya,",
+      "start": 139.66,
+      "end": 139.66
+    },
+    {
+      "text": " ya,",
+      "start": 139.66,
+      "end": 139.66
+    },
+    {
+      "text": " ya,",
+      "start": 139.66,
+      "end": 140.24
+    },
+    {
+      "text": " ya,",
+      "start": 140.24,
+      "end": 140.24
+    },
+    {
+      "text": " ya,",
+      "start": 140.24,
+      "end": 140.24
+    },
+    {
+      "text": " ya,",
+      "start": 140.24,
+      "end": 140.24
+    },
+    {
+      "text": " ya,",
+      "start": 140.24,
+      "end": 140.62
+    },
+    {
+      "text": " ya,",
+      "start": 140.62,
+      "end": 140.62
+    },
+    {
+      "text": " ya,",
+      "start": 140.62,
+      "end": 140.62
+    },
+    {
+      "text": " ya,",
+      "start": 140.62,
+      "end": 140.62
+    },
+    {
+      "text": " ya,",
+      "start": 140.62,
+      "end": 140.62
+    },
+    {
+      "text": " ya,",
+      "start": 140.62,
+      "end": 140.62
+    },
+    {
+      "text": " ya,",
+      "start": 140.62,
+      "end": 140.62
+    },
+    {
+      "text": " ya,",
+      "start": 140.62,
+      "end": 140.62
+    },
+    {
+      "text": " ya,",
+      "start": 140.62,
+      "end": 140.62
+    },
+    {
+      "text": " ya,",
+      "start": 140.62,
+      "end": 140.62
+    },
+    {
+      "text": " ya,",
+      "start": 140.62,
+      "end": 140.62
+    },
+    {
+      "text": " ya,",
+      "start": 140.62,
+      "end": 140.62
+    },
+    {
+      "text": " ya,",
+      "start": 140.62,
+      "end": 140.62
+    },
+    {
+      "text": " ya,",
+      "start": 140.62,
+      "end": 140.62
+    },
+    {
+      "text": " ya,",
+      "start": 140.62,
+      "end": 140.62
+    },
+    {
+      "text": " ya,",
+      "start": 140.62,
+      "end": 140.62
+    },
+    {
+      "text": " ya,",
+      "start": 140.62,
+      "end": 140.62
+    },
+    {
+      "text": " ya,",
+      "start": 140.62,
+      "end": 140.62
+    },
+    {
+      "text": " ya,",
+      "start": 140.62,
+      "end": 140.64
+    },
+    {
+      "text": " ya,",
+      "start": 140.64,
+      "end": 140.64
+    },
+    {
+      "text": " ya,",
+      "start": 140.64,
+      "end": 140.64
+    },
+    {
+      "text": " ya,",
+      "start": 140.64,
+      "end": 140.64
+    },
+    {
+      "text": " ya,",
+      "start": 140.64,
+      "end": 140.64
+    },
+    {
+      "text": " ya,",
+      "start": 140.64,
+      "end": 140.64
+    },
+    {
+      "text": " ya,",
+      "start": 140.64,
+      "end": 140.64
+    },
+    {
+      "text": " ya,",
+      "start": 140.64,
+      "end": 140.64
+    },
+    {
+      "text": " ya,",
+      "start": 140.64,
+      "end": 140.64
+    },
+    {
+      "text": " ya,",
+      "start": 140.64,
+      "end": 140.64
+    },
+    {
+      "text": " ya,",
+      "start": 140.64,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.66
+    },
+    {
+      "text": " ya,",
+      "start": 140.66,
+      "end": 140.68
+    },
+    {
+      "text": " ya,",
+      "start": 140.72,
+      "end": 140.72
+    },
+    {
+      "text": " ya,",
+      "start": 140.72,
+      "end": 140.72
+    },
+    {
+      "text": " ya,",
+      "start": 140.72,
+      "end": 140.72
+    },
+    {
+      "text": " ya,",
+      "start": 140.72,
+      "end": 140.72
+    },
+    {
+      "text": " ya,",
+      "start": 140.72,
+      "end": 140.72
+    },
+    {
+      "text": " ya,",
+      "start": 140.72,
+      "end": 140.72
+    },
+    {
+      "text": " ya,",
+      "start": 140.72,
+      "end": 140.74
+    },
+    {
+      "text": " ya,",
+      "start": 140.88,
+      "end": 141.06
+    },
+    {
+      "text": " ya,",
+      "start": 141.24,
+      "end": 141.48
+    },
+    {
+      "text": " ya,",
+      "start": 141.68,
+      "end": 141.68
+    },
+    {
+      "text": " ya,",
+      "start": 141.68,
+      "end": 141.68
+    },
+    {
+      "text": " ya,",
+      "start": 141.68,
+      "end": 141.68
+    },
+    {
+      "text": " ya,",
+      "start": 141.68,
+      "end": 141.68
+    },
+    {
+      "text": " ya,",
+      "start": 141.68,
+      "end": 141.68
+    },
+    {
+      "text": " ya,",
+      "start": 141.68,
+      "end": 141.68
+    },
+    {
+      "text": " ya,",
+      "start": 141.68,
+      "end": 142
+    },
+    {
+      "text": " ya,",
+      "start": 142.06,
+      "end": 142.06
+    },
+    {
+      "text": " ya,",
+      "start": 142.06,
+      "end": 142.06
+    },
+    {
+      "text": " ya,",
+      "start": 142.06,
+      "end": 142.06
+    },
+    {
+      "text": " ya,",
+      "start": 142.06,
+      "end": 142.08
+    },
+    {
+      "text": " ya,",
+      "start": 142.1,
+      "end": 142.1
+    },
+    {
+      "text": " ya,",
+      "start": 142.1,
+      "end": 142.1
+    },
+    {
+      "text": " ya,",
+      "start": 142.1,
+      "end": 142.1
+    },
+    {
+      "text": " ya,",
+      "start": 142.1,
+      "end": 142.1
+    },
+    {
+      "text": " ya,",
+      "start": 142.1,
+      "end": 142.1
+    },
+    {
+      "text": " ya,",
+      "start": 142.1,
+      "end": 142.1
+    },
+    {
+      "text": " ya,",
+      "start": 142.1,
+      "end": 142.1
+    },
+    {
+      "text": " ya,",
+      "start": 142.1,
+      "end": 142.1
+    },
+    {
+      "text": " ya,",
+      "start": 142.1,
+      "end": 142.1
+    },
+    {
+      "text": " ya,",
+      "start": 142.1,
+      "end": 142.1
+    },
+    {
+      "text": " ya,",
+      "start": 142.1,
+      "end": 142.1
+    },
+    {
+      "text": " ya,",
+      "start": 142.1,
+      "end": 142.1
+    },
+    {
+      "text": " ya,",
+      "start": 142.1,
+      "end": 142.1
+    },
+    {
+      "text": " ya,",
+      "start": 142.1,
+      "end": 142.1
+    },
+    {
+      "text": " ya,",
+      "start": 142.1,
+      "end": 142.12
+    },
+    {
+      "text": " ya,",
+      "start": 142.14,
+      "end": 142.14
+    },
+    {
+      "text": " ya,",
+      "start": 142.14,
+      "end": 142.14
+    },
+    {
+      "text": " ya,",
+      "start": 142.14,
+      "end": 143.16
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.64
+    },
+    {
+      "text": " ya,",
+      "start": 143.64,
+      "end": 143.66
+    },
+    {
+      "text": " ya,",
+      "start": 144,
+      "end": 144
+    },
+    {
+      "text": " ya,",
+      "start": 144,
+      "end": 144
+    },
+    {
+      "text": " ya,",
+      "start": 144,
+      "end": 144
+    },
+    {
+      "text": " ya,",
+      "start": 144,
+      "end": 144
+    },
+    {
+      "text": " ya,",
+      "start": 144,
+      "end": 144
+    },
+    {
+      "text": " ya,",
+      "start": 144,
+      "end": 144
+    },
+    {
+      "text": " ya,",
+      "start": 144,
+      "end": 144
+    },
+    {
+      "text": " ya,",
+      "start": 144,
+      "end": 144
+    },
+    {
+      "text": " ya,",
+      "start": 144,
+      "end": 144
+    },
+    {
+      "text": " ya,",
+      "start": 144,
+      "end": 144
+    },
+    {
+      "text": " ya,",
+      "start": 144,
+      "end": 144
+    },
+    {
+      "text": " ya,",
+      "start": 144,
+      "end": 144
+    },
+    {
+      "text": " ya,",
+      "start": 144,
+      "end": 144
+    },
+    {
+      "text": " ya,",
+      "start": 144,
+      "end": 144
+    },
+    {
+      "text": " ya,",
+      "start": 144,
+      "end": 144
+    },
+    {
+      "text": " ya,",
+      "start": 144,
+      "end": 144.26
+    },
+    {
+      "text": " ya,",
+      "start": 144.46,
+      "end": 144.6
+    },
+    {
+      "text": " ya,",
+      "start": 144.6,
+      "end": 144.6
+    },
+    {
+      "text": " ya,",
+      "start": 144.6,
+      "end": 144.62
+    },
+    {
+      "text": " ya,",
+      "start": 144.8,
+      "end": 144.82
+    },
+    {
+      "text": " ya,",
+      "start": 146.3,
+      "end": 146.32
+    },
+    {
+      "text": " ya,",
+      "start": 147.02,
+      "end": 147.02
+    },
+    {
+      "text": " ya,",
+      "start": 147.02,
+      "end": 147.04
+    },
+    {
+      "text": " ya,",
+      "start": 147.32,
+      "end": 147.32
+    },
+    {
+      "text": " ya,",
+      "start": 147.32,
+      "end": 147.32
+    },
+    {
+      "text": " ya,",
+      "start": 147.32,
+      "end": 147.42
+    },
+    {
+      "text": " ya,",
+      "start": 149.22,
+      "end": 149.22
+    },
+    {
+      "text": " ya,",
+      "start": 149.22,
+      "end": 149.22
+    },
+    {
+      "text": " ya,",
+      "start": 149.22,
+      "end": 149.24
+    },
+    {
+      "text": " ya,",
+      "start": 149.4,
+      "end": 149.4
+    },
+    {
+      "text": " ya,",
+      "start": 149.4,
+      "end": 149.42
+    },
+    {
+      "text": " ya,",
+      "start": 149.96,
+      "end": 149.96
+    },
+    {
+      "text": " ya,",
+      "start": 149.96,
+      "end": 149.96
+    },
+    {
+      "text": " ya,",
+      "start": 149.96,
+      "end": 149.96
+    },
+    {
+      "text": " ya,",
+      "start": 149.96,
+      "end": 149.96
+    },
+    {
+      "text": " ya,",
+      "start": 149.96,
+      "end": 149.96
+    },
+    {
+      "text": " ya,",
+      "start": 149.96,
+      "end": 149.96
+    },
+    {
+      "text": " ya,",
+      "start": 149.96,
+      "end": 149.96
+    },
+    {
+      "text": " ya,",
+      "start": 149.96,
+      "end": 149.96
+    },
+    {
+      "text": " ya,",
+      "start": 149.96,
+      "end": 149.96
+    },
+    {
+      "text": " ya,",
+      "start": 149.96,
+      "end": 149.96
+    },
+    {
+      "text": " ya,",
+      "start": 149.96,
+      "end": 149.98
+    },
+    {
+      "text": " ya,",
+      "start": 149.98,
+      "end": 149.98
+    },
+    {
+      "text": " ya,",
+      "start": 149.98,
+      "end": 149.98
+    },
+    {
+      "text": " ya,",
+      "start": 149.98,
+      "end": 149.98
+    },
+    {
+      "text": " ya,",
+      "start": 149.98,
+      "end": 149.98
+    },
+    {
+      "text": " ya,",
+      "start": 149.98,
+      "end": 149.98
+    },
+    {
+      "text": " ya,",
+      "start": 149.98,
+      "end": 149.98
+    },
+    {
+      "text": " ya,",
+      "start": 149.98
+    },
+    {
+      "text": " [MUH]",
+      "start": 169.98,
+      "end": 169.98
+    },
+    {
+      "text": " Bago",
+      "start": 160,
+      "end": 162.24
+    },
+    {
+      "text": " bukan",
+      "start": 162.24,
+      "end": 162.78
+    },
+    {
+      "text": " sekar",
+      "start": 162.78,
+      "end": 163.54
+    },
+    {
+      "text": " darna",
+      "start": 163.54,
+      "end": 164.98
+    },
+    {
+      "text": " mayangga",
+      "start": 164.98,
+      "end": 166.76
+    },
+    {
+      "text": " Bukan",
+      "start": 166.76,
+      "end": 167.68
+    },
+    {
+      "text": " hanya",
+      "start": 167.68,
+      "end": 168.34
+    },
+    {
+      "text": " mibandung",
+      "start": 168.34,
+      "end": 169.78
+    },
+    {
+      "text": " dan",
+      "start": 169.78,
+      "end": 170.16
+    },
+    {
+      "text": " udangga",
+      "start": 170.16,
+      "end": 171.54
+    },
+    {
+      "text": " lah",
+      "start": 171.54,
+      "end": 172.42
+    },
+    {
+      "text": " Baliknya",
+      "start": 172.42,
+      "end": 174
+    },
+    {
+      "text": " gemilang",
+      "start": 174,
+      "end": 175.14
+    },
+    {
+      "text": " lipat",
+      "start": 175.14,
+      "end": 175.76
+    },
+    {
+      "text": " dan",
+      "start": 175.76,
+      "end": 176.26
+    },
+    {
+      "text": " sejarah",
+      "start": 176.26,
+      "end": 178.5
+    },
+    {
+      "text": " Udah",
+      "start": 178.5,
+      "end": 179.44
+    },
+    {
+      "text": " paksin",
+      "start": 179.44,
+      "end": 180.34
+    },
+    {
+      "text": " dan",
+      "start": 180.34,
+      "end": 181.24
+    },
+    {
+      "text": " cu",
+      "start": 181.24,
+      "end": 185.86
+    },
+    {
+      "text": " yang",
+      "start": 185.86,
+      "end": 186.78
+    },
+    {
+      "text": " tak",
+      "start": 186.78,
+      "end": 187.16
+    },
+    {
+      "text": " pernah",
+      "start": 187.16,
+      "end": 187.7
+    },
+    {
+      "text": " gue",
+      "start": 187.7,
+      "end": 188.18
+    },
+    {
+      "text": " yang",
+      "start": 188.18,
+      "end": 189.04
+    },
+    {
+      "text": " tinggak",
+      "start": 189.04,
+      "end": 193.54
+    },
+    {
+      "text": " pago",
+      "start": 193.54,
+      "end": 194.2
+    },
+    {
+      "text": " jemput",
+      "start": 194.2,
+      "end": 194.56
+    },
+    {
+      "text": " muda",
+      "start": 194.56,
+      "end": 194.7
+    },
+    {
+      "text": " jamu",
+      "start": 194.7,
+      "end": 195.24
+    },
+    {
+      "text": " selera",
+      "start": 195.24,
+      "end": 196.12
+    },
+    {
+      "text": " wawakad",
+      "start": 196.12,
+      "end": 197.06
+    },
+    {
+      "text": " dan",
+      "start": 197.06,
+      "end": 197.2
+    },
+    {
+      "text": " dengan",
+      "start": 197.2,
+      "end": 197.44
+    },
+    {
+      "text": " menulang",
+      "start": 197.44,
+      "end": 198.04
+    },
+    {
+      "text": " kongber",
+      "start": 198.04,
+      "end": 198.46
+    },
+    {
+      "text": " bisa",
+      "start": 198.46,
+      "end": 198.86
+    },
+    {
+      "text": " arruk",
+      "start": 198.86,
+      "end": 199.26
+    },
+    {
+      "text": " cak",
+      "start": 199.26,
+      "end": 199.46
+    },
+    {
+      "text": " pertisdayan",
+      "start": 199.46,
+      "end": 200.18
+    },
+    {
+      "text": " dapur",
+      "start": 200.18,
+      "end": 200.44
+    },
+    {
+      "text": " ce",
+      "start": 200.44,
+      "end": 200.62
+    },
+    {
+      "text": " lah",
+      "start": 200.62,
+      "end": 200.78
+    },
+    {
+      "text": " yang",
+      "start": 200.78,
+      "end": 201.04
+    },
+    {
+      "text": " istimewa",
+      "start": 201.04,
+      "end": 201.74
+    },
+    {
+      "text": " apa",
+      "start": 201.74,
+      "end": 202.04
+    },
+    {
+      "text": " fabriani",
+      "start": 202.04,
+      "end": 202.64
+    },
+    {
+      "text": " ini",
+      "start": 202.48,
+      "end": 202.7
+    },
+    {
+      "text": " paling",
+      "start": 202.7,
+      "end": 203.04
+    },
+    {
+      "text": " enak",
+      "start": 203.04,
+      "end": 203.5
+    },
+    {
+      "text": " sedap",
+      "start": 203.5,
+      "end": 204.08
+    },
+    {
+      "text": " rasa",
+      "start": 204.08,
+      "end": 204.92
+    },
+    {
+      "text": " Tumiran",
+      "start": 204.92,
+      "end": 207.56
+    },
+    {
+      "text": " ikan",
+      "start": 207.56,
+      "end": 208.32
+    },
+    {
+      "text": " bakar",
+      "start": 208.32,
+      "end": 209.08
+    },
+    {
+      "text": " payah",
+      "start": 209.08,
+      "end": 209.98
+    },
+    {
+      "text": " redan",
+      "start": 209.98,
+      "end": 211.8
+    },
+    {
+      "text": " Jangan",
+      "start": 211.8,
+      "end": 212.78
+    },
+    {
+      "text": " lupa,",
+      "start": 212.78,
+      "end": 213.54
+    },
+    {
+      "text": " pagok",
+      "start": 213.72,
+      "end": 214.94
+    },
+    {
+      "text": " yang",
+      "start": 214.94,
+      "end": 215.44
+    },
+    {
+      "text": " indah",
+      "start": 215.44,
+      "end": 216.46
+    },
+    {
+      "text": " Berdiri",
+      "start": 216.46,
+      "end": 218.08
+    },
+    {
+      "text": " gagah,",
+      "start": 218.08,
+      "end": 219.26
+    },
+    {
+      "text": " keyang",
+      "start": 219.26,
+      "end": 220.48
+    },
+    {
+      "text": " melangkah,",
+      "start": 220.48,
+      "end": 249.98
+    },
+    {
+      "text": " tak",
+      "start": 249.98,
+      "end": 249.98
+    },
+    {
+      "text": " pernah",
+      "start": 249.98,
+      "end": 249.98
+    },
+    {
+      "text": " kelah",
+      "start": 249.98,
+      "end": 249.98
+    }
+  ]
+}
