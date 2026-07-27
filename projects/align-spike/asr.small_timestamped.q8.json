@@ -1,0 +1,1144 @@
+{
+  "model": "onnx-community/whisper-small_timestamped",
+  "dtype": "q8",
+  "language": "ms",
+  "audio": "kota-pagoh.16k.wav",
+  "durationSec": 249.66,
+  "loadSec": 26.935860958000003,
+  "transcribeSec": 27.963825957999997,
+  "rtf": 0.11200763421453175,
+  "wordCount": 226,
+  "text": " Segamat Paguh Datang! Suatu ketika tak pernah ternampakan Gini, Pago Melangkah kehadapan Maju pago Bukan ni gaw dan angan Pusat ilmu dan pusat pendidikan College dan University Asal paksi ilmuwan Penuntut pendidik bersatu seiringan Hab University Menjadi Saksi University Tunghus singun megaberdiri University Technologi Mara Melakar Missy University Islam Antarabam Satu gudisisi Politechnik Tunshed Nasir Ilmu di Gali Istitut Kemahiran Belia Negara Sempurnavisi Bersatu sama berdiri Hilmu dicari Sungai Muar melakar sejarah Denai air penghubung daerah Pedagang lalu bersilih singgah Di hulunya apa gober diri gagah Berabad lama, isah diri wajat Sultana laudin riayat, ca'ampunya hikaya Sultana ketujuh dari negeri penuh berdaulat Di istana hingga baginda gering dan mangkat Di atas bukit persemadian agam Kampung raja bersama yang makam Lalu masyurlah seluruh alam Menjadi saksi Sejarah Nansilam Bukit kepung kau tak pernah kalah Biar pun kejang komunis menjara Biar pun jasa dan nyawa di tada Tekat juang hingga ketitis darah Subur hingga ladang nasuhah Taman herbah dan juga rempah Kusatana manramuan tropika Dari ladah hitam hingga kapulaga Bago bukan sekadar nama yang ga Bukan hanya mi bandung dan udang gala Ibaliknya gemilang lipatan sejarah Punya paksi dan cita yang indah Menjadi mercu yang tak pernah goya Perjelah yang istimewa Apapapabriani paling enak sedap rasa Tumiran ikan bakar payah redan Jangan lupa Pagoh yang indah Berdiri gagah Kian melangkah Tak pernah kalah Batu bahag! Sila masuk!",
+  "words": [
+    {
+      "text": " Segamat",
+      "start": 29.98,
+      "end": 29.98
+    },
+    {
+      "text": " Paguh",
+      "start": 29.98,
+      "end": 29.98
+    },
+    {
+      "text": " Datang!",
+      "start": 29.98,
+      "end": 29.98
+    },
+    {
+      "text": " Suatu",
+      "start": 20,
+      "end": 21.08
+    },
+    {
+      "text": " ketika",
+      "start": 21.08,
+      "end": 21.76
+    },
+    {
+      "text": " tak",
+      "start": 21.76,
+      "end": 22.28
+    },
+    {
+      "text": " pernah",
+      "start": 22.28,
+      "end": 22.88
+    },
+    {
+      "text": " ternampakan",
+      "start": 22.88,
+      "end": 24.12
+    },
+    {
+      "text": " Gini,",
+      "start": 24.12,
+      "end": 25.66
+    },
+    {
+      "text": " Pago",
+      "start": 26.4,
+      "end": 27.04
+    },
+    {
+      "text": " Melangkah",
+      "start": 27.04,
+      "end": 29.82
+    },
+    {
+      "text": " kehadapan",
+      "start": 29.82,
+      "end": 33.34
+    },
+    {
+      "text": " Maju",
+      "start": 40,
+      "end": 43.04
+    },
+    {
+      "text": " pago",
+      "start": 43.04,
+      "end": 43.42
+    },
+    {
+      "text": " Bukan",
+      "start": 43.42,
+      "end": 44.26
+    },
+    {
+      "text": " ni",
+      "start": 44.26,
+      "end": 44.42
+    },
+    {
+      "text": " gaw",
+      "start": 44.42,
+      "end": 44.58
+    },
+    {
+      "text": " dan",
+      "start": 44.58,
+      "end": 44.84
+    },
+    {
+      "text": " angan",
+      "start": 44.84,
+      "end": 45.56
+    },
+    {
+      "text": " Pusat",
+      "start": 45.56,
+      "end": 46
+    },
+    {
+      "text": " ilmu",
+      "start": 46,
+      "end": 46.54
+    },
+    {
+      "text": " dan",
+      "start": 46.54,
+      "end": 46.82
+    },
+    {
+      "text": " pusat",
+      "start": 46.82,
+      "end": 47.18
+    },
+    {
+      "text": " pendidikan",
+      "start": 47.18,
+      "end": 48.2
+    },
+    {
+      "text": " College",
+      "start": 48.2,
+      "end": 48.66
+    },
+    {
+      "text": " dan",
+      "start": 48.66,
+      "end": 48.96
+    },
+    {
+      "text": " University",
+      "start": 48.96,
+      "end": 49.46
+    },
+    {
+      "text": " Asal",
+      "start": 49.46,
+      "end": 50.08
+    },
+    {
+      "text": " paksi",
+      "start": 50.08,
+      "end": 50.44
+    },
+    {
+      "text": " ilmuwan",
+      "start": 50.44,
+      "end": 51.06
+    },
+    {
+      "text": " Penuntut",
+      "start": 51.06,
+      "end": 51.7
+    },
+    {
+      "text": " pendidik",
+      "start": 51.7,
+      "end": 52.34
+    },
+    {
+      "text": " bersatu",
+      "start": 52.34,
+      "end": 52.74
+    },
+    {
+      "text": " seiringan",
+      "start": 52.74,
+      "end": 53.84
+    },
+    {
+      "text": " Hab",
+      "start": 53.84,
+      "end": 54.16
+    },
+    {
+      "text": " University",
+      "start": 54.16,
+      "end": 54.92
+    },
+    {
+      "text": " Menjadi",
+      "start": 54.92,
+      "end": 55.7
+    },
+    {
+      "text": " Saksi",
+      "start": 55.7,
+      "end": 56.48
+    },
+    {
+      "text": " University",
+      "start": 56.48,
+      "end": 56.9
+    },
+    {
+      "text": " Tunghus",
+      "start": 56.9,
+      "end": 57.76
+    },
+    {
+      "text": " singun",
+      "start": 57.76,
+      "end": 58
+    },
+    {
+      "text": " megaberdiri",
+      "start": 58,
+      "end": 59.08
+    },
+    {
+      "text": " University",
+      "start": 59.08,
+      "end": 59.82
+    },
+    {
+      "text": " Technologi",
+      "start": 59.82,
+      "end": 60.78
+    },
+    {
+      "text": " Mara",
+      "start": 60.78,
+      "end": 61.14
+    },
+    {
+      "text": " Melakar",
+      "start": 61.14,
+      "end": 61.64
+    },
+    {
+      "text": " Missy",
+      "start": 61.64,
+      "end": 62
+    },
+    {
+      "text": " University",
+      "start": 62,
+      "end": 62.56
+    },
+    {
+      "text": " Islam",
+      "start": 62.56,
+      "end": 63.14
+    },
+    {
+      "text": " Antarabam",
+      "start": 63.14,
+      "end": 63.86
+    },
+    {
+      "text": " Satu",
+      "start": 63.86,
+      "end": 64.28
+    },
+    {
+      "text": " gudisisi",
+      "start": 64.28,
+      "end": 65.16
+    },
+    {
+      "text": " Politechnik",
+      "start": 65.16,
+      "end": 65.96
+    },
+    {
+      "text": " Tunshed",
+      "start": 65.96,
+      "end": 66.46
+    },
+    {
+      "text": " Nasir",
+      "start": 66.46,
+      "end": 66.84
+    },
+    {
+      "text": " Ilmu",
+      "start": 66.84,
+      "end": 67.08
+    },
+    {
+      "text": " di",
+      "start": 67.08,
+      "end": 67.32
+    },
+    {
+      "text": " Gali",
+      "start": 67.32,
+      "end": 67.6
+    },
+    {
+      "text": " Istitut",
+      "start": 67.6,
+      "end": 68.2
+    },
+    {
+      "text": " Kemahiran",
+      "start": 68.2,
+      "end": 68.8
+    },
+    {
+      "text": " Belia",
+      "start": 68.8,
+      "end": 69.22
+    },
+    {
+      "text": " Negara",
+      "start": 69.22,
+      "end": 69.66
+    },
+    {
+      "text": " Sempurnavisi",
+      "start": 69.66,
+      "end": 71.16
+    },
+    {
+      "text": " Bersatu",
+      "start": 71.16,
+      "end": 71.92
+    },
+    {
+      "text": " sama",
+      "start": 71.92,
+      "end": 72.48
+    },
+    {
+      "text": " berdiri",
+      "start": 72.48,
+      "end": 73.5
+    },
+    {
+      "text": " Hilmu",
+      "start": 73.5,
+      "end": 75.38
+    },
+    {
+      "text": " dicari",
+      "start": 75.38,
+      "end": 76.42
+    },
+    {
+      "text": " Sungai",
+      "start": 76.42,
+      "end": 76.98
+    },
+    {
+      "text": " Muar",
+      "start": 76.98,
+      "end": 77.32
+    },
+    {
+      "text": " melakar",
+      "start": 77.32,
+      "end": 77.94
+    },
+    {
+      "text": " sejarah",
+      "start": 77.94,
+      "end": 79.06
+    },
+    {
+      "text": " Denai",
+      "start": 79.06,
+      "end": 79.78
+    },
+    {
+      "text": " air",
+      "start": 79.78,
+      "end": 80
+    },
+    {
+      "text": " penghubung",
+      "start": 80,
+      "end": 80.7
+    },
+    {
+      "text": " daerah",
+      "start": 80.7,
+      "end": 81.82
+    },
+    {
+      "text": " Pedagang",
+      "start": 81.82,
+      "end": 82.68
+    },
+    {
+      "text": " lalu",
+      "start": 82.68,
+      "end": 83.02
+    },
+    {
+      "text": " bersilih",
+      "start": 83.02,
+      "end": 83.8
+    },
+    {
+      "text": " singgah",
+      "start": 83.8,
+      "end": 84.36
+    },
+    {
+      "text": " Di",
+      "start": 84.36,
+      "end": 84.56
+    },
+    {
+      "text": " hulunya",
+      "start": 84.56,
+      "end": 85.04
+    },
+    {
+      "text": " apa",
+      "start": 85.04,
+      "end": 85.44
+    },
+    {
+      "text": " gober",
+      "start": 85.44,
+      "end": 86.12
+    },
+    {
+      "text": " diri",
+      "start": 86.12,
+      "end": 86.48
+    },
+    {
+      "text": " gagah",
+      "start": 86.48,
+      "end": 87.2
+    },
+    {
+      "text": " Berabad",
+      "start": 87.2,
+      "end": 87.76
+    },
+    {
+      "text": " lama,",
+      "start": 87.76,
+      "end": 88.18
+    },
+    {
+      "text": " isah",
+      "start": 88.46,
+      "end": 88.7
+    },
+    {
+      "text": " diri",
+      "start": 88.7,
+      "end": 89.04
+    },
+    {
+      "text": " wajat",
+      "start": 89.04,
+      "end": 89.46
+    },
+    {
+      "text": " Sultana",
+      "start": 89.46,
+      "end": 89.98
+    },
+    {
+      "text": " laudin",
+      "start": 89.98,
+      "end": 90.42
+    },
+    {
+      "text": " riayat,",
+      "start": 90.42,
+      "end": 90.94
+    },
+    {
+      "text": " ca",
+      "start": 91.02,
+      "end": 91.1
+    },
+    {
+      "text": "'ampunya",
+      "start": 91.1,
+      "end": 91.56
+    },
+    {
+      "text": " hikaya",
+      "start": 91.56,
+      "end": 92.08
+    },
+    {
+      "text": " Sultana",
+      "start": 92.08,
+      "end": 92.66
+    },
+    {
+      "text": " ketujuh",
+      "start": 92.66,
+      "end": 93.2
+    },
+    {
+      "text": " dari",
+      "start": 93.2,
+      "end": 93.42
+    },
+    {
+      "text": " negeri",
+      "start": 93.42,
+      "end": 93.96
+    },
+    {
+      "text": " penuh",
+      "start": 93.96,
+      "end": 94.38
+    },
+    {
+      "text": " berdaulat",
+      "start": 94.38,
+      "end": 95.16
+    },
+    {
+      "text": " Di",
+      "start": 95.16,
+      "end": 95.42
+    },
+    {
+      "text": " istana",
+      "start": 95.42,
+      "end": 95.84
+    },
+    {
+      "text": " hingga",
+      "start": 95.84,
+      "end": 96.28
+    },
+    {
+      "text": " baginda",
+      "start": 96.28,
+      "end": 96.74
+    },
+    {
+      "text": " gering",
+      "start": 96.74,
+      "end": 97.14
+    },
+    {
+      "text": " dan",
+      "start": 97.14,
+      "end": 97.4
+    },
+    {
+      "text": " mangkat",
+      "start": 97.4,
+      "end": 98.14
+    },
+    {
+      "text": " Di",
+      "start": 98.14,
+      "end": 99.6
+    },
+    {
+      "text": " atas",
+      "start": 99.6,
+      "end": 100
+    },
+    {
+      "text": " bukit",
+      "start": 100,
+      "end": 100.46
+    },
+    {
+      "text": " persemadian",
+      "start": 100.46,
+      "end": 101.54
+    },
+    {
+      "text": " agam",
+      "start": 101.54,
+      "end": 102.36
+    },
+    {
+      "text": " Kampung",
+      "start": 102.36,
+      "end": 103.86
+    },
+    {
+      "text": " raja",
+      "start": 103.86,
+      "end": 104.38
+    },
+    {
+      "text": " bersama",
+      "start": 104.38,
+      "end": 105.18
+    },
+    {
+      "text": " yang",
+      "start": 105.18,
+      "end": 105.56
+    },
+    {
+      "text": " makam",
+      "start": 105.56,
+      "end": 106.34
+    },
+    {
+      "text": " Lalu",
+      "start": 106.34,
+      "end": 107.34
+    },
+    {
+      "text": " masyurlah",
+      "start": 107.34,
+      "end": 108.36
+    },
+    {
+      "text": " seluruh",
+      "start": 108.36,
+      "end": 109.18
+    },
+    {
+      "text": " alam",
+      "start": 109.18,
+      "end": 109.94
+    },
+    {
+      "text": " Menjadi",
+      "start": 109.94,
+      "end": 111.28
+    },
+    {
+      "text": " saksi",
+      "start": 111.28,
+      "end": 112.28
+    },
+    {
+      "text": " Sejarah",
+      "start": 112.28,
+      "end": 115.5
+    },
+    {
+      "text": " Nansilam",
+      "start": 115.5,
+      "end": 118.04
+    },
+    {
+      "text": " Bukit",
+      "start": 120,
+      "end": 139.12
+    },
+    {
+      "text": " kepung",
+      "start": 139.12,
+      "end": 139.44
+    },
+    {
+      "text": " kau",
+      "start": 139.44,
+      "end": 139.62
+    },
+    {
+      "text": " tak",
+      "start": 139.62,
+      "end": 139.78
+    },
+    {
+      "text": " pernah",
+      "start": 139.78,
+      "end": 140.06
+    },
+    {
+      "text": " kalah",
+      "start": 140.06,
+      "end": 140.86
+    },
+    {
+      "text": " Biar",
+      "start": 140.86,
+      "end": 141.5
+    },
+    {
+      "text": " pun",
+      "start": 141.5,
+      "end": 141.66
+    },
+    {
+      "text": " kejang",
+      "start": 141.66,
+      "end": 142.04
+    },
+    {
+      "text": " komunis",
+      "start": 142.04,
+      "end": 142.68
+    },
+    {
+      "text": " menjara",
+      "start": 142.68,
+      "end": 143.38
+    },
+    {
+      "text": " Biar",
+      "start": 143.38,
+      "end": 144.28
+    },
+    {
+      "text": " pun",
+      "start": 144.28,
+      "end": 144.46
+    },
+    {
+      "text": " jasa",
+      "start": 144.46,
+      "end": 144.72
+    },
+    {
+      "text": " dan",
+      "start": 144.74,
+      "end": 145.02
+    },
+    {
+      "text": " nyawa",
+      "start": 145.02,
+      "end": 145.26
+    },
+    {
+      "text": " di",
+      "start": 145.26,
+      "end": 145.54
+    },
+    {
+      "text": " tada",
+      "start": 145.54,
+      "end": 146.22
+    },
+    {
+      "text": " Tekat",
+      "start": 146.22,
+      "end": 146.74
+    },
+    {
+      "text": " juang",
+      "start": 146.74,
+      "end": 147.16
+    },
+    {
+      "text": " hingga",
+      "start": 147.16,
+      "end": 147.84
+    },
+    {
+      "text": " ketitis",
+      "start": 147.84,
+      "end": 148.5
+    },
+    {
+      "text": " darah",
+      "start": 148.5,
+      "end": 149.32
+    },
+    {
+      "text": " Subur",
+      "start": 149.32,
+      "end": 149.92
+    },
+    {
+      "text": " hingga",
+      "start": 149.92,
+      "end": 150.44
+    },
+    {
+      "text": " ladang",
+      "start": 150.44,
+      "end": 150.9
+    },
+    {
+      "text": " nasuhah",
+      "start": 150.9,
+      "end": 152.04
+    },
+    {
+      "text": " Taman",
+      "start": 152.04,
+      "end": 152.56
+    },
+    {
+      "text": " herbah",
+      "start": 152.56,
+      "end": 153.28
+    },
+    {
+      "text": " dan",
+      "start": 153.28,
+      "end": 153.46
+    },
+    {
+      "text": " juga",
+      "start": 153.46,
+      "end": 153.74
+    },
+    {
+      "text": " rempah",
+      "start": 153.74,
+      "end": 154.72
+    },
+    {
+      "text": " Kusatana",
+      "start": 154.72,
+      "end": 155.64
+    },
+    {
+      "text": " manramuan",
+      "start": 155.64,
+      "end": 156.56
+    },
+    {
+      "text": " tropika",
+      "start": 156.56,
+      "end": 157.26
+    },
+    {
+      "text": " Dari",
+      "start": 157.26,
+      "end": 157.76
+    },
+    {
+      "text": " ladah",
+      "start": 157.76,
+      "end": 158.12
+    },
+    {
+      "text": " hitam",
+      "start": 158.12,
+      "end": 158.48
+    },
+    {
+      "text": " hingga",
+      "start": 158.48,
+      "end": 159.14
+    },
+    {
+      "text": " kapulaga",
+      "start": 159.14,
+      "end": 160.2
+    },
+    {
+      "text": " Bago",
+      "start": 160.2,
+      "end": 162.28
+    },
+    {
+      "text": " bukan",
+      "start": 162.28,
+      "end": 162.9
+    },
+    {
+      "text": " sekadar",
+      "start": 162.9,
+      "end": 164.62
+    },
+    {
+      "text": " nama",
+      "start": 164.62,
+      "end": 165.34
+    },
+    {
+      "text": " yang",
+      "start": 165.34,
+      "end": 165.96
+    },
+    {
+      "text": " ga",
+      "start": 165.96,
+      "end": 166.5
+    },
+    {
+      "text": " Bukan",
+      "start": 166.5,
+      "end": 167.8
+    },
+    {
+      "text": " hanya",
+      "start": 167.8,
+      "end": 168.4
+    },
+    {
+      "text": " mi",
+      "start": 168.4,
+      "end": 168.82
+    },
+    {
+      "text": " bandung",
+      "start": 168.82,
+      "end": 169.78
+    },
+    {
+      "text": " dan",
+      "start": 169.78,
+      "end": 170.2
+    },
+    {
+      "text": " udang",
+      "start": 170.2,
+      "end": 171.2
+    },
+    {
+      "text": " gala",
+      "start": 171.2,
+      "end": 172.14
+    },
+    {
+      "text": " Ibaliknya",
+      "start": 172.14,
+      "end": 174.06
+    },
+    {
+      "text": " gemilang",
+      "start": 174.06,
+      "end": 175.08
+    },
+    {
+      "text": " lipatan",
+      "start": 175.08,
+      "end": 175.94
+    },
+    {
+      "text": " sejarah",
+      "start": 175.94,
+      "end": 178.78
+    },
+    {
+      "text": " Punya",
+      "start": 178.78,
+      "end": 179.54
+    },
+    {
+      "text": " paksi",
+      "start": 179.54,
+      "end": 180.48
+    },
+    {
+      "text": " dan",
+      "start": 180.48,
+      "end": 181.3
+    },
+    {
+      "text": " cita",
+      "start": 181.3,
+      "end": 181.96
+    },
+    {
+      "text": " yang",
+      "start": 181.96,
+      "end": 182.38
+    },
+    {
+      "text": " indah",
+      "start": 182.38,
+      "end": 183.44
+    },
+    {
+      "text": " Menjadi",
+      "start": 183.44,
+      "end": 184.96
+    },
+    {
+      "text": " mercu",
+      "start": 209.54,
+      "end": 209.54
+    },
+    {
+      "text": " yang",
+      "start": 209.54,
+      "end": 209.54
+    },
+    {
+      "text": " tak",
+      "start": 209.54,
+      "end": 209.54
+    },
+    {
+      "text": " pernah",
+      "start": 209.54,
+      "end": 209.54
+    },
+    {
+      "text": " goya",
+      "start": 209.54,
+      "end": 209.98
+    },
+    {
+      "text": " Perjelah",
+      "start": 200,
+      "end": 200.8
+    },
+    {
+      "text": " yang",
+      "start": 200.8,
+      "end": 201.04
+    },
+    {
+      "text": " istimewa",
+      "start": 201.04,
+      "end": 201.76
+    },
+    {
+      "text": " Apapapabriani",
+      "start": 201.76,
+      "end": 202.64
+    },
+    {
+      "text": " paling",
+      "start": 202.64,
+      "end": 203.02
+    },
+    {
+      "text": " enak",
+      "start": 203.02,
+      "end": 203.46
+    },
+    {
+      "text": " sedap",
+      "start": 203.46,
+      "end": 204.12
+    },
+    {
+      "text": " rasa",
+      "start": 204.12,
+      "end": 204.8
+    },
+    {
+      "text": " Tumiran",
+      "start": 204.8,
+      "end": 207.56
+    },
+    {
+      "text": " ikan",
+      "start": 207.56,
+      "end": 208.38
+    },
+    {
+      "text": " bakar",
+      "start": 208.38,
+      "end": 209.06
+    },
+    {
+      "text": " payah",
+      "start": 209.06,
+      "end": 210.04
+    },
+    {
+      "text": " redan",
+      "start": 210.04,
+      "end": 211.52
+    },
+    {
+      "text": " Jangan",
+      "start": 211.52,
+      "end": 212.72
+    },
+    {
+      "text": " lupa",
+      "start": 212.72,
+      "end": 213.54
+    },
+    {
+      "text": " Pagoh",
+      "start": 213.54,
+      "end": 215.02
+    },
+    {
+      "text": " yang",
+      "start": 215.02,
+      "end": 215.58
+    },
+    {
+      "text": " indah",
+      "start": 215.58,
+      "end": 216.46
+    },
+    {
+      "text": " Berdiri",
+      "start": 216.46,
+      "end": 218.08
+    },
+    {
+      "text": " gagah",
+      "start": 218.08,
+      "end": 219.26
+    },
+    {
+      "text": " Kian",
+      "start": 219.26,
+      "end": 220.62
+    },
+    {
+      "text": " melangkah",
+      "start": 220.62,
+      "end": 222.28
+    },
+    {
+      "text": " Tak",
+      "start": 222.28,
+      "end": 223.6
+    },
+    {
+      "text": " pernah",
+      "start": 223.6,
+      "end": 224.16
+    },
+    {
+      "text": " kalah",
+      "start": 224.16,
+      "end": 227.82
+    },
+    {
+      "text": " Batu",
+      "start": 227.82,
+      "end": 233.56
+    },
+    {
+      "text": " bahag!",
+      "start": 233.56,
+      "end": 234.68
+    },
+    {
+      "text": " Sila",
+      "start": 235.84,
+      "end": 239.94
+    },
+    {
+      "text": " masuk!",
+      "start": 239.94,
+      "end": 240.56
+    }
+  ]
+}
