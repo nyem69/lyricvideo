@@ -15,6 +15,21 @@ export interface VizFrame {
   wave: Uint8Array; // 0..255, silence = 128
   t: number; // seconds since start (rotations / drift)
   accent: string; // active accent color as `#rrggbb` — every style draws in this
+  /** Lyric words for text-driven styles (see `VizStyle.ownsLyrics`). Absent for
+   *  the graphic styles, and when the project has no lyrics. */
+  text?: VizText;
+}
+
+/** A window of lyric words around playback time, built by the renderer. */
+export interface VizText {
+  words: string[];
+  /** Index range [activeFrom, activeTo) of `words` that belongs to the lyric
+   *  line playing right now; empty (from === to) between lines. */
+  activeFrom: number;
+  activeTo: number;
+  fontStack: string; // CSS font-family stack of the lyric text style
+  fontWeight: number;
+  color: string; // lyric fill colour (inactive words)
 }
 
 export interface VizStyle {
@@ -25,6 +40,10 @@ export interface VizStyle {
    *  from the canvas floor and can be raised but never pushed below it; 'center'
    *  styles are symmetric about the midline and follow any placement preset. */
   anchor: 'center' | 'bottom';
+  /** The style renders the lyrics itself from `VizFrame.text`: the renderer
+   *  skips the lyric band for it, and calls `draw` even without an audio
+   *  signal (text, not spectrum, is what it shows). */
+  ownsLyrics?: boolean;
   draw: (f: VizFrame) => void;
 }
 
@@ -890,6 +909,111 @@ const sakura: VizStyle = {
   },
 };
 
+// Rotating double-helix ribbon of lyric words (ported from a Fusion pCustom
+// recipe, see projects/helix-spike). Two helices 180° apart; each word sits at
+// angle i·step+phase, x = sin·R, depth = cos: front words large and bright,
+// back words small and dim. Trails are echo copies at earlier phases — recomputed
+// from `t` every frame, so a seek or export frame is byte-identical.
+const HELIX_LOOP = 5; // seconds per 720° sweep (eased, so the spin breathes)
+const HELIX_SWEEP = 720;
+const HELIX_ECHOES = 12;
+const HELIX_ECHO_DT = 0.006;
+export const HELIX_MIN_WORDS = 15;
+export const HELIX_MAX_WORDS = 24;
+
+function helixPhaseDeg(t: number): number {
+  const cycles = Math.floor(t / HELIX_LOOP);
+  const u = t / HELIX_LOOP - cycles;
+  const eased = u * u * (3 - 2 * u); // smoothstep: slows at both ends of each sweep
+  return HELIX_SWEEP * (cycles + eased);
+}
+
+const helix: VizStyle = {
+  id: 'helix',
+  name: 'Helix Ribbon',
+  desc: 'The lyrics themselves, wound into a slowly turning double helix: the current line glows in the accent, upcoming words trail behind. Replaces the lyric band.',
+  anchor: 'center',
+  ownsLyrics: true,
+  draw: (f) => {
+    const { ctx, w, h, t, accent, text } = f;
+    const b = bass(f.freq);
+    const unit = Math.min(w, h);
+    const words = text?.words ?? [];
+    const n = words.length;
+    const turns = Math.max(1, n / 7.5); // ~7.5 words per turn, as in the reference
+    const step = (360 * turns) / Math.max(1, n);
+    const radius = unit * 0.133 * (1 + b * 0.08);
+    const pitch = unit * 0.049;
+    const baseSize = unit * 0.038;
+    const y0 = h / 2 - ((n - 1) * pitch) / 2;
+    const D2R = Math.PI / 180;
+
+    ctx.save();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    if (n === 0) {
+      // No lyrics yet: keep the helix visible as a ribbon of accent dots so the
+      // style previews (and the picker) still show the motion.
+      const dots = HELIX_MIN_WORDS;
+      const dStep = (360 * 2) / dots;
+      const dy0 = h / 2 - ((dots - 1) * pitch) / 2;
+      const ph = helixPhaseDeg(t);
+      for (const off of [0, 180]) {
+        for (let i = 0; i < dots; i++) {
+          const a = (i * dStep + ph + off) * D2R;
+          const depth = Math.cos(a);
+          ctx.fillStyle = rgba(accent, 0.25 + 0.75 * (depth + 1) / 2);
+          ctx.beginPath();
+          ctx.arc(w / 2 + Math.sin(a) * radius, dy0 + i * pitch, unit * 0.006 * (1 + 0.6 * depth), 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      ctx.restore();
+      return;
+    }
+
+    const stack = text!.fontStack;
+    const weight = text!.fontWeight;
+    type P = { i: number; x: number; y: number; depth: number; alpha: number };
+    const parts: P[] = [];
+    // Echo copies (trails) first, oldest first; skip copies that would land on
+    // top of the previous one (the sweep is eased, so near its ends the ribbon
+    // is almost still and the echoes would only cost fill calls).
+    let prev = Number.NaN;
+    for (let j = HELIX_ECHOES; j >= 0; j--) {
+      const ph = helixPhaseDeg(Math.max(0, t - j * HELIX_ECHO_DT));
+      if (j > 0 && Math.abs(ph - prev) < 0.05) continue;
+      prev = ph;
+      const alphaScale = j === 0 ? 1 : 0.22 * (1 - j / (HELIX_ECHOES + 1));
+      for (const off of [0, 180]) {
+        for (let i = 0; i < n; i++) {
+          const a = (i * step + ph + off) * D2R;
+          const depth = Math.cos(a);
+          parts.push({
+            i,
+            x: w / 2 + Math.sin(a) * radius,
+            y: y0 + i * pitch,
+            depth,
+            alpha: alphaScale * (0.18 + 0.82 * (depth + 1) / 2),
+          });
+        }
+      }
+    }
+    parts.sort((p, q) => p.depth - q.depth); // back to front
+    const from = text!.activeFrom;
+    const to = text!.activeTo;
+    for (const p of parts) {
+      const active = p.i >= from && p.i < to;
+      const size = baseSize * (1 + 0.6 * p.depth) * (active ? 1.12 + b * 0.1 : 1);
+      ctx.font = `${weight} ${size.toFixed(1)}px ${stack}`;
+      ctx.fillStyle = rgba(active ? accent : text!.color, p.alpha);
+      ctx.fillText(words[p.i], p.x, p.y);
+    }
+    ctx.restore();
+  },
+};
+
 export const VIZ_STYLES: VizStyle[] = [
   bars,
   mirror,
@@ -909,6 +1033,7 @@ export const VIZ_STYLES: VizStyle[] = [
   flower,
   garden,
   sakura,
+  helix,
 ];
 export const VIZ_STYLE_MAP: Record<string, VizStyle> = Object.fromEntries(
   VIZ_STYLES.map((s) => [s.id, s])

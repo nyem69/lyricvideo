@@ -1,5 +1,7 @@
 # Repository Guidelines
 
+> **Binding rules live in `CLAUDE.md` — read it first.** This file is the repository structure guide only; `CLAUDE.md` holds the operating rules and constraints that every agent (Codex included) must follow.
+
 ## Project Structure & Module Organization
 
 This is a browser-only SvelteKit lyric video generator. The live app is under `src/`; `prototype.html` is historical reference. Route files live in `src/routes/`, shared code in `src/lib/`, and global styles in `src/app.css`.

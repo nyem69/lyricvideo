@@ -1,7 +1,10 @@
 // src/lib/renderer/visualizer-renderer.ts
 import type { LyricBand, TextStyle, MontageSettings } from '$lib/montage/model';
 import { DEFAULT_TITLE_STYLE, DEFAULT_BAND_STYLE } from '$lib/montage/model';
-import { VIZ_STYLE_MAP, rgba } from '$lib/visualizer/viz-styles';
+import { VIZ_STYLE_MAP, rgba, HELIX_MIN_WORDS, HELIX_MAX_WORDS } from '$lib/visualizer/viz-styles';
+import type { VizText } from '$lib/visualizer/viz-styles';
+import { lyricWindow } from '$lib/visualizer/lyric-window';
+import { getFontFamily } from '$lib/montage/fonts';
 import {
   V_ANCHOR_FRAC,
   DEFAULT_VIZ_ANCHOR,
@@ -127,6 +130,10 @@ export class VisualizerRenderer {
     let energy = 0;
     for (let i = 0; i < this.freq.length; i++) energy += this.freq[i];
     const style = VIZ_STYLE_MAP[this.styleId] ?? VIZ_STYLE_MAP.bars;
+    // A lyric-owning style gets the word window and draws even in silence —
+    // its content is the text, which exists whether or not audio is playing.
+    const ownsLyrics = style.ownsLyrics === true;
+    const text: VizText | undefined = ownsLyrics ? this.vizText(t) : undefined;
     // Placement preset shifts the visualizer vertically. 'center' (default) =>
     // zero shift, so each style keeps its original home. Floor-anchored styles
     // (bars/area) can be raised but are clamped at the floor (dy<=0), since they
@@ -135,10 +142,10 @@ export class VisualizerRenderer {
     if (energy > 0 && style.anchor === 'bottom' && dy > 0) dy = 0;
     ctx.save();
     ctx.translate(0, dy);
-    if (energy === 0) {
+    if (energy === 0 && !ownsLyrics) {
       this.drawIdle(W, H, this.idleFrame++ / 60);
     } else {
-      style.draw({ ctx, w: W, h: H, freq: this.freq, wave: this.wave, t, accent: this.accent });
+      style.draw({ ctx, w: W, h: H, freq: this.freq, wave: this.wave, t, accent: this.accent, text });
     }
     ctx.restore();
 
@@ -153,8 +160,21 @@ export class VisualizerRenderer {
       });
     }
 
-    const band = this.bands.find((b) => t >= b.start && t < b.end) ?? null;
+    // The band is the default lyric layer; a style that owns the lyrics has
+    // already drawn them (drawing both would double the text on screen).
+    const band = ownsLyrics ? null : (this.bands.find((b) => t >= b.start && t < b.end) ?? null);
     if (band) drawLyricBand(ctx, band, W, H, this.bandStyle, V_ANCHOR_FRAC[this.lyricAnchor], t);
+  }
+
+  private vizText(t: number): VizText | undefined {
+    const win = lyricWindow(this.bands, t, HELIX_MIN_WORDS, HELIX_MAX_WORDS);
+    if (win.words.length === 0) return undefined;
+    return {
+      ...win,
+      fontStack: getFontFamily(this.bandStyle.fontFamilyId).stack,
+      fontWeight: this.bandStyle.fontWeight,
+      color: this.bandStyle.color,
+    };
   }
 
   // A calm centered EQ that breathes via a few out-of-phase sine waves — no
