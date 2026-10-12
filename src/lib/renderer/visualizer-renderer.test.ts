@@ -143,3 +143,56 @@ describe('titleVisible (title yields to the first lyric)', () => {
     expect(titleVisible(1.5, OPENING, bands)).toBe(false);
   });
 });
+
+describe('VisualizerRenderer lyric-owning styles', () => {
+  // A ctx that records fillText + strokeText (the band strokes, the helix only fills).
+  function rendererWithTextSpy() {
+    const calls: string[] = [];
+    const ctx = new Proxy(
+      {},
+      {
+        get(_t, prop: string) {
+          if (prop === 'fillText' || prop === 'strokeText' || prop === 'arc')
+            return () => {
+              calls.push(prop);
+            };
+          if (prop === 'measureText') return (s: string) => ({ width: String(s).length * 6 });
+          if (prop === 'createLinearGradient' || prop === 'createRadialGradient')
+            return () => ({ addColorStop() {} });
+          return () => {};
+        },
+        set() {
+          return true;
+        },
+      }
+    );
+    const canvas = { width: 1080, height: 1920, getContext: () => ctx } as unknown as HTMLCanvasElement;
+    const renderer = new VisualizerRenderer({ canvas });
+    renderer.setSettings(DEFAULT_SETTINGS);
+    renderer.setBands([{ id: 'a', start: 0, end: 10, primary: 'hello helix world' }]);
+    return { renderer, calls };
+  }
+
+  it('helix draws the words itself and the band is skipped', () => {
+    const { renderer, calls } = rendererWithTextSpy();
+    renderer.setStyle('helix');
+    renderer.renderAt(5);
+    expect(calls).toContain('fillText');
+    expect(calls).not.toContain('strokeText'); // the band's outline pass never ran
+  });
+
+  it('helix renders even with no audio signal (no idle shimmer takeover)', () => {
+    const { renderer, calls } = rendererWithTextSpy();
+    renderer.setStyle('helix');
+    renderer.renderAt(5); // freq buffer is all-zero: energy === 0
+    expect(calls.filter((c) => c === 'fillText').length).toBeGreaterThanOrEqual(6);
+  });
+
+  it('a graphic style still draws the band', () => {
+    const { renderer, calls } = rendererWithTextSpy();
+    renderer.setStyle('bars');
+    renderer.renderAt(5);
+    expect(calls).toContain('strokeText');
+  });
+});
+

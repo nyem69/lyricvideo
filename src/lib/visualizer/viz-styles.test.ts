@@ -1,6 +1,6 @@
 // src/lib/visualizer/viz-styles.test.ts
 import { describe, it, expect } from 'vitest';
-import { VIZ_STYLES, VIZ_STYLE_MAP, rgba, type VizFrame } from './viz-styles';
+import { VIZ_STYLES, VIZ_STYLE_MAP, rgba, type VizFrame, type VizText } from './viz-styles';
 
 // A ctx that records every color assigned to fill/stroke/shadow and every
 // gradient color stop, so we can assert a style actually paints in the accent
@@ -62,7 +62,7 @@ function frame(w: number, h: number, fill: number): VizFrame {
 }
 
 describe('viz styles', () => {
-  it('exposes all eighteen styles', () => {
+  it('exposes all nineteen styles', () => {
     expect(VIZ_STYLES.map((s) => s.id)).toEqual([
       'bars',
       'mirror',
@@ -82,6 +82,7 @@ describe('viz styles', () => {
       'flower',
       'garden',
       'sakura',
+      'helix',
     ]);
     expect(Object.keys(VIZ_STYLE_MAP).sort()).toEqual([
       'area',
@@ -91,6 +92,7 @@ describe('viz styles', () => {
       'fog',
       'garden',
       'glitch',
+      'helix',
       'matrix',
       'mirror',
       'orb',
@@ -155,5 +157,109 @@ describe('viz styles', () => {
     expect(rgba('#1234ff', 0.5)).toBe('rgba(18, 52, 255, 0.5)');
     expect(rgba('#fff')).toBe('rgba(255, 255, 255, 1)');
     expect(rgba('d4af37', 0.35)).toBe('rgba(212, 175, 55, 0.35)');
+  });
+
+  describe('helix (lyric-owning)', () => {
+    const text = (words: string[], activeTo: number): VizText => ({
+      words,
+      activeFrom: 0,
+      activeTo,
+      fontStack: "'Playfair Display', serif",
+      fontWeight: 700,
+      color: '#fdf6e3',
+    });
+    const WORDS = 'I DONT WANT YOUR BODY BUT I HATE TO THINK ABOUT YOU WITH SOMEBODY ELSE'.split(' ');
+
+    // A ctx that records fillText calls with the fill colour in force.
+    function textCtx() {
+      const draws: { word: string; x: number; y: number; color: string; font: string }[] = [];
+      let fill = '';
+      let font = '';
+      const ctx = new Proxy(
+        {},
+        {
+          get(_t, prop: string) {
+            if (prop === '__draws') return draws;
+            if (prop === 'fillText')
+              return (word: string, x: number, y: number) => draws.push({ word, x, y, color: fill, font });
+            return () => {};
+          },
+          set(_t, prop: string, value: unknown) {
+            if (prop === 'fillStyle') fill = String(value);
+            if (prop === 'font') font = String(value);
+            return true;
+          },
+        }
+      ) as unknown as CanvasRenderingContext2D;
+      return { ctx, draws };
+    }
+    const frameWith = (ctx: CanvasRenderingContext2D, t: number, tx?: VizText): VizFrame => ({
+      ctx,
+      w: 1080,
+      h: 1920,
+      freq: new Uint8Array(1024).fill(120),
+      wave: new Uint8Array(2048).fill(128),
+      t,
+      accent: '#1234ff',
+      text: tx,
+    });
+
+    it('declares ownership of the lyric layer', () => {
+      expect(VIZ_STYLE_MAP.helix.ownsLyrics).toBe(true);
+      // and is the only one — every other style still relies on the band
+      expect(VIZ_STYLES.filter((s) => s.ownsLyrics).map((s) => s.id)).toEqual(['helix']);
+    });
+
+    it('draws every word on both helices, in the lyric font', () => {
+      const { ctx, draws } = textCtx();
+      VIZ_STYLE_MAP.helix.draw(frameWith(ctx, 1.0, text(WORDS, 4)));
+      const main = draws.filter((d) => d.color.endsWith(', 1)') || !d.color.startsWith('rgba'));
+      // the full-alpha copy: 15 words x 2 helices
+      expect(draws.length).toBeGreaterThanOrEqual(WORDS.length * 2);
+      for (const w of WORDS) expect(draws.some((d) => d.word === w)).toBe(true);
+      expect(draws.every((d) => d.font.includes("'Playfair Display'") && d.font.startsWith('700 '))).toBe(true);
+      void main;
+    });
+
+    it('paints the active line in the accent and the rest in the lyric colour', () => {
+      const { ctx, draws } = textCtx();
+      VIZ_STYLE_MAP.helix.draw(frameWith(ctx, 1.0, text(WORDS, 4)));
+      // 'I' recurs at index 6 (inactive), so check the unique active words only.
+      const active = draws.filter((d) => ['DONT', 'WANT', 'YOUR'].includes(d.word));
+      const rest = draws.filter((d) => d.word === 'ELSE');
+      expect(active.every((d) => d.color.includes('18, 52, 255'))).toBe(true);
+      expect(rest.every((d) => d.color.includes('253, 246, 227'))).toBe(true);
+    });
+
+    it('is a pure function of t (same frame twice => identical draws)', () => {
+      const a = textCtx();
+      const b = textCtx();
+      VIZ_STYLE_MAP.helix.draw(frameWith(a.ctx, 2.345, text(WORDS, 4)));
+      VIZ_STYLE_MAP.helix.draw(frameWith(b.ctx, 2.345, text(WORDS, 4)));
+      expect(a.draws).toEqual(b.draws);
+      const c = textCtx();
+      VIZ_STYLE_MAP.helix.draw(frameWith(c.ctx, 2.5, text(WORDS, 4)));
+      expect(c.draws).not.toEqual(a.draws);
+    });
+
+    it('front words are drawn larger and brighter than back words', () => {
+      const { ctx, draws } = textCtx();
+      VIZ_STYLE_MAP.helix.draw(frameWith(ctx, 0, text(WORDS, 0)));
+      const px = (d: { font: string }) => Number.parseFloat(d.font.split(' ')[1]);
+      const alpha = (d: { color: string }) => Number.parseFloat(d.color.slice(d.color.lastIndexOf(',') + 1));
+      // The last draw is the front-most particle (sorted back to front).
+      const front = draws[draws.length - 1];
+      const smallest = draws.reduce((m, d) => (px(d) < px(m) ? d : m), draws[0]);
+      expect(px(front)).toBeGreaterThan(px(smallest) * 2);
+      expect(alpha(front)).toBeGreaterThan(alpha(smallest));
+    });
+
+    it('falls back to an accent-dot ribbon when there are no words', () => {
+      const f = frame(1080, 1920, 120);
+      VIZ_STYLE_MAP.helix.draw(f);
+      const calls = (f.ctx as unknown as { __calls: string[] }).__calls;
+      expect(calls).toContain('arc');
+      expect(calls).not.toContain('fillText');
+    });
   });
 });
