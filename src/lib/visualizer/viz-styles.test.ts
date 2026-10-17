@@ -173,6 +173,7 @@ describe('viz styles', () => {
     // A ctx that records fillText calls with the fill colour in force.
     function textCtx() {
       const draws: { word: string; x: number; y: number; color: string; font: string }[] = [];
+      const fontSets: string[] = [];
       let fill = '';
       let font = '';
       const ctx = new Proxy(
@@ -186,12 +187,12 @@ describe('viz styles', () => {
           },
           set(_t, prop: string, value: unknown) {
             if (prop === 'fillStyle') fill = String(value);
-            if (prop === 'font') font = String(value);
+            if (prop === 'font') fontSets.push((font = String(value)));
             return true;
           },
         }
       ) as unknown as CanvasRenderingContext2D;
-      return { ctx, draws };
+      return { ctx, draws, fontSets };
     }
     const frameWith = (ctx: CanvasRenderingContext2D, t: number, tx?: VizText): VizFrame => ({
       ctx,
@@ -252,6 +253,38 @@ describe('viz styles', () => {
       const smallest = draws.reduce((m, d) => (px(d) < px(m) ? d : m), draws[0]);
       expect(px(front)).toBeGreaterThan(px(smallest) * 2);
       expect(alpha(front)).toBeGreaterThan(alpha(smallest));
+    });
+
+    // Live copies keep 0.1 px sizes ('41.3px'), echoes are whole pixels ('41px'),
+    // so the font string tells the two apart.
+    const isLive = (d: { font: string }) => /^700 \d+\.\dpx /.test(d.font);
+
+    it('rounds echo sizes to whole pixels and sets the font only when it changes', () => {
+      // 0.1 px sizes on every copy made each one a fresh glyph rasterisation.
+      for (const t of [0.4, 1.0, 2.345, 4.9]) {
+        const { ctx, draws, fontSets } = textCtx();
+        VIZ_STYLE_MAP.helix.draw(frameWith(ctx, t, text(WORDS, 4)));
+        expect(draws.every((d) => isLive(d) || /^700 \d+px /.test(d.font))).toBe(true);
+        const runs = draws.filter((d, k) => k === 0 || d.font !== draws[k - 1].font).length;
+        expect(fontSets.length).toBe(runs);
+        expect(new Set(draws.filter((d) => !isLive(d)).map((d) => d.font)).size).toBeLessThan(60); // ~500 at 0.1 px
+      }
+    });
+
+    it('culls faint echoes but always draws the live copy of every word on both strands', () => {
+      const alpha = (d: { color: string }) => Number.parseFloat(d.color.slice(d.color.lastIndexOf(',') + 1));
+      for (const t of [0.4, 1.0, 2.345, 4.9]) {
+        const { ctx, draws } = textCtx();
+        VIZ_STYLE_MAP.helix.draw(frameWith(ctx, t, text(WORDS, 4)));
+        expect(draws.every((d) => alpha(d) >= 0.02)).toBe(true);
+        const live = draws.filter(isLive);
+        expect(live.length).toBe(WORDS.length * 2);
+        for (const w of new Set(WORDS)) {
+          const copies = WORDS.filter((x) => x === w).length;
+          expect(live.filter((d) => d.word === w).length).toBe(copies * 2);
+        }
+        expect(live.every((d) => alpha(d) >= 0.18)).toBe(true);
+      }
     });
 
     it('falls back to an accent-dot ribbon when there are no words', () => {
