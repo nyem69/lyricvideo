@@ -918,6 +918,10 @@ const HELIX_LOOP = 5; // seconds per 720° sweep (eased, so the spin breathes)
 const HELIX_SWEEP = 720;
 const HELIX_ECHOES = 12;
 const HELIX_ECHO_DT = 0.006;
+// Echo copies fainter than this cost a full fillText each but change no pixel by
+// more than ~16/255 even where they stack (0.06 visibly shortened the back-strand
+// trails). The live copy (j = 0) is never culled.
+const HELIX_ECHO_MIN_ALPHA = 0.02;
 export const HELIX_MIN_WORDS = 15;
 export const HELIX_MAX_WORDS = 24;
 
@@ -975,7 +979,7 @@ const helix: VizStyle = {
 
     const stack = text!.fontStack;
     const weight = text!.fontWeight;
-    type P = { i: number; x: number; y: number; depth: number; alpha: number };
+    type P = { i: number; x: number; y: number; depth: number; alpha: number; live: boolean };
     const parts: P[] = [];
     // Echo copies (trails) first, oldest first; skip copies that would land on
     // top of the previous one (the sweep is eased, so near its ends the ribbon
@@ -990,23 +994,25 @@ const helix: VizStyle = {
         for (let i = 0; i < n; i++) {
           const a = (i * step + ph + off) * D2R;
           const depth = Math.cos(a);
-          parts.push({
-            i,
-            x: w / 2 + Math.sin(a) * radius,
-            y: y0 + i * pitch,
-            depth,
-            alpha: alphaScale * (0.18 + 0.82 * (depth + 1) / 2),
-          });
+          const alpha = alphaScale * (0.18 + 0.82 * (depth + 1) / 2);
+          if (j > 0 && alpha < HELIX_ECHO_MIN_ALPHA) continue;
+          parts.push({ i, x: w / 2 + Math.sin(a) * radius, y: y0 + i * pitch, depth, alpha, live: j === 0 });
         }
       }
     }
     parts.sort((p, q) => p.depth - q.depth); // back to front
     const from = text!.activeFrom;
     const to = text!.activeTo;
+    // Each distinct font size is a fresh glyph rasterisation, and 0.1 px steps on
+    // every copy gave ~600 of them per frame (22-76 ms at 1080x1920). Echoes snap
+    // to whole pixels (the cost); the live copy keeps 0.1 px so slow spins don't
+    // tick in 1 px pops and echoes never round away from the word they trail.
+    let font = '';
     for (const p of parts) {
       const active = p.i >= from && p.i < to;
       const size = baseSize * (1 + 0.6 * p.depth) * (active ? 1.12 + b * 0.1 : 1);
-      ctx.font = `${weight} ${size.toFixed(1)}px ${stack}`;
+      const f = `${weight} ${p.live ? size.toFixed(1) : Math.round(size)}px ${stack}`;
+      if (f !== font) ctx.font = font = f;
       ctx.fillStyle = rgba(active ? accent : text!.color, p.alpha);
       ctx.fillText(words[p.i], p.x, p.y);
     }
